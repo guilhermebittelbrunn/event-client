@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSidebar } from '../context/SidebarContext';
-import { AnimalIcon, ChevronDownIcon, GridIcon, HorizontaLDots, PencilIcon, HomeIcon } from '../icons/index';
+import { ChevronDownIcon, CalenderIcon, HorizontaLDots, HomeIcon } from '../icons/index';
 import { Logo } from '../assets/icons';
 
 type NavItem = {
@@ -21,34 +21,24 @@ const navItems: NavItem[] = [
         path: '/painel',
     },
     {
-        icon: <AnimalIcon />,
-        name: 'Animais',
-        path: '/painel/animais',
-    },
-    {
-        icon: <PencilIcon />,
-        name: 'Cadastros',
-        subItems: [
-            {
-                name: 'Espécies',
-                path: '/painel/especies',
-            },
-        ],
+        icon: <CalenderIcon />,
+        name: 'Eventos',
+        path: '/painel/eventos',
     },
 ];
 
 const othersItems: NavItem[] = [
-    {
-        icon: <GridIcon />,
-        name: 'Mocks',
-        subItems: [
-            { name: 'Calendar', path: '/painel/calendar' },
-            { name: 'User Profile', path: '/painel/profile' },
-            { name: 'Basic Tables', path: '/painel/basic-tables', pro: false },
-            { name: 'Blank Page', path: '/painel/blank', pro: false },
-            { name: '404 Error', path: '/painel/error-404', pro: false },
-        ],
-    },
+    // {
+    //     icon: <GridIcon />,
+    //     name: 'Mocks',
+    //     subItems: [
+    //         { name: 'Calendar', path: '/painel/calendar' },
+    //         { name: 'User Profile', path: '/painel/profile' },
+    //         { name: 'Basic Tables', path: '/painel/basic-tables', pro: false },
+    //         { name: 'Blank Page', path: '/painel/blank', pro: false },
+    //         { name: '404 Error', path: '/painel/error-404', pro: false },
+    //     ],
+    // },
 ];
 
 const AppSidebar: React.FC = () => {
@@ -233,7 +223,7 @@ const AppSidebar: React.FC = () => {
 
     return (
         <aside
-            className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-white dark:bg-gray-900 dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200
+            className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-white dark:bg-matte-black dark:border-champagne-dark text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200
         ${isExpanded || isMobileOpen ? 'w-[290px]' : isHovered ? 'w-[290px]' : 'w-[90px]'}
         ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}
         lg:translate-x-0`}
@@ -262,7 +252,7 @@ const AppSidebar: React.FC = () => {
                                     !isExpanded && !isHovered ? 'lg:justify-center' : 'justify-start'
                                 }`}
                             >
-                                {isExpanded || isHovered || isMobileOpen ? 'Menu' : <HorizontaLDots />}
+                                {isExpanded || isHovered || isMobileOpen ? '' : <HorizontaLDots />}
                             </h2>
                             {renderMenuItems(navItems, 'main')}
                         </div>
@@ -273,7 +263,7 @@ const AppSidebar: React.FC = () => {
                                     !isExpanded && !isHovered ? 'lg:justify-center' : 'justify-start'
                                 }`}
                             >
-                                {isExpanded || isHovered || isMobileOpen ? 'Others' : <HorizontaLDots />}
+                                {isExpanded || isHovered || isMobileOpen ? '' : <HorizontaLDots />}
                             </h2>
                             {renderMenuItems(othersItems, 'others')}
                         </div>

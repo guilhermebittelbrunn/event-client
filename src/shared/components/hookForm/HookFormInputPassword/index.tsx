@@ -1,30 +1,26 @@
-import { Input } from '@/shared/components/form';
+import { InputPassword } from '@/shared/components/form';
 import { InputProps } from 'antd';
 import { Control, Controller, ControllerProps, FieldValues, Path } from 'react-hook-form';
 
-interface HookFormInputProps<T extends FieldValues> extends InputProps {
+interface HookFormInputPasswordProps<T extends FieldValues> extends InputProps {
     control?: Control<T>;
     name: Path<T>;
     label: string;
-    type?: string;
     controllerProps?: Omit<ControllerProps<T>, 'name' | 'control' | 'render'>;
 }
 
-export function HookFormInput<T extends FieldValues>({
+export function HookFormInputPassword<T extends FieldValues>({
     control,
     name,
     label,
-    type = 'text',
     controllerProps,
     ...props
-}: HookFormInputProps<T>): React.ReactElement {
+}: HookFormInputPasswordProps<T>): React.ReactElement {
     return (
         <Controller
             control={control}
             name={name}
-            render={({ field }) => (
-                <Input {...field} label={label} placeholder={label} type={type} {...props} />
-            )}
+            render={({ field }) => <InputPassword {...field} label={label} placeholder={label} {...props} />}
             {...controllerProps}
         />
     );

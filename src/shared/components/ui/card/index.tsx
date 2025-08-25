@@ -13,7 +13,7 @@ export function Card({ title, description, icon = <></>, primary = false, classN
         <div
             className={cn(
                 'rounded-lg border border-gray-200 dark:border-gray-600 p-6 shadow-theme-xs',
-                primary ? 'bg-brand-500 dark:bg-brand-900' : 'bg-white dark:bg-gray-800',
+                primary ? 'bg-soft-gold dark:bg-brand-900' : 'bg-white dark:bg-gray-800',
                 className,
             )}
         >

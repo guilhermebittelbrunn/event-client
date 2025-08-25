@@ -8,7 +8,7 @@ export interface ParagraphProps {
 
 export function Paragraph({ children, className, primary = false, ...props }: ParagraphProps) {
     return (
-        <h1
+        <p
             className={cn(
                 'py-4 flex items-center justify-center text-2xl transition ',
                 primary ? 'text-brand-500 dark:text-brand-900' : 'text-gray-800 dark:text-white/90',
@@ -17,6 +17,6 @@ export function Paragraph({ children, className, primary = false, ...props }: Pa
             {...props}
         >
             {children}
-        </h1>
+        </p>
     );
 }

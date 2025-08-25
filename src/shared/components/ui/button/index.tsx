@@ -1,27 +1,23 @@
 import { cn } from '@/shared/utils/cn';
 import { Button as AntdButton, ButtonProps as AntdButtonProps } from 'antd';
-import { ButtonType } from 'antd/es/button';
 
-export interface ButtonProps extends AntdButtonProps {
+export interface ButtonProps extends Omit<AntdButtonProps, 'type'> {
     children?: React.ReactNode;
     className?: string;
     size?: 'large' | 'middle' | 'small';
-    type?: ButtonType;
+    type?: 'primary' | 'secondary';
 }
 
-export function Button({ children, className, size = 'middle', type = 'primary', ...props }: ButtonProps) {
+const buttonStyles = {
+    primary:
+        'p-4 flex items-center font-bold justify-center text-sm text-snow-white transition rounded-lg bg-soft-gold border-soft-gold border-1 shadow-theme-xs hover:opacity-80 dark:bg-soft-gold-dark',
+    secondary:
+        'p-4 flex items-center font-bold justify-center text-sm text-soft-gold transition rounded-lg border-soft-gold border-1 dark:text-snow-white shadow-theme-xs hover:opacity-70 dark:hover:opacity-80 dark:border-champagne-dark dark:bg-matte-black dark:text-soft-gold-dark dark:border-soft-gold-dark',
+};
+
+export function Button({ children, className, size = 'middle', type, ...props }: ButtonProps) {
     return (
-        <AntdButton
-            size={size}
-            type={type}
-            className={cn(
-                type == 'primary'
-                    ? 'py-4 flex items-center font-bold justify-center text-sm  text-white transition rounded-lg bg-brand-500 dark:bg-brand-900 shadow-theme-xs hover:bg-brand-600 dark:hover:bg-brand-600'
-                    : 'py-4 inline-flex items-center justify-center font-medium gap-2 rounded-lg transition text-sm bg-white text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-white/[0.03] dark:hover:text-gray-300',
-                className,
-            )}
-            {...props}
-        >
+        <AntdButton size={size} className={cn(type ? buttonStyles[type] : '', className)} {...props}>
             {children}
         </AntdButton>
     );

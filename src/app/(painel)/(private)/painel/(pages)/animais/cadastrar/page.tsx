@@ -68,7 +68,7 @@ export default function CreateAnimalPage() {
                     </div>
                 </FormContainer>
                 <FormFooter>
-                    <Button type="default" onClick={() => router.back()}>
+                    <Button type="secondary" onClick={() => router.back()}>
                         Cancelar
                     </Button>
                     <Button type="primary" onClick={() => router.back()}>

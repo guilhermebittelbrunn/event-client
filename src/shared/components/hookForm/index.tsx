@@ -8,3 +8,4 @@ export * from './HookFormSwitch';
 export * from './HookFormSelect';
 export * from './HookFormUpload';
 export * from './HookFormTextArea';
+export * from './HookFormInputPassword';

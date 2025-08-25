@@ -2,18 +2,26 @@ import { Input as AntdInput, InputProps as AntdInputProps } from 'antd';
 import { cn } from '@/shared/utils/cn';
 import { Label } from '../label';
 
-export type InputProps = AntdInputProps & {
+export type InputPasswordProps = AntdInputProps & {
     label?: string;
     required?: boolean;
 };
 
-export function Input({ className, label, required, id, placeholder, size = 'large', ...props }: InputProps) {
+export function InputPassword({
+    className,
+    label,
+    required,
+    id,
+    placeholder,
+    size = 'large',
+    ...props
+}: InputPasswordProps) {
     return (
         <>
             <Label required={required} htmlFor={id} className="text-matte-black dark:text-snow-white">
                 {label}
             </Label>
-            <AntdInput
+            <AntdInput.Password
                 id={id}
                 size={size}
                 placeholder={placeholder || label || undefined}
@@ -22,6 +30,7 @@ export function Input({ className, label, required, id, placeholder, size = 'lar
                     className,
                 )}
                 {...props}
+                type="password"
             />
         </>
     );

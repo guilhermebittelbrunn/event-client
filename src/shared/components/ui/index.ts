@@ -13,6 +13,7 @@ export * from './modal';
 export * from './pageBreadCrumb';
 export * from './paragraph';
 export * from './responsiveImage';
+export * from './step';
 export * from './table';
 export * from './title';
 export * from './themeToggleButton';

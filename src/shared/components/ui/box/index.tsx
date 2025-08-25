@@ -1,21 +1,29 @@
 import { cn } from '@/shared/utils/cn';
+import { Flex } from 'antd';
 
 interface BoxProps {
     children: React.ReactNode;
-    primary?: boolean;
+    type?: 'primary' | 'secondary';
     className?: string;
 }
 
-export function Box({ children, primary = false, className }: BoxProps) {
+const boxTypes = {
+    primary: 'bg-soft-gold dark:bg-soft-gold-dark',
+    secondary: 'bg-champagne dark:bg-champagne-dark',
+};
+
+export function Box({ children, type, className }: BoxProps) {
     return (
-        <div
+        <Flex
+            vertical={false}
+            justify="center"
             className={cn(
-                'flex flex-col',
-                primary ? 'bg-brand-500 dark:bg-brand-900' : 'bg-gray-50 dark:bg-gray-800',
+                'flex flex-col w-full',
+                type ? boxTypes[type] : 'bg-gray-50 dark:bg-matte-black',
                 className,
             )}
         >
             {children}
-        </div>
+        </Flex>
     );
 }
