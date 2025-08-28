@@ -1,5 +1,5 @@
 import { Select as AntdSelect, SelectProps as AntdSelectProps } from 'antd';
-import { cn } from '@/shared/utils/cn';
+import { cn } from '@/shared/utils/helpers/cn';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 import { Label } from '../label';

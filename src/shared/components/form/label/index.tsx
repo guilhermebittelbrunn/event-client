@@ -1,4 +1,4 @@
-import { cn } from '@/shared/utils/cn';
+import { cn } from '@/shared/utils/helpers/cn';
 import React, { ReactNode } from 'react';
 
 interface LabelProps {

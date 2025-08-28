@@ -1,9 +1,10 @@
 'use client';
-import Link from 'next/link';
 import React, { useState } from 'react';
 import { Dropdown, DropdownItem, Title } from '../ui';
+import useAuth from '@/shared/hooks/useAuth';
 
 export default function UserDropdown() {
+    const { user, signOut } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
 
     function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -24,7 +25,7 @@ export default function UserDropdown() {
                     <Image width={44} height={44} src="/images/user/owner.jpg" alt="User" />
                 </span> */}
 
-                <Title className="text-sm">Olá, Lucas</Title>
+                <Title className="text-sm">Olá, {user?.name}</Title>
             </button>
 
             <Dropdown
@@ -34,10 +35,10 @@ export default function UserDropdown() {
             >
                 <div>
                     <span className="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">
-                        Musharof Chowdhury
+                        {user?.name}
                     </span>
                     <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
-                        randomuser@pimjo.com
+                        {user?.email}
                     </span>
                 </div>
 
@@ -118,9 +119,9 @@ export default function UserDropdown() {
                         </DropdownItem>
                     </li>
                 </ul>
-                <Link
-                    href="/signin"
-                    className="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+                <div
+                    onClick={signOut}
+                    className="flex cursor-pointer items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
                 >
                     <svg
                         className="fill-gray-500 group-hover:fill-gray-700 dark:group-hover:fill-gray-300"
@@ -137,8 +138,8 @@ export default function UserDropdown() {
                             fill=""
                         />
                     </svg>
-                    Sign out
-                </Link>
+                    Sair
+                </div>
             </Dropdown>
         </div>
     );

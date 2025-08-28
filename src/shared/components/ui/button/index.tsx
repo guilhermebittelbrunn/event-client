@@ -1,4 +1,4 @@
-import { cn } from '@/shared/utils/cn';
+import { cn } from '@/shared/utils/helpers/cn';
 import { Button as AntdButton, ButtonProps as AntdButtonProps } from 'antd';
 
 export interface ButtonProps extends Omit<AntdButtonProps, 'type'> {
@@ -6,6 +6,7 @@ export interface ButtonProps extends Omit<AntdButtonProps, 'type'> {
     className?: string;
     size?: 'large' | 'middle' | 'small';
     type?: 'primary' | 'secondary';
+    loading?: boolean;
 }
 
 const buttonStyles = {
@@ -15,9 +16,14 @@ const buttonStyles = {
         'p-4 flex items-center font-bold justify-center text-sm text-soft-gold transition rounded-lg border-soft-gold border-1 dark:text-snow-white shadow-theme-xs hover:opacity-70 dark:hover:opacity-80 dark:border-champagne-dark dark:bg-matte-black dark:text-soft-gold-dark dark:border-soft-gold-dark',
 };
 
-export function Button({ children, className, size = 'middle', type, ...props }: ButtonProps) {
+export function Button({ children, className, size = 'middle', type, loading, ...props }: ButtonProps) {
     return (
-        <AntdButton size={size} className={cn(type ? buttonStyles[type] : '', className)} {...props}>
+        <AntdButton
+            size={size}
+            className={cn(type ? buttonStyles[type] : '', loading && 'opacity-50', className)}
+            loading={loading}
+            {...props}
+        >
             {children}
         </AntdButton>
     );

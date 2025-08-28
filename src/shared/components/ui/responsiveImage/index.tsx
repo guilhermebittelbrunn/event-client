@@ -1,4 +1,4 @@
-import { cn } from '@/shared/utils/cn';
+import { cn } from '@/shared/utils/helpers/cn';
 import Image from 'next/image';
 import React from 'react';
 

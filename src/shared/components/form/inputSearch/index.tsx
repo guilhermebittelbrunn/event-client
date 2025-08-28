@@ -1,5 +1,5 @@
 import { Input as AntdInput, InputProps as AntdInputProps } from 'antd';
-import { cn } from '@/shared/utils/cn';
+import { cn } from '@/shared/utils/helpers/cn';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 type Trigger = 'onChange' | 'onSearch';
@@ -55,7 +55,7 @@ export function InputSearch({
 
     return (
         <AntdInput.Search
-            className={cn('dark:bg-gray-800 dark:hover:bg-gray-700', className)}
+            className={cn('', className)}
             size="large"
             enterButton
             onSearch={handleSearch}

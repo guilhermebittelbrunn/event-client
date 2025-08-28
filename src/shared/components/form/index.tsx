@@ -12,3 +12,4 @@ export * from './inputUpload';
 export * from './label';
 export * from './textArea';
 export * from './container';
+export * from './rangePicker';

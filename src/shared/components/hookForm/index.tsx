@@ -2,6 +2,7 @@ export { FormProvider, useFormContext, useWatch, useFieldArray } from 'react-hoo
 
 export * from './HookFormInput';
 export * from './HookFormInputSearch';
+export * from './HookFormRangePicker';
 export * from './HookFormDatePicker';
 export * from './HookFormComboBox';
 export * from './HookFormSwitch';

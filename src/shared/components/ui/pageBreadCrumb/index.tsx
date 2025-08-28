@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
+import { Box } from '../box';
+import { Title } from '../title';
 
 interface BreadcrumbProps {
     pageTitle: string;
@@ -12,11 +14,11 @@ interface BreadcrumbProps {
 
 const PageBreadcrumb: React.FC<BreadcrumbProps> = ({ pageTitle, sideElement, breadcrumbItems }) => {
     return (
-        <div className="flex justify-between items-center dark:bg-gray-900">
+        <Box className="flex flex-row justify-between dark:bg-matte-black-contrast">
             <div className="flex flex-wrap flex-col items-start gap-3 mb-6">
-                <h2 className="text-2xl font-semibold text-gray-800 dark:text-white/90" x-text="pageName">
+                <Title className="text-2xl font-semibold " x-text="pageName">
                     {pageTitle}
-                </h2>
+                </Title>
                 <nav>
                     <ol className="flex items-center gap-1.5">
                         <li>
@@ -69,12 +71,14 @@ const PageBreadcrumb: React.FC<BreadcrumbProps> = ({ pageTitle, sideElement, bre
                                 </Link>
                             </li>
                         ))}
-                        <li className="text-sm text-brand-500 font-semibold dark:text-white/90">{pageTitle}</li>
+                        <li className="text-sm text-soft-gold font-semibold dark:text-soft-gold-dark">
+                            {pageTitle}
+                        </li>
                     </ol>
                 </nav>
             </div>
             {sideElement && <div className="flex justify-end items-center gap-2">{sideElement}</div>}
-        </div>
+        </Box>
     );
 };
 

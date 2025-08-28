@@ -1,4 +1,4 @@
-import { cn } from '@/shared/utils/cn';
+import { cn } from '@/shared/utils/helpers/cn';
 
 interface FormContainerProps {
     children: React.ReactNode;
@@ -6,5 +6,9 @@ interface FormContainerProps {
 }
 
 export function FormContainer({ children, className }: FormContainerProps) {
-    return <div className={cn('grid grid-cols-1 md:grid-cols-2 gap-8 space-y-6', className)}>{children}</div>;
+    return (
+        <div className={cn('grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-8 md:space-y-6 ', className)}>
+            {children}
+        </div>
+    );
 }

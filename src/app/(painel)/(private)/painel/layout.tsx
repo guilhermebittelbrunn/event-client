@@ -1,5 +1,6 @@
 'use client';
 
+import { Box } from '@/shared/components/ui/box';
 import { useSidebar } from '@/shared/context/SidebarContext';
 import AppHeader from '@/shared/layout/AppHeader';
 import AppSidebar from '@/shared/layout/AppSidebar';
@@ -17,12 +18,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           : 'lg:ml-[90px]';
 
     return (
-        <div className="min-h-screen xl:flex bg-snow-white dark:bg-matte-black">
+        <div className="min-h-screen xl:flex bg-snow-white dark:bg-matte-black-contrast">
             <AppSidebar />
             <Backdrop />
-            <div className={`flex-1 transition-all duration-300 ease-in-out ${mainContentMargin}`}>
+            <div className={`flex-1 transition-all duration-300 ease-in-out ${mainContentMargin} `}>
                 <AppHeader />
-                <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">{children}</div>
+                <Box className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6 dark:bg-matte-black-contrast">
+                    {children}
+                </Box>
             </div>
         </div>
     );

@@ -10,7 +10,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
     const customTheme = {
         token: {
-            colorPrimary: '#3C50E0',
+            colorPrimary: '#CBA135',
             colorBgContainer: theme === 'dark' ? '#1C1B19' : '#FFFFFF',
             colorBgElevated: theme === 'dark' ? '#1C1B19' : '#FFFFFF',
             colorText: theme === 'dark' ? '#E2E8F0' : '#1C1B19',
@@ -26,21 +26,18 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             colorWarning: '#F59E0B',
             colorError: '#EF4444',
             colorInfo: '#3C50E0',
+
+            colorInfoBg: theme === 'dark' ? '#1C1B19' : '#F8FAFC',
+            colorErrorBg: theme === 'dark' ? '#1C1B19' : '#F8FAFC',
+            colorWarningBg: theme === 'dark' ? '#1C1B19' : '#F8FAFC',
+            colorSuccessBg: theme === 'dark' ? '#1C1B19' : '#F8FAFC',
         },
         components: {
             Table: {
-                headerBg: theme === 'dark' ? '#1b2330' : '#E2E8F0',
+                headerBg: theme === 'dark' ? '#252523' : '#F8F9FA',
                 borderColor: theme === 'dark' ? '#1F2938' : '#E2E8F0',
             },
-            Input: {
-                colorBgContainer: theme === 'dark' ? '#1C1B19' : '#FFFFFF',
-                algorithm: theme === 'dark' ? darkAlgorithm : defaultAlgorithm,
-                colorText: theme === 'dark' ? '#E2E8F0' : '#1C1B19',
-                colorTextSecondary: theme === 'dark' ? '#1C1B19' : '#64748B',
-                colorBorder: theme === 'dark' ? '#374151' : '#E2E8F0',
-                colorBorderSecondary: theme === 'dark' ? '#1C1B19' : '#F1F5F9',
-                colorFill: theme === 'dark' ? '#1C1B19' : '#F8FAFC',
-            },
+
             Select: {
                 colorBgContainer: theme === 'dark' ? '#1C1B19' : '#FFFFFF',
                 algorithm: theme === 'dark' ? darkAlgorithm : defaultAlgorithm,

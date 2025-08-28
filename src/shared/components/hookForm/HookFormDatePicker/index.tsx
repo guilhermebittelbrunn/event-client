@@ -3,7 +3,7 @@ import { DatePickerProps } from 'antd';
 import { Control, Controller, ControllerProps, FieldValues, Path } from 'react-hook-form';
 
 interface HookFormDatePickerProps<T extends FieldValues> extends DatePickerProps {
-    control: Control<T>;
+    control?: Control<T>;
     name: Path<T>;
     label: string;
     controllerProps?: Omit<ControllerProps<T>, 'name' | 'control' | 'render'>;
@@ -20,9 +20,19 @@ export function HookFormDatePicker<T extends FieldValues>({
         <Controller
             control={control}
             name={name}
-            render={({ field }) => (
-                <DatePicker {...field} placeholder={label} onChange={field.onChange} {...props} />
-            )}
+            render={({ field, fieldState }) => {
+                const { error } = fieldState;
+
+                return (
+                    <DatePicker
+                        {...field}
+                        placeholder={label}
+                        onChange={field.onChange}
+                        error={error}
+                        {...props}
+                    />
+                );
+            }}
             {...controllerProps}
         />
     );

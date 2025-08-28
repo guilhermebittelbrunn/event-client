@@ -3,8 +3,10 @@ import { useState } from 'react';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 import { PlusOutlined } from '@ant-design/icons';
-import { cn } from '@/shared/utils/cn';
+import { cn } from '@/shared/utils/helpers/cn';
 import { Label } from '../label';
+import { FieldError } from 'react-hook-form';
+import { ErrorBadge } from '../../ui';
 
 const getBase64 = (file: FileType): Promise<string> =>
     new Promise((resolve, reject) => {
@@ -14,11 +16,15 @@ const getBase64 = (file: FileType): Promise<string> =>
         reader.onerror = (error) => reject(error);
     });
 
-export interface InputUploadProps extends UploadProps {
+export interface InputUploadProps extends Omit<UploadProps, 'onChange'> {
     showPreview?: boolean;
     className?: string;
     label?: string;
     multiple?: boolean;
+    error?: FieldError;
+    showErrorBadge?: boolean;
+    required?: boolean;
+    onChange?: (fileList: UploadFile[]) => void;
 }
 
 export function InputUpload({
@@ -26,6 +32,10 @@ export function InputUpload({
     className,
     label = 'Imagem',
     multiple = false,
+    error,
+    showErrorBadge = true,
+    required,
+    onChange,
 }: InputUploadProps) {
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
@@ -40,11 +50,14 @@ export function InputUpload({
         setPreviewOpen(true);
     };
 
-    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => setFileList(newFileList);
+    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+        setFileList(newFileList);
+        onChange?.(newFileList);
+    };
 
     const uploadButton = (
         <button
-            className="p-4 gap-2 flex flex-col items-center font-bold justify-between text-sm border-1 text-white transition rounded-lg border-brand-500 dark:border-brand-900 shadow-theme-xs hover:border-brand-600 dark:hover:border-brand-600 hover:cursor-pointer"
+            className="p-4 gap-2 flex flex-col items-center font-bold justify-between text-sm border-1 text-white transition rounded-lg border-soft-gold dark:border-soft-gold-dark shadow-theme-xs hover:opacity-80 hover:cursor-pointer"
             type="button"
         >
             {<PlusOutlined />}
@@ -53,17 +66,21 @@ export function InputUpload({
     );
     return (
         <>
-            <Label>{label}</Label>
-            <Upload
-                listType="picture"
-                fileList={fileList}
-                onPreview={handlePreview}
-                onChange={handleChange}
-                className={cn('w-full', className)}
-                multiple={multiple}
-            >
-                {fileList.length >= (multiple ? 8 : 1) ? null : uploadButton}
-            </Upload>
+            <Label required={required} className="text-matte-black dark:text-snow-white">
+                {label}
+            </Label>
+            <ErrorBadge hidden={!error || !showErrorBadge} message={error?.message || 'Imagem inválido'}>
+                <Upload
+                    listType="picture"
+                    fileList={fileList}
+                    onPreview={handlePreview}
+                    onChange={handleChange}
+                    className={cn('w-full', className)}
+                    multiple={multiple}
+                >
+                    {fileList.length >= (multiple ? 8 : 1) ? null : uploadButton}
+                </Upload>
+            </ErrorBadge>
             {previewImage && showPreview && (
                 <AntdImage
                     wrapperStyle={{ display: 'none' }}

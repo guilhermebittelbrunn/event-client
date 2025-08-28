@@ -11,6 +11,11 @@ export function useClientRouter() {
         setIsMounted(true);
     }, []);
 
+    const currentDomain =
+        typeof window !== 'undefined'
+            ? `${window.location.protocol}//${window.location.hostname}${window.location.port ? `:${window.location.port}` : ''}`
+            : '';
+
     const push = (href: string) => {
         if (isMounted) {
             router.push(href);
@@ -43,6 +48,7 @@ export function useClientRouter() {
 
     return {
         ...router,
+        currentDomain,
         push,
         replace,
         back,

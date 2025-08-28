@@ -1,5 +1,5 @@
 import { Select, SelectProps } from 'antd';
-import { cn } from '@/shared/utils/cn';
+import { cn } from '@/shared/utils/helpers/cn';
 
 export interface ComboboxProps extends SelectProps {
     options: SelectProps['options'];

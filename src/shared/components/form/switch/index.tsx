@@ -1,4 +1,4 @@
-import { cn } from '@/shared/utils/cn';
+import { cn } from '@/shared/utils/helpers/cn';
 import { Switch as AntdSwitch, SwitchProps as AntdSwitchProps } from 'antd';
 
 export interface SwitchProps extends AntdSwitchProps {
