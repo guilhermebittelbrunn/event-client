@@ -8,6 +8,7 @@ const publicRoutes = [
 ] as const;
 
 const PUBLIC_REDIRECT_URL_WHEN_AUTHENTICATED = '/painel';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const REDIRECT_URL_WHEN_UNAUTHENTICATED = '/entrar';
 
 export default function middleware(request: NextRequest) {
