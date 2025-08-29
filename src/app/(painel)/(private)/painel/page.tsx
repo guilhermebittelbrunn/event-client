@@ -2,6 +2,7 @@
 
 import { Title, AddButton } from '@/shared/components/ui';
 import ResponsiveImage from '@/shared/components/ui/responsiveImage';
+import { useRedirect } from '@/shared/hooks';
 import { EditFilled } from '@ant-design/icons';
 import React from 'react';
 
@@ -205,6 +206,8 @@ const EventCard = ({ event, detailed = false }: { event: any; detailed?: boolean
 };
 
 export default function Home() {
+    const { redirect } = useRedirect();
+
     return (
         <div className="min-h-screen bg-snow-white dark:bg-matte-black">
             <div className="p-4 space-y-6">
@@ -213,7 +216,9 @@ export default function Home() {
                         <Title className="text-xl font-bold text-neutral-800 dark:text-white">
                             Próximo evento
                         </Title>
-                        <AddButton type="primary">Novo evento</AddButton>
+                        <AddButton type="primary" onClick={() => redirect('/painel/eventos/cadastrar')}>
+                            Novo evento
+                        </AddButton>
                     </div>
 
                     <EventCard event={mockData.data} detailed />

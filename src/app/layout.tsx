@@ -9,7 +9,7 @@ import ClientLayout from './clientLayout';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { ToastContainer } from 'react-toastify';
-import { AuthProvider } from '@/shared/hooks/useAuth';
+import { AuthProvider } from '@/shared/context/AuthContext';
 
 const outfit = Outfit({
     subsets: ['latin'],

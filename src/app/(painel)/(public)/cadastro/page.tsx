@@ -9,7 +9,7 @@ import { Box } from '@/shared/components/ui/box';
 import Link from 'next/link';
 import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import useAuth from '@/shared/hooks/useAuth';
+import useAuth from '@/shared/context/AuthContext';
 
 export default function SignUpForm() {
     const form = useForm({ resolver: yupResolver(signUpRequestSchema) });

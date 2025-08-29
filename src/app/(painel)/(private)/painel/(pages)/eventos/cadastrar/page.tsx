@@ -10,7 +10,6 @@ import { EventForm } from '../(components)/EventForm';
 import { useEventCrud } from '../(hooks)/useEventCrud';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { createEventRequestSchema, CreateEventSchema } from '@/lib/services/event';
-import { useEffect } from 'react';
 
 export default function CreateEventPage() {
     const { createEventMutation } = useEventCrud();
@@ -18,16 +17,13 @@ export default function CreateEventPage() {
         resolver: yupResolver(createEventRequestSchema),
     });
 
-    useEffect(() => {
-        console.log('form.formState.errors :>> ', form.formState.errors);
-    }, [form.formState.errors]);
-
     const onSubmit: SubmitHandler<CreateEventSchema> = (data) => {
         createEventMutation.mutate({
             name: data.name,
             slug: data.slug,
             startAt: data.dates[0]!,
             endAt: data.dates[1]!,
+            image: data?.image?.[0]?.originFileObj,
         });
     };
 

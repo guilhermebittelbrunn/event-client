@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { Dropdown, DropdownItem, Title } from '../ui';
-import useAuth from '@/shared/hooks/useAuth';
+import useAuth from '@/shared/context/AuthContext';
 
 export default function UserDropdown() {
     const { user, signOut } = useAuth();

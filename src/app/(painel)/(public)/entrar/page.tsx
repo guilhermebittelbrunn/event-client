@@ -6,7 +6,7 @@ import { HookFormInput, HookFormInputPassword } from '@/shared/components/hookFo
 import { Button, Title } from '@/shared/components/ui';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Link from 'next/link';
-import useAuth from '@/shared/hooks/useAuth';
+import useAuth from '@/shared/context/AuthContext';
 import { signInRequestSchema, SignInSchema } from '@/lib/services/auth/schema';
 import { yupResolver } from '@hookform/resolvers/yup';
 

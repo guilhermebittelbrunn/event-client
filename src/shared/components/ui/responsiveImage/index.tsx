@@ -1,6 +1,7 @@
 import { cn } from '@/shared/utils/helpers/cn';
 import Image from 'next/image';
 import React from 'react';
+import { Fallback } from '../../common/fallback';
 
 export default function ResponsiveImage({
     src,
@@ -9,23 +10,17 @@ export default function ResponsiveImage({
     height,
     className,
 }: {
-    src: string;
+    src?: string;
     alt: string;
     width: number;
     height: number;
-    className: string;
+    className?: string;
 }) {
     return (
-        <div className="relative">
-            <div className="overflow-hidden">
-                <Image
-                    src={src}
-                    alt={alt}
-                    className={cn('w-full border border-gray-200 rounded-xl dark:border-gray-800', className)}
-                    width={width}
-                    height={height}
-                />
+        <Fallback condition={Boolean(src)}>
+            <div className={`relative w-${width} h-${height} rounded-full overflow-hidden`}>
+                <Image src={src!} alt={alt} fill className={cn('w-full object-cover', className)} />
             </div>
-        </div>
+        </Fallback>
     );
 }

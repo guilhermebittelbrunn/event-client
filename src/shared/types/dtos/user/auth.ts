@@ -1,6 +1,14 @@
 export interface TokenDTO {
-    access_token: string;
-    refresh_token?: string;
-    expires_in: number;
-    expires_at: number;
+    accessToken: string;
+    refreshToken?: string;
+    expiresIn: number;
+    expiresAt: number;
+}
+
+export interface UserTokenPayload {
+    sub: string;
+    email: string;
+    role: string;
+    iat: number;
+    exp: number;
 }

@@ -24,3 +24,5 @@ export interface SignInResponse {
         tokens: TokenDTO;
     };
 }
+
+export type RefreshTokenResponse = SignInResponse;

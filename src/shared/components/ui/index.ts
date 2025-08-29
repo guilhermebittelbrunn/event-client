@@ -13,6 +13,7 @@ export * from './linkButton';
 export * from './loadingScreen';
 export * from './modal';
 export * from './pageBreadCrumb';
+export * from './paginationTable';
 export * from './paragraph';
 export * from './responsiveImage';
 export * from './step';

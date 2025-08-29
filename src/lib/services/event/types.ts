@@ -1,4 +1,5 @@
 import { EventDTO, EventStatusEnum } from '@/shared/types/dtos';
+import { UpdateRequest } from '@/shared/types/utils';
 
 export interface CreateEventRequest {
     name: string;
@@ -12,4 +13,12 @@ export interface CreateEventRequest {
 
 export interface CreateEventResponse {
     data: EventDTO;
+}
+
+export interface FindEventByIdResponse {
+    data: EventDTO;
+}
+
+export interface UpdateEventRequest extends UpdateRequest<CreateEventRequest> {
+    id: string;
 }

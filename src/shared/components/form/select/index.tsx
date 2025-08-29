@@ -27,13 +27,24 @@ export function Select({
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const handleFilterChange = (key: string, value: string | null) => {
+    const currentStatus = searchParams.get('status') || undefined;
+
+    const handleFilterChange = (key: string, value: string | string[] | null) => {
         const params = new URLSearchParams(searchParams.toString());
-        if (value) {
-            params.set(key, value);
+
+        if (value && (Array.isArray(value) ? value.length > 0 : value !== '')) {
+            // If the value exists and is not empty, add/update the parameter
+            if (Array.isArray(value)) {
+                // For arrays (multiple select), add each value
+                value.forEach((v) => params.append(key, v));
+            } else {
+                params.set(key, value);
+            }
         } else {
+            // If the value is null, undefined, empty, or an empty array, remove the parameter
             params.delete(key);
         }
+
         router.push(`?${params.toString()}`);
     };
 
@@ -43,6 +54,7 @@ export function Select({
             <AntdSelect
                 options={options}
                 className={cn('', className)}
+                value={currentStatus}
                 size={size}
                 placeholder={placeholder || 'Selecione uma opção'}
                 {...props}

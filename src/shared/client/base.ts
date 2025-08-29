@@ -8,6 +8,8 @@ import {
     STAGING_WORKER_URL,
 } from '../utils';
 import FormattedError from '../utils/helpers/formattedError';
+import { localStorage } from '../utils/helpers/localStorage';
+import { isTokenExpired } from '../utils/helpers/token';
 
 export interface ClientConfigWeb {
     tokenStorageKey: string;
@@ -43,6 +45,8 @@ export default class ClientBase {
                 'Content-Type': 'application/json',
             },
         });
+
+        this.setupInterceptors();
     }
 
     get userId(): string | undefined {
@@ -59,9 +63,6 @@ export default class ClientBase {
     }
 
     private get environmentApiUrl(): string {
-        // This sequence of precedence is important since we consider both NODE_ENV and APP_ENV
-        // to validate env state, so, sometimes you can be at staging and production at the same time
-        // and in that case, we want to use the staging url
         switch (this.config.environment) {
             case 'staging':
                 return STAGING_API_URL;
@@ -83,6 +84,37 @@ export default class ClientBase {
         }
     }
 
+    private setupInterceptors(): void {
+        this.restClient.interceptors.request.use(
+            (config) => {
+                const accessToken = localStorage.getItem('accessToken');
+                const refreshToken = localStorage.getItem('refreshToken');
+
+                if (accessToken && !isTokenExpired(accessToken)) {
+                    config.headers.Authorization = `Bearer ${accessToken}`;
+                    config.headers['Refresh-Token'] = `Refresh ${refreshToken}`;
+                }
+
+                return config;
+            },
+            (error) => {
+                return Promise.reject(error);
+            },
+        );
+
+        this.restClient.interceptors.response.use(
+            (response) => response,
+            async (error) => {
+                if (error.response?.status === 401) {
+                    if (typeof window !== 'undefined') {
+                        window.dispatchEvent(new CustomEvent('token-expired'));
+                    }
+                }
+                return Promise.reject(error);
+            },
+        );
+    }
+
     public setHeader(key: string, value: string): void {
         this.restClient.defaults.headers.common[key] = value;
         this.workerClient.defaults.headers.common[key] = value;
@@ -96,14 +128,25 @@ export default class ClientBase {
         }
     }
 
+    public logout(): void {
+        this.removeHeader('Authorization');
+        this.removeHeader('Refresh-Token');
+
+        if (typeof window !== 'undefined') {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+        }
+    }
+
     public removeHeader(key: string): void {
         this.restClient.defaults.headers.common[key] = undefined;
         this.workerClient.defaults.headers.common[key] = undefined;
     }
 
-    public request<T>(client: AxiosInstance, config: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+    public async request<T>(client: AxiosInstance, config: AxiosRequestConfig): Promise<AxiosResponse<T>> {
         try {
-            return client.request<T>(config);
+            const response = await client.request<T>(config);
+            return response;
         } catch (error) {
             console.error(error);
             throw new FormattedError(error);

@@ -6,7 +6,7 @@ const client = new Client({
         (process.env.APP_ENV as any) ||
         (process.env.VERCEL_ENV as any) ||
         'development',
-    tokenStorageKey: '',
+    tokenStorageKey: 'accessToken',
 });
 
 export default client;

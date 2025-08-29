@@ -1,6 +1,6 @@
 import client from '@/lib/client';
 import { UserDTO } from '@/shared/types/dtos';
-import { SignInRequest, SignInResponse, SignUpRequest } from './types';
+import { RefreshTokenResponse, SignInRequest, SignInResponse, SignUpRequest } from './types';
 import ClientBase from '@/shared/client/base';
 
 export default class AuthService {
@@ -25,18 +25,30 @@ export default class AuthService {
             data: dto,
         });
 
+        localStorage.setItem('accessToken', data.data.tokens.accessToken);
+        localStorage.setItem('refreshToken', data.data.tokens.refreshToken || '');
+
         this.client.setHeaders({
-            Authorization: data.data.tokens.access_token,
-            'Refresh-Token': data.data.tokens.refresh_token ?? '',
+            Authorization: `Bearer ${data.data.tokens.accessToken}`,
+            'Refresh-Token': `Refresh ${data.data.tokens.refreshToken}`,
         });
 
         return data;
     }
 
-    async getUser() {
-        const { data } = await this.client.request<UserDTO>(this.client.restClient, {
-            url: `${this.baseUrl}/me`,
-            method: 'GET',
+    async refreshToken(refreshToken: string): Promise<RefreshTokenResponse> {
+        const { data } = await this.client.request<RefreshTokenResponse>(this.client.restClient, {
+            url: `${this.baseUrl}/refresh`,
+            method: 'POST',
+            data: { refreshToken },
+        });
+
+        localStorage.setItem('accessToken', data.data.tokens.accessToken);
+        localStorage.setItem('refreshToken', data.data.tokens.refreshToken || '');
+
+        this.client.setHeaders({
+            Authorization: `Bearer ${data.data.tokens.accessToken}`,
+            'Refresh-Token': `Refresh ${data.data.tokens.refreshToken}`,
         });
 
         return data;

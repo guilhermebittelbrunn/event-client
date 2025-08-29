@@ -1,20 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTokenPayload } from './shared/utils/helpers/token';
+import { UserTokenPayload } from './shared/types/dtos/user/auth';
 
-const publicRoutes = [
+export const publicRoutes = [
     { path: '/', whenAuthenticated: 'next' },
     { path: '/entrar', whenAuthenticated: 'redirect' },
     { path: '/cadastro', whenAuthenticated: 'redirect' },
 ] as const;
 
 const PUBLIC_REDIRECT_URL_WHEN_AUTHENTICATED = '/painel';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const REDIRECT_URL_WHEN_UNAUTHENTICATED = '/entrar';
 
 export default function middleware(request: NextRequest) {
-    const authToken = request.cookies.get('token');
-    const tokenPayload = getTokenPayload(authToken?.value);
-    const isAuthenticated = !!authToken && !!tokenPayload?.role;
+    const authToken = request.cookies.get('accessToken')?.value;
+    const tokenPayload = getTokenPayload<UserTokenPayload>(authToken);
+    const isAuthenticated = !!authToken && !!tokenPayload?.sub;
 
     const { pathname } = request.nextUrl;
     const publicRoute = publicRoutes.find((route) => route.path === pathname);
@@ -23,12 +23,12 @@ export default function middleware(request: NextRequest) {
         return NextResponse.next();
     }
 
-    // if (!isAuthenticated && !publicRoute) {
-    //     const redirectUrl = request.nextUrl.clone();
-    //     redirectUrl.pathname = REDIRECT_URL_WHEN_UNAUTHENTICATED;
+    if (!isAuthenticated && !publicRoute) {
+        const redirectUrl = request.nextUrl.clone();
+        redirectUrl.pathname = REDIRECT_URL_WHEN_UNAUTHENTICATED;
 
-    //     return NextResponse.redirect(redirectUrl);
-    // }
+        return NextResponse.redirect(redirectUrl);
+    }
 
     if (isAuthenticated && publicRoute?.whenAuthenticated === 'redirect') {
         const redirectUrl = request.nextUrl.clone();
