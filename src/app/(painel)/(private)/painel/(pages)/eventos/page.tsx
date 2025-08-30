@@ -1,10 +1,10 @@
 'use client';
 
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, QrcodeOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 
 import PageBreadcrumb from '@/shared/components/ui/pageBreadCrumb';
-import { InputSearch, Select } from '@/shared/components/form';
+import { InputSearch } from '@/shared/components/form';
 import { AddButton, Container, PaginationTable, createColumn } from '@/shared/components/ui';
 import { ActionsMenu } from '@/shared/components/ui/actionMenu';
 import { Box } from '@/shared/components/ui/box';
@@ -16,7 +16,7 @@ import ResponsiveImage from '@/shared/components/ui/responsiveImage';
 
 export default function EventsPage() {
     const router = useRouter();
-    const { useListPaginatedEvent } = useEventCrud();
+    const { useListPaginatedEvent, deleteEventMutation } = useEventCrud();
 
     const { data, isLoading } = useListPaginatedEvent();
 
@@ -63,13 +63,21 @@ export default function EventsPage() {
             align: 'center',
             render: (_: unknown, record) => (
                 <ActionsMenu
-                    items={[]}
+                    items={[
+                        {
+                            icon: <QrcodeOutlined />,
+                            key: 'qrcode',
+                            label: 'Acessos',
+                            onClick: () => {
+                                router.push(`/painel/eventos/acessos/${record.id}`);
+                            },
+                        },
+                    ]}
                     onEdit={() => {
-                        router.push(`/painel/animais/${record.id}`);
+                        router.push(`/painel/eventos/editar/${record.id}`);
                     }}
                     onDelete={() => {
-                        // TODO: Implement delete action
-                        console.log('Delete', record);
+                        deleteEventMutation.mutate(record.id);
                     }}
                 />
             ),
@@ -95,15 +103,6 @@ export default function EventsPage() {
             <Container>
                 <Box className="mb-4 space-y-4">
                     <Box className="grid grid-cols-1 md:grid-cols-4 gap-4 bg-white">
-                        <Select
-                            mode="multiple"
-                            name="status"
-                            changeUrl
-                            placeholder="Status"
-                            allowClear
-                            options={EventStatusOptions}
-                        />
-
                         <InputSearch changeUrl placeholder="Nome do evento" trigger={['onChange']} />
                     </Box>
                 </Box>

@@ -23,11 +23,18 @@ export function HookFormRangePicker<T extends FieldValues>({
             render={({ field, fieldState }) => {
                 const { error } = fieldState;
 
+                // Ensure the value is the correct type for RangePicker
+                let rangeValue: [Date, Date] | null = null;
+                if (Array.isArray(field.value) && field.value.length === 2) {
+                    rangeValue = field.value as unknown as [Date, Date];
+                }
+
                 return (
                     <RangePicker
                         {...field}
                         placeholder={label}
                         onChange={field.onChange}
+                        value={rangeValue as any}
                         error={error}
                         {...props}
                     />

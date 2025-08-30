@@ -3,6 +3,7 @@ import { cn } from '@/shared/utils/helpers/cn';
 import { FieldError } from 'react-hook-form';
 import { ErrorBadge } from '../../ui';
 import { Label } from '../label';
+import dayjs from 'dayjs';
 
 const AntdRangePicker = AntdDatePicker.RangePicker;
 
@@ -13,6 +14,8 @@ export interface RangePickerProps {
     required?: boolean;
     label?: string;
     id?: string;
+    value?: [Date, Date] | null;
+    onChange?: (dates: any, dateStrings: [string, string]) => void;
 }
 
 export function RangePicker({
@@ -22,8 +25,12 @@ export function RangePicker({
     required,
     label,
     id,
+    value,
+    onChange,
     ...props
 }: RangePickerProps) {
+    const dayjsValue = value ? ([dayjs(value[0]), dayjs(value[1])] as [dayjs.Dayjs, dayjs.Dayjs]) : null;
+
     return (
         <ErrorBadge
             hidden={!error || !showErrorBadge}
@@ -41,6 +48,8 @@ export function RangePicker({
                     error && 'border-red-600 dark:border-red-900',
                     className,
                 )}
+                value={dayjsValue}
+                onChange={onChange}
                 {...props}
             />
         </ErrorBadge>

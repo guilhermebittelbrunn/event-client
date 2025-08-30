@@ -1,6 +1,7 @@
 import { cn } from '@/shared/utils';
 import { Title } from '../title';
 import { Box } from '../box';
+import { Loading } from '../loading';
 
 interface LoadingScreenProps {
     loading?: boolean;
@@ -21,7 +22,7 @@ export function LoadingScreen({ loading = true, className, description }: Loadin
             )}
         >
             <Box className="flex flex-col items-center gap-4">
-                <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-soft-gold dark:border-gray-700 dark:border-t-soft-gold" />
+                <Loading size="large" />
                 <Title className="text-sm text-matte-black dark:text-snow-white">
                     {description || 'Carregando...'}
                 </Title>

@@ -1,5 +1,5 @@
 import { Image as AntdImage, GetProp, Upload, UploadFile, UploadProps } from 'antd';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 import { PlusOutlined } from '@ant-design/icons';
@@ -25,6 +25,7 @@ export interface InputUploadProps extends Omit<UploadProps, 'onChange'> {
     showErrorBadge?: boolean;
     required?: boolean;
     onChange?: (fileList: UploadFile[]) => void;
+    value?: UploadFile[];
 }
 
 export function InputUpload({
@@ -36,10 +37,17 @@ export function InputUpload({
     showErrorBadge = true,
     required,
     onChange,
+    value,
 }: InputUploadProps) {
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
     const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+    useEffect(() => {
+        if (value && value.length > 0) {
+            setFileList(value);
+        }
+    }, [value]);
 
     const handlePreview = async (file: UploadFile) => {
         if (!file.url && !file.preview) {
