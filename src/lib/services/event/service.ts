@@ -29,8 +29,8 @@ export default class EventService {
         const body = formDataFromObject(dto);
 
         const { data } = await this.client.request<UpdateResponse>(this.client.restClient, {
-            url: `${this.baseUrl}`,
-            method: 'POST',
+            url: `${this.baseUrl}/${dto.id}`,
+            method: 'PUT',
             data: body,
             headers: {
                 'Content-Type': undefined, // Remove Content-Type to let the browser automatically set it for FormData
@@ -60,7 +60,7 @@ export default class EventService {
 
     async delete(id: string): Promise<void> {
         await this.client.request<void>(this.client.restClient, {
-            url: `${this.baseUrl}/delete/${id}`,
+            url: `${this.baseUrl}/${id}`,
             method: 'DELETE',
         });
     }

@@ -3,6 +3,10 @@
 import { useTheme } from '@/shared/context/ThemeContext';
 import { ConfigProvider, theme as themeAntd } from 'antd';
 import ptBR from 'antd/locale/pt_BR';
+import dayjs from 'dayjs';
+import 'dayjs/locale/pt-br';
+
+dayjs.locale('pt-br');
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
     const { theme } = useTheme();

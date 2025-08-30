@@ -20,7 +20,7 @@ export function HookFormUpload<T extends FieldValues>({
             name={name}
             render={({ field, fieldState }) => {
                 const { error } = fieldState;
-                return <InputUpload {...field} {...props} error={error} label={label} />;
+                return <InputUpload {...field} {...props} error={error} label={label} value={field.value} />;
             }}
             {...props.controllerProps}
         />

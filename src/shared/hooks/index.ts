@@ -7,3 +7,4 @@ export * from './useClientRouter';
 export * from './useRedirect';
 export * from './useAlert';
 export * from './usePagination';
+export * from './useQRCode';

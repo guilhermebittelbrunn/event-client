@@ -3,7 +3,8 @@
 import { Title, AddButton } from '@/shared/components/ui';
 import ResponsiveImage from '@/shared/components/ui/responsiveImage';
 import { useRedirect } from '@/shared/hooks';
-import { EditFilled } from '@ant-design/icons';
+import { EditFilled, ShareAltOutlined } from '@ant-design/icons';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 // Mock de dados
@@ -165,6 +166,7 @@ const calculateDaysLeft = (dateString: string) => {
 };
 
 const EventCard = ({ event, detailed = false }: { event: any; detailed?: boolean }) => {
+    const router = useRouter();
     const daysLeft = calculateDaysLeft(event.startAt);
 
     return (
@@ -186,7 +188,20 @@ const EventCard = ({ event, detailed = false }: { event: any; detailed?: boolean
                         <h3 className="font-bold text-neutral-800 dark:text-white text-lg mb-1">
                             {event.name}
                         </h3>
-                        <EditFilled size={24} className="text-soft-gold dark:text-soft-gold-dark" />
+                        <div className="flex flex-row gap-6">
+                            <ShareAltOutlined
+                                className="text-soft-gold dark:text-soft-gold-dark scale-150"
+                                onClick={() => {
+                                    router.push(`/painel/eventos/acessos/${event.id}`);
+                                }}
+                            />
+                            <EditFilled
+                                className="text-soft-gold dark:text-soft-gold-dark scale-150"
+                                onClick={() => {
+                                    router.push(`/painel/eventos/editar/${event.id}`);
+                                }}
+                            />
+                        </div>
                     </div>
                     <p className="text-gray-600 dark:text-gray-400 text-sm">{formatDate(event.startAt)}</p>
                 </div>

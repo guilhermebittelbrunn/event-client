@@ -19,7 +19,7 @@ interface ActionsMenuProps {
 export function ActionsMenu({ onEdit, onDelete, items }: ActionsMenuProps) {
     return (
         <Dropdown
-            trigger={['click', 'hover']}
+            trigger={['click']}
             placement="bottomRight"
             menu={{
                 items: [

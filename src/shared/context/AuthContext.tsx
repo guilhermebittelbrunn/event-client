@@ -112,7 +112,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     });
 
     const getUserMutation = useMutation({
-        mutationFn: userService.findById,
+        mutationFn: (id: string) => userService.findById(id),
         onError: (error) => {
             console.warn('Failed to get user:', error);
             signOut();
