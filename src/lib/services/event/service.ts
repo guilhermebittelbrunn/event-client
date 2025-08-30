@@ -2,7 +2,7 @@ import client from '@/lib/client';
 import ClientBase from '@/shared/client/base';
 import { CreateEventRequest, CreateEventResponse, FindEventByIdResponse, UpdateEventRequest } from './types';
 import { formDataFromObject } from '@/shared/utils/helpers/formDataHelper';
-import { PaginatedResponse, PaginationRequest, UpdateResponse } from '@/shared/types/utils';
+import { PaginatedResponse, PaginationRequestWithOrderAndDate, UpdateResponse } from '@/shared/types/utils';
 import { EventDTO } from '@/shared/types/dtos';
 
 export default class EventService {
@@ -48,7 +48,9 @@ export default class EventService {
         return data;
     }
 
-    async listPaginated(dto: PaginationRequest): Promise<PaginatedResponse<EventDTO>> {
+    async listPaginated(
+        dto: PaginationRequestWithOrderAndDate<EventDTO>,
+    ): Promise<PaginatedResponse<EventDTO>> {
         const { data } = await this.client.request<PaginatedResponse<EventDTO>>(this.client.restClient, {
             url: `${this.baseUrl}`,
             method: 'GET',

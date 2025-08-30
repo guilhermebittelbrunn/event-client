@@ -1,4 +1,5 @@
 import { MoreIcon } from '@/shared/icons';
+import { cn } from '@/shared/utils';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Dropdown } from 'antd';
 
@@ -14,9 +15,10 @@ interface ActionsMenuProps {
     onEdit?: () => void;
     onDelete?: () => void;
     items?: MenuItem[];
+    className?: string;
 }
 
-export function ActionsMenu({ onEdit, onDelete, items }: ActionsMenuProps) {
+export function ActionsMenu({ onEdit, onDelete, items, className }: ActionsMenuProps) {
     return (
         <Dropdown
             trigger={['click']}
@@ -50,7 +52,12 @@ export function ActionsMenu({ onEdit, onDelete, items }: ActionsMenuProps) {
                 ],
             }}
         >
-            <div className="flex items-center justify-center w-full h-full rounded-full p-2 hover:cursor-pointer hover:opacity-40">
+            <div
+                className={cn(
+                    'flex items-center justify-center w-full h-full rounded-full p-2 hover:cursor-pointer hover:opacity-40',
+                    className,
+                )}
+            >
                 <MoreIcon className="fill-gray-500 dark:fill-gray-400" />
             </div>
         </Dropdown>

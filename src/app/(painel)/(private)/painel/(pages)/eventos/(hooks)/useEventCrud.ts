@@ -2,6 +2,8 @@ import { CreateEventRequest, eventService, UpdateEventRequest } from '@/lib/serv
 import { useRedirect } from '@/shared/hooks';
 import useAlert from '@/shared/hooks/useAlert';
 import usePagination from '@/shared/hooks/usePagination';
+import { EventDTO } from '@/shared/types/dtos';
+import { PaginationRequestWithOrder, PaginationRequestWithOrderAndDate } from '@/shared/types/utils';
 import { handleClientError } from '@/shared/utils';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -42,11 +44,16 @@ export const useEventCrud = () => {
             queryFn: () => eventService.findById(id),
         });
 
-    const useListPaginatedEvent = () =>
+    const useListPaginatedEvent = (dto: PaginationRequestWithOrderAndDate<EventDTO> = {}) =>
         useQuery({
-            queryKey: [LIST_EVENTS_PAGINATED_QUERY_KEY, currentPage, currentLimit, currentTerm],
+            queryKey: [LIST_EVENTS_PAGINATED_QUERY_KEY, currentPage, currentLimit, currentTerm, dto],
             queryFn: () =>
-                eventService.listPaginated({ page: currentPage, limit: currentLimit, term: currentTerm }),
+                eventService.listPaginated({
+                    page: currentPage,
+                    limit: currentLimit,
+                    term: currentTerm,
+                    ...dto,
+                }),
             placeholderData: (previousData) => previousData,
         });
 

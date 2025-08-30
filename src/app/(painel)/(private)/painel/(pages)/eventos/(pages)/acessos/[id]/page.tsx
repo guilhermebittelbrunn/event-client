@@ -12,7 +12,7 @@ import {
     Helper,
 } from '@/shared/components/ui';
 import ResponsiveImage from '@/shared/components/ui/responsiveImage';
-import { useEventCrud } from '../../(hooks)/useEventCrud';
+import { useEventCrud } from '../../../(hooks)/useEventCrud';
 import { useParams } from 'next/navigation';
 import { Fallback } from '@/shared/components/common/fallback';
 import { DownloadOutlined, QrcodeOutlined, CopyOutlined, LinkOutlined } from '@ant-design/icons';

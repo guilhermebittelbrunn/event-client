@@ -23,7 +23,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <Backdrop />
             <div className={`flex-1 transition-all duration-300 ease-in-out ${mainContentMargin} `}>
                 <AppHeader />
-                <Box className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6 dark:bg-matte-black-contrast">
+                <Box className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6 bg-gray-100 dark:bg-matte-black-contrast">
                     {children}
                 </Box>
             </div>
