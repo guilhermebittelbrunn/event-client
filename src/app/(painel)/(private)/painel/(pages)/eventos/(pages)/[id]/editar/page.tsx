@@ -30,6 +30,7 @@ export default function EditEventPage() {
         updateEventMutation.mutate({
             id: id,
             name: data.name,
+            description: data.description,
             slug: data.slug,
             startAt: data.dates[0]!,
             endAt: data.dates[1]!,

@@ -2,11 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getTokenPayload } from './shared/utils/helpers/token';
 import { UserTokenPayload } from './shared/types/dtos/user/auth';
 
-export const publicRoutes = [
+interface PublicRoute {
+    path: string;
+    whenAuthenticated: 'next' | 'redirect';
+    isPrefix?: boolean;
+}
+
+export const publicRoutes: PublicRoute[] = [
     { path: '/', whenAuthenticated: 'next' },
     { path: '/entrar', whenAuthenticated: 'redirect' },
     { path: '/cadastro', whenAuthenticated: 'redirect' },
-] as const;
+    { path: '/evento', whenAuthenticated: 'next', isPrefix: true },
+];
 
 const PUBLIC_REDIRECT_URL_WHEN_AUTHENTICATED = '/painel';
 const REDIRECT_URL_WHEN_UNAUTHENTICATED = '/entrar';
@@ -17,7 +24,13 @@ export default function middleware(request: NextRequest) {
     const isAuthenticated = !!authToken && !!tokenPayload?.sub;
 
     const { pathname } = request.nextUrl;
-    const publicRoute = publicRoutes.find((route) => route.path === pathname);
+
+    const publicRoute = publicRoutes.find((route) => {
+        if (route.isPrefix) {
+            return pathname.startsWith(route.path);
+        }
+        return route.path === pathname;
+    });
 
     if (!isAuthenticated && publicRoute) {
         return NextResponse.next();

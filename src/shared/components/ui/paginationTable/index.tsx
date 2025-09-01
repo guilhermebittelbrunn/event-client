@@ -34,7 +34,9 @@ export function PaginationTable<T>(props: PaginationTableProps<T>) {
             dataSource={data}
             columns={columns}
             loading={isLoading}
+            scroll={{ x: 'max-content' }}
             pagination={{
+                position: ['bottomRight'],
                 current: currentPage,
                 pageSize: currentLimit,
                 responsive: true,

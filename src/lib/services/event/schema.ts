@@ -2,7 +2,7 @@ import * as yup from 'yup';
 
 export const createEventRequestSchema = yup.object({
     name: yup.string().required('Nome é obrigatório'),
-    slug: yup.string().required('Slug é obrigatório'),
+    slug: yup.string().required('Link de acesso é obrigatório'),
     description: yup.string().optional(),
     dates: yup
         .tuple([yup.date().required(), yup.date().required()])

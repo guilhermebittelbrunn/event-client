@@ -25,6 +25,7 @@ export function InputSearch({
 }: InputSearchProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const defaultValue = searchParams.get(paramKey) || '';
 
     const handleChangeUrl = (value: string) => {
         const key = name || paramKey;
@@ -67,6 +68,7 @@ export function InputSearch({
             enterButton
             onSearch={handleSearch}
             onChange={handleChange}
+            defaultValue={defaultValue}
             {...props}
         />
     );

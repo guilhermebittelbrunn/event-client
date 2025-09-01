@@ -6,6 +6,7 @@ interface HookFormTextAreaProps<T extends FieldValues> extends TextAreaProps {
     name: Path<T>;
     label: string;
     controllerProps?: Omit<ControllerProps<T>, 'name' | 'control' | 'render'>;
+    labelClassName?: string;
 }
 
 export function HookFormTextArea<T extends FieldValues>({
@@ -13,6 +14,7 @@ export function HookFormTextArea<T extends FieldValues>({
     name,
     label,
     controllerProps,
+    labelClassName,
     ...props
 }: HookFormTextAreaProps<T>) {
     return (
@@ -21,7 +23,16 @@ export function HookFormTextArea<T extends FieldValues>({
             name={name}
             render={({ field, fieldState }) => {
                 const { error } = fieldState;
-                return <TextArea {...field} placeholder={label} {...props} error={error} label={label} />;
+                return (
+                    <TextArea
+                        {...field}
+                        placeholder={label}
+                        {...props}
+                        error={error}
+                        label={label}
+                        labelClassName={labelClassName}
+                    />
+                );
             }}
             {...controllerProps}
         />

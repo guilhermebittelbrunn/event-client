@@ -7,8 +7,8 @@ import ThemeToggleButton from '@/shared/components/ui/themeToggleButton';
 export default function Home() {
     return (
         <Box>
-            <header className="sticky w-full top-0 z-50 mx-auto flex justify-center px-6 bg-snow-white dark:bg-matte-black">
-                <Box className="flex flex-row w-full justify-between max-w-screen-xl bg-snow-white dark:bg-matte-black">
+            <header className="sticky w-full top-0 z-50 mx-auto flex justify-center px-6 bg-white dark:bg-matte-black">
+                <Box className="flex flex-row w-full justify-between max-w-screen-xl bg-white dark:bg-matte-black">
                     <div className="flex items-center gap-4">
                         <Title className="text-2xl font-bold text-matte-black dark:text-snow-white font-cursive">
                             Qinstante
@@ -16,7 +16,7 @@ export default function Home() {
                     </div>
 
                     <div className="flex items-center gap-2">
-                        <LinkButton type="secondary" href="/entrar">
+                        <LinkButton type="secondary" href="/entrar" className="bg-white">
                             Fazer login
                         </LinkButton>
                         <LinkButton type="primary" href="/cadastro">
@@ -30,7 +30,7 @@ export default function Home() {
             </div>
 
             <Box className="flex flex-col items-center justify-center py-8">
-                <Box className="text-center items-center justify-center mb-12 max-w-2xl">
+                <Box className="text-center items-center justify-center mb-12 max-w-2xl px-4">
                     <Title className="text-3xl md:text-4xl py-10 font-bold text-matte-black dark:text-snow-white mb-6 leading-tight">
                         Capture e guarde os melhores momentos do seu dia mais especial
                     </Title>

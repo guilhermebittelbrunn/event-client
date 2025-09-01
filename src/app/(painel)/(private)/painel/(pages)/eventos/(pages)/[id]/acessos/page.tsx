@@ -23,23 +23,23 @@ import { useAlert } from '@/shared/hooks';
 import { useEffect } from 'react';
 
 const HelperSection = () => (
-    <Box className="p-6">
+    <Box className="p-2">
         <Title className="text-lg font-semibold text-matte-black dark:text-snow-white mb-3">
             Como usar o QR Code
         </Title>
         <div className="space-y-2">
-            <Paragraph className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
                 1. Faça o download do QR Code no formato desejado
-            </Paragraph>
-            <Paragraph className="text-sm text-gray-600 dark:text-gray-400">
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
                 2. Imprima e distribua pelos locais do seu evento
-            </Paragraph>
-            <Paragraph className="text-sm text-gray-600 dark:text-gray-400">
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
                 3. Os convidados escaneiam o QR Code para acessar o evento
-            </Paragraph>
-            <Paragraph className="text-sm text-gray-600 dark:text-gray-400">
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
                 4. As fotos serão automaticamente organizadas na sua conta
-            </Paragraph>
+            </p>
         </div>
     </Box>
 );
@@ -55,8 +55,8 @@ export default function EventAccessesPage() {
     const event = data?.data;
 
     const qrCodeUrl = event?.guestAccess?.url
-        ? `${currentDomain}/eventos/${event.guestAccess.url}`
-        : `${currentDomain}/eventos/${event?.slug}`;
+        ? `${currentDomain}/evento${event.guestAccess.url}`
+        : `${currentDomain}/evento/${event?.slug}`;
 
     const {
         qrCodeDataUrl,

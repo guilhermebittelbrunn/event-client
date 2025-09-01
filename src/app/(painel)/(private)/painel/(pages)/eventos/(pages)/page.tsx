@@ -106,7 +106,7 @@ export default function EventsPage() {
                         <InputSearch changeUrl placeholder="Nome do evento" trigger={['onChange']} />
                     </Box>
                 </Box>
-                <Box className="w-full overflow-x-auto ">
+                <Box className="w-full">
                     <PaginationTable data={events || []} meta={meta} columns={columns} isLoading={isLoading} />
                 </Box>
             </Container>
