@@ -39,8 +39,15 @@ export default function Home() {
             {Boolean(events?.length) && events?.[0] ? (
                 <>
                     <EventCard event={events[0]} detailed />
-                    <Title className="text-xl font-bold text-neutral-800 dark:text-white">Outros eventos</Title>
-                    {events?.slice(1).map((event) => <EventCard key={event.id} event={event} />)}
+
+                    {Boolean(events?.length > 1) && (
+                        <>
+                            <Title className="text-xl font-bold text-neutral-800 dark:texft-white">
+                                Outros eventos
+                            </Title>
+                            {events?.slice(1).map((event) => <EventCard key={event.id} event={event} />)}
+                        </>
+                    )}
                 </>
             ) : (
                 <>

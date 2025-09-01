@@ -1,6 +1,10 @@
+import { AxiosError } from 'axios';
 import FormattedError from './formattedError';
 
 export function handleClientError(error: any): string {
+    if (error instanceof AxiosError) {
+        return error.response?.data.message;
+    }
     if (error instanceof FormattedError) {
         return error.message;
     }

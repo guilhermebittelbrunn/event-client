@@ -25,30 +25,29 @@ export default class AuthService {
             data: dto,
         });
 
-        localStorage.setItem('accessToken', data.data.tokens.accessToken);
-        localStorage.setItem('refreshToken', data.data.tokens.refreshToken || '');
+        localStorage.setItem('accessToken', data.meta.tokens.accessToken);
+        localStorage.setItem('refreshToken', data.meta.tokens.refreshToken || '');
 
         this.client.setHeaders({
-            Authorization: `Bearer ${data.data.tokens.accessToken}`,
-            'Refresh-Token': `Refresh ${data.data.tokens.refreshToken}`,
+            Authorization: `Bearer ${data.meta.tokens.accessToken}`,
+            'Refresh-Token': `${data.meta.tokens.refreshToken}`,
         });
 
         return data;
     }
 
-    async refreshToken(refreshToken: string): Promise<RefreshTokenResponse> {
+    async refreshToken(): Promise<RefreshTokenResponse> {
         const { data } = await this.client.request<RefreshTokenResponse>(this.client.restClient, {
             url: `${this.baseUrl}/refresh`,
             method: 'POST',
-            data: { refreshToken },
         });
 
-        localStorage.setItem('accessToken', data.data.tokens.accessToken);
-        localStorage.setItem('refreshToken', data.data.tokens.refreshToken || '');
+        localStorage.setItem('accessToken', data.meta.tokens.accessToken);
+        localStorage.setItem('refreshToken', data.meta.tokens.refreshToken || '');
 
         this.client.setHeaders({
-            Authorization: `Bearer ${data.data.tokens.accessToken}`,
-            'Refresh-Token': `Refresh ${data.data.tokens.refreshToken}`,
+            Authorization: `Bearer ${data.meta.tokens.accessToken}`,
+            'Refresh-Token': `${data.meta.tokens.refreshToken}`,
         });
 
         return data;

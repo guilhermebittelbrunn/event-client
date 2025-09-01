@@ -69,12 +69,12 @@ export default function EventsPage() {
                             key: 'qrcode',
                             label: 'Acessos',
                             onClick: () => {
-                                router.push(`/painel/eventos/acessos/${record.id}`);
+                                router.push(`/painel/eventos/${record.id}/acessos`);
                             },
                         },
                     ]}
                     onEdit={() => {
-                        router.push(`/painel/eventos/editar/${record.id}`);
+                        router.push(`/painel/eventos/${record.id}/editar`);
                     }}
                     onDelete={() => {
                         deleteEventMutation.mutate(record.id);

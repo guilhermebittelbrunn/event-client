@@ -19,8 +19,8 @@ export interface SignInRequest {
 }
 
 export interface SignInResponse {
-    data: {
-        user: UserDTO;
+    data: UserDTO;
+    meta: {
         tokens: TokenDTO;
     };
 }

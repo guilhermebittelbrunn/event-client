@@ -12,10 +12,13 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { createEventRequestSchema, CreateEventSchema } from '@/lib/services/event';
 import { useParams } from 'next/navigation';
 import { useEffect } from 'react';
+import { useAlert, useRedirect } from '@/shared/hooks';
 
 export default function EditEventPage() {
     const { id } = useParams() as { id: string };
     const { useFindEventById, updateEventMutation } = useEventCrud();
+    const { errorAlert } = useAlert();
+    const { redirect } = useRedirect();
 
     const { data, isLoading } = useFindEventById(id);
 
@@ -58,6 +61,13 @@ export default function EditEventPage() {
         }
     }, [data, form]);
 
+    useEffect(() => {
+        if (!isLoading && !data) {
+            errorAlert('Evento não encontrado');
+            redirect('/painel/eventos');
+        }
+    }, [isLoading, data, errorAlert, redirect]);
+
     if (isLoading) {
         return <LoadingScreen />;
     }
@@ -66,10 +76,7 @@ export default function EditEventPage() {
         <>
             <PageBreadcrumb
                 pageTitle="Editar Evento"
-                breadcrumbItems={[
-                    { label: 'Eventos', href: '/painel/eventos' },
-                    { label: 'Editar', href: `/painel/eventos/editar/${id}` },
-                ]}
+                breadcrumbItems={[{ label: 'Eventos', href: '/painel/eventos' }]}
             />
             <Container title="Edite os dados do evento" className="mt-2">
                 <FormProvider {...form}>

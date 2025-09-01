@@ -3,7 +3,7 @@ import { useMutation, UseMutationResult } from '@tanstack/react-query';
 import useAlert from '../hooks/useAlert';
 import { useRedirect } from '../hooks/useRedirect';
 import { handleClientError } from '../utils';
-import { SignInRequest, SignInResponse, SignUpRequest, RefreshTokenResponse } from '@/lib/services/auth/types';
+import { SignInRequest, SignInResponse, SignUpRequest } from '@/lib/services/auth/types';
 import { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import client from '@/lib/client';
 import { UserDTO } from '../types/dtos';
@@ -25,7 +25,6 @@ interface AuthContextData {
 
     signInMutation: UseMutationResult<SignInResponse, any, SignInRequest, unknown>;
     signUpMutation: UseMutationResult<UserDTO, any, SignUpRequest, unknown>;
-    refreshTokenMutation: UseMutationResult<RefreshTokenResponse, any, string, unknown>;
 
     signOut(): void;
     refreshTokens(): Promise<void>;
@@ -51,17 +50,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const refreshTokenMutation = useMutation({
         mutationFn: authService.refreshToken,
-        onSuccess: (data) => {
-            const { accessToken, refreshToken } = data.data.tokens;
+        onSuccess: ({ meta }) => {
+            const { accessToken, refreshToken } = meta.tokens;
 
             localStorage.setItem('accessToken', accessToken);
             localStorage.setItem('refreshToken', refreshToken || '');
             setAccessToken(accessToken);
 
-            client.setHeaders({
-                Authorization: `Bearer ${accessToken}`,
-                'Refresh-Token': `Refresh ${refreshToken}`,
-            });
+            // client.setHeaders({
+            //     Authorization: `Bearer ${accessToken}`,
+            //     'Refresh-Token': `${refreshToken}`,
+            // });
         },
         onError: (error) => {
             console.warn('Failed to refresh tokens:', error);
@@ -73,8 +72,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         mutationFn(data: SignInRequest) {
             return authService.signIn(data);
         },
-        onSuccess: ({ data }: SignInResponse) => {
-            const { user: userData, tokens } = data;
+        onSuccess: ({ data: userData, meta }: SignInResponse) => {
+            const { tokens } = meta;
 
             localStorage.setUser(userData);
             localStorage.setItem('accessToken', tokens.accessToken);
@@ -87,11 +86,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
             client.setHeaders({
                 Authorization: `Bearer ${tokens.accessToken}`,
-                'Refresh-Token': `Refresh ${tokens.refreshToken}`,
+                'Refresh-Token': `${tokens.refreshToken}`,
             });
 
             successAlert('Login realizado com sucesso');
-            redirectWithDelay('/painel', 300);
+            redirect('/painel');
         },
         onError: (error) => {
             errorAlert(handleClientError(error));
@@ -137,12 +136,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
             if (currentAccessToken && refreshToken) {
                 await refreshTokenMutation.mutateAsync(refreshToken);
+            } else {
+                warningAlert('Sessão expirada, faça login novamente');
+                signOut();
             }
         } catch (error) {
             console.warn('Error refreshing tokens:', error);
             signOut();
         }
-    }, [refreshTokenMutation, signOut]);
+    }, [refreshTokenMutation, signOut, warningAlert]);
 
     useEffect(() => {
         setIsClient(true);
@@ -187,15 +189,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, [user]);
 
     useEffect(() => {
-        const handleTokenExpired = () => {
-            refreshTokens();
-        };
-
         if (typeof window !== 'undefined') {
-            window.addEventListener('token-expired', handleTokenExpired);
+            window.addEventListener('token-expired', refreshTokens);
 
             return () => {
-                window.removeEventListener('token-expired', handleTokenExpired);
+                window.removeEventListener('token-expired', refreshTokens);
             };
         }
     }, [refreshTokens]);
@@ -208,7 +206,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 isInitialized,
                 signInMutation,
                 signUpMutation,
-                refreshTokenMutation,
                 signOut,
                 refreshTokens,
                 user,

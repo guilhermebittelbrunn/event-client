@@ -1,4 +1,4 @@
-import { UserDTO } from '@/shared/types/dtos';
+import { EventDTO, UserDTO } from '@/shared/types/dtos';
 import CryptoJS from 'crypto-js';
 import storageKeys from './storageKeys';
 
@@ -47,8 +47,16 @@ const clearUser = () => {
     localStorage.removeItem(storageKeys.USER_ID);
 };
 
+const removeEvent = () => {
+    localStorage.removeItem(storageKeys.EVENT_ID);
+};
+
 const setUser = (user: UserDTO) => {
     localStorage.setItem(storageKeys.USER_ID, JSON.stringify(user));
+};
+
+const setEvent = (event: EventDTO) => {
+    localStorage.setItem(storageKeys.EVENT_ID, JSON.stringify(event));
 };
 
 const getUser = (): UserDTO | undefined => {
@@ -63,6 +71,18 @@ const getUser = (): UserDTO | undefined => {
     return userData;
 };
 
+const getEvent = (): EventDTO | undefined => {
+    const event = localStorage.getItem(storageKeys.EVENT_ID);
+
+    if (!event) {
+        return undefined;
+    }
+
+    const eventData: EventDTO = JSON.parse(event);
+
+    return eventData;
+};
+
 export const localStorage = {
     setItem,
     getItem,
@@ -70,4 +90,7 @@ export const localStorage = {
     setUser,
     getUser,
     clearUser,
+    setEvent,
+    getEvent,
+    removeEvent,
 };

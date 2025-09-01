@@ -21,7 +21,7 @@ export const EventCard = ({ event, detailed }: EventCardProps) => {
             label: 'Acessos',
             icon: <ShareAltOutlined className="text-soft-gold dark:text-soft-gold-dark scale-150" />,
             onClick: () => {
-                router.push(`/painel/eventos/acessos/${event.id}`);
+                router.push(`/painel/eventos/${event.id}/acessos`);
             },
         },
         {
@@ -29,7 +29,7 @@ export const EventCard = ({ event, detailed }: EventCardProps) => {
             label: 'Editar',
             icon: <EditFilled className="text-soft-gold dark:text-soft-gold-dark scale-150" />,
             onClick: () => {
-                router.push(`/painel/eventos/editar/${event.id}`);
+                router.push(`/painel/eventos/${event.id}/editar`);
             },
         },
     ];
@@ -56,13 +56,13 @@ export const EventCard = ({ event, detailed }: EventCardProps) => {
                                 <ShareAltOutlined
                                     className="text-soft-gold dark:text-soft-gold-dark scale-150"
                                     onClick={() => {
-                                        router.push(`/painel/eventos/acessos/${event.id}`);
+                                        router.push(`/painel/eventos/${event.id}/acessos`);
                                     }}
                                 />
                                 <EditFilled
                                     className="text-soft-gold dark:text-soft-gold-dark scale-150"
                                     onClick={() => {
-                                        router.push(`/painel/eventos/editar/${event.id}`);
+                                        router.push(`/painel/eventos/${event.id}/editar`);
                                     }}
                                 />
                             </div>

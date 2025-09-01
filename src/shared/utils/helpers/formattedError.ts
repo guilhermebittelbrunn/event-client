@@ -19,6 +19,9 @@ export default class FormattedError {
                     const responseError = error.response;
 
                     if (responseError.data && responseError.data.message) {
+                        if (Array.isArray(responseError.data.message)) {
+                            return responseError.data.message.join(', ');
+                        }
                         return responseError.data.message;
                     }
 

@@ -20,6 +20,7 @@ import { useClientRouter, useQRCode, useRedirect } from '@/shared/hooks';
 import { formatDate } from '@/shared/utils';
 import Image from 'next/image';
 import { useAlert } from '@/shared/hooks';
+import { useEffect } from 'react';
 
 const HelperSection = () => (
     <Box className="p-6">
@@ -48,7 +49,7 @@ export default function EventAccessesPage() {
     const { useFindEventById } = useEventCrud();
     const { currentDomain } = useClientRouter();
     const { redirect } = useRedirect();
-    const { successAlert } = useAlert();
+    const { successAlert, errorAlert } = useAlert();
 
     const { data, isLoading } = useFindEventById(id);
     const event = data?.data;
@@ -85,14 +86,18 @@ export default function EventAccessesPage() {
         }
     };
 
+    useEffect(() => {
+        if (!isLoading && !data) {
+            errorAlert('Nenhum acesso encontrado para este evento');
+            redirect('/painel/eventos');
+        }
+    }, [isLoading, data, errorAlert, redirect]);
+
     return (
         <>
             <PageBreadcrumb
                 pageTitle="Acessos"
-                breadcrumbItems={[
-                    { label: 'Eventos', href: '/painel/eventos' },
-                    { label: event?.name || 'Evento', href: `/painel/eventos/editar/${id}` },
-                ]}
+                breadcrumbItems={[{ label: 'Eventos', href: '/painel/eventos' }]}
             />
             <Container
                 title="Acessos"

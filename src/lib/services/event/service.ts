@@ -1,6 +1,13 @@
 import client from '@/lib/client';
 import ClientBase from '@/shared/client/base';
-import { CreateEventRequest, CreateEventResponse, FindEventByIdResponse, UpdateEventRequest } from './types';
+import {
+    CreateEventRequest,
+    CreateEventResponse,
+    FindEventByIdResponse,
+    FindEventBySlugResponse,
+    SignInByTokenResponse,
+    UpdateEventRequest,
+} from './types';
 import { formDataFromObject } from '@/shared/utils/helpers/formDataHelper';
 import { PaginatedResponse, PaginationRequestWithOrderAndDate, UpdateResponse } from '@/shared/types/utils';
 import { EventDTO } from '@/shared/types/dtos';
@@ -9,6 +16,22 @@ export default class EventService {
     private readonly baseUrl = '/event';
 
     constructor(private readonly client: ClientBase) {}
+
+    async signInByToken(token: string): Promise<SignInByTokenResponse> {
+        const { data } = await this.client.request<SignInByTokenResponse>(this.client.restClient, {
+            url: `${this.baseUrl}/sign-in-by-token`,
+            method: 'POST',
+            data: { token },
+        });
+
+        localStorage.setItem('eventToken', data.meta.token.accessToken || '');
+
+        this.client.setHeaders({
+            'event-token': `${data.meta.token.accessToken}`,
+        });
+
+        return data;
+    }
 
     async create(dto: CreateEventRequest): Promise<CreateEventResponse> {
         const body = formDataFromObject(dto);
@@ -43,6 +66,14 @@ export default class EventService {
     async findById(id: string): Promise<FindEventByIdResponse> {
         const { data } = await this.client.request<FindEventByIdResponse>(this.client.restClient, {
             url: `${this.baseUrl}/${id}`,
+            method: 'GET',
+        });
+        return data;
+    }
+
+    async findBySlug(slug: string): Promise<FindEventBySlugResponse> {
+        const { data } = await this.client.request<FindEventByIdResponse>(this.client.restClient, {
+            url: `${this.baseUrl}/slug/${slug}`,
             method: 'GET',
         });
         return data;
