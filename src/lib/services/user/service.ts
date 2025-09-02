@@ -1,20 +1,22 @@
-import client from '@/lib/client';
-import ClientBase from '@/shared/client/base';
+import api from '@/shared/client/api';
 import { FindUserByIdResponse } from './type';
 
 export default class UserService {
     private readonly baseUrl = '/user';
 
-    constructor(private readonly client: ClientBase) {}
+    constructor() {}
 
     async findById(id: string): Promise<FindUserByIdResponse> {
-        const { data } = await this.client.request<FindUserByIdResponse>(this.client.restClient, {
-            url: `${this.baseUrl}/${id}`,
-            method: 'GET',
-        });
+        const headers = api.defaults.headers;
+
+        console.log('headers :>> ', headers);
+
+        const { data } = await api.get<FindUserByIdResponse>(`${this.baseUrl}/${id}`);
+
+        console.log('data :>> ', data);
 
         return data;
     }
 }
 
-export const userService = new UserService(client);
+export const userService = new UserService();

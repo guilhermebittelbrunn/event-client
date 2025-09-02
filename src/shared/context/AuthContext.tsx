@@ -1,72 +1,58 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { authService } from '@/lib/services';
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
 import useAlert from '../hooks/useAlert';
 import { useRedirect } from '../hooks/useRedirect';
-import { handleClientError } from '../utils';
+import { getTokenPayload, handleClientError } from '../utils';
 import { SignInRequest, SignInResponse, SignUpRequest } from '@/lib/services/auth/types';
-import { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
-import client from '@/lib/client';
+import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { UserDTO } from '../types/dtos';
 import { userService } from '@/lib/services/user';
-import { localStorage } from '../utils/helpers/localStorage';
 import { LoadingScreen } from '../components/ui';
-import useLocalStorage from '../hooks/useLocalStorage';
-import { setCookie, removeCookie } from '../utils/helpers/cookies';
-import { isTokenExpired } from '../utils/helpers/token';
+import { setCookie, removeCookie, getCookie } from '../utils/helpers/cookies';
 import { usePathname } from 'next/navigation';
 import { publicRoutes } from '@/middleware';
+import { UserTokenPayload } from '../types/dtos/user/auth';
 
 interface AuthContextData {
     authenticating: boolean;
     isAuthenticated: boolean;
-    isInitialized: boolean;
     user?: UserDTO;
-    accessToken?: string;
 
     signInMutation: UseMutationResult<SignInResponse, any, SignInRequest, unknown>;
     signUpMutation: UseMutationResult<UserDTO, any, SignUpRequest, unknown>;
 
     signOut(): void;
-    refreshTokens(): Promise<void>;
 }
 
 const AuthContext = createContext({} as AuthContextData);
 
+const getTokensFromCookies = () => {
+    const accessToken = getCookie('accessToken');
+    const refreshToken = getCookie('refreshToken');
+    return { accessToken, refreshToken };
+};
+
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<UserDTO | undefined>(undefined);
-    const [accessToken, setAccessToken] = useLocalStorage('accessToken', '');
+
     const [authenticating, setAuthenticating] = useState(false);
     const [isClient, setIsClient] = useState(false);
-    const [isInitialized, setIsInitialized] = useState(false);
-    const hasInitialized = useRef(false);
     const pathname = usePathname();
 
     const { successAlert, errorAlert, warningAlert } = useAlert();
     const { redirectWithDelay, redirect } = useRedirect();
 
-    const isPublicRoute = publicRoutes.find((route) => route.path === pathname);
+    const isPublicRoute = publicRoutes.find(({ path }) => path === pathname);
+    const shouldShowLoading = !isClient || (!isPublicRoute && authenticating);
 
-    const shouldShowLoading = !isClient || (!isPublicRoute && (authenticating || !isInitialized));
+    const signOut = useCallback(() => {
+        removeCookie('accessToken');
+        removeCookie('refreshToken');
 
-    const refreshTokenMutation = useMutation({
-        mutationFn: authService.refreshToken,
-        onSuccess: ({ meta }) => {
-            const { accessToken, refreshToken } = meta.tokens;
-
-            localStorage.setItem('accessToken', accessToken);
-            localStorage.setItem('refreshToken', refreshToken || '');
-            setAccessToken(accessToken);
-
-            // client.setHeaders({
-            //     Authorization: `Bearer ${accessToken}`,
-            //     'Refresh-Token': `${refreshToken}`,
-            // });
-        },
-        onError: (error) => {
-            console.warn('Failed to refresh tokens:', error);
-            signOut();
-        },
-    });
+        setUser(undefined);
+        redirect('/entrar');
+    }, [redirect]);
 
     const signInMutation = useMutation({
         mutationFn(data: SignInRequest) {
@@ -75,26 +61,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         onSuccess: ({ data: userData, meta }: SignInResponse) => {
             const { tokens } = meta;
 
-            localStorage.setUser(userData);
-            localStorage.setItem('accessToken', tokens.accessToken);
-            localStorage.setItem('refreshToken', tokens.refreshToken);
+            setCookie('accessToken', tokens.accessToken, tokens.expiresIn);
+            if (tokens.refreshToken) {
+                setCookie('refreshToken', tokens.refreshToken, tokens.expiresIn);
+            }
 
             setUser(userData);
-            setAccessToken(tokens.accessToken);
-
-            setCookie('accessToken', tokens.accessToken, tokens.expiresIn);
-
-            client.setHeaders({
-                Authorization: `Bearer ${tokens.accessToken}`,
-                'Refresh-Token': `${tokens.refreshToken}`,
-            });
-
             successAlert('Login realizado com sucesso');
             redirect('/painel');
         },
-        onError: (error) => {
-            errorAlert(handleClientError(error));
-        },
+        onError: (error) => errorAlert(handleClientError(error)),
     });
 
     const signUpMutation = useMutation({
@@ -105,111 +81,61 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             successAlert('Cadastro realizado com sucesso');
             redirectWithDelay('/entrar', 600);
         },
-        onError: (error) => {
-            errorAlert(handleClientError(error));
-        },
+        onError: (error) => errorAlert(handleClientError(error)),
     });
 
     const getUserMutation = useMutation({
         mutationFn: (id: string) => userService.findById(id),
-        onError: (error) => {
-            console.warn('Failed to get user:', error);
-            signOut();
-        },
     });
-
-    const signOut = useCallback(() => {
-        client.logout();
-        localStorage.clearUser();
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        setUser(undefined);
-        setAccessToken('');
-        removeCookie('accessToken');
-        redirect('/');
-    }, [setAccessToken, redirect]);
-
-    const refreshTokens = useCallback(async () => {
-        try {
-            const currentAccessToken = localStorage.getItem('accessToken');
-            const refreshToken = localStorage.getItem('refreshToken');
-
-            if (currentAccessToken && refreshToken) {
-                await refreshTokenMutation.mutateAsync(refreshToken);
-            } else {
-                warningAlert('Sessão expirada, faça login novamente');
-                signOut();
-            }
-        } catch (error) {
-            console.warn('Error refreshing tokens:', error);
-            signOut();
-        }
-    }, [refreshTokenMutation, signOut, warningAlert]);
 
     useEffect(() => {
         setIsClient(true);
     }, []);
 
     useEffect(() => {
-        if (!isClient || hasInitialized.current) return;
+        if (!isClient || isPublicRoute) return;
 
-        if (isPublicRoute) {
-            setIsInitialized(true);
-            return;
-        }
+        const { accessToken: cookieAccessToken } = getTokensFromCookies();
 
-        (async () => {
-            hasInitialized.current = true;
+        if (cookieAccessToken) {
             setAuthenticating(true);
 
             try {
-                const userId = localStorage.getUser()?.id;
-                const currentAccessToken = localStorage.getItem('accessToken');
+                const { sub } = getTokenPayload<UserTokenPayload>(cookieAccessToken) || {};
 
-                if (userId && currentAccessToken && !isTokenExpired(currentAccessToken)) {
-                    const { data } = await getUserMutation.mutateAsync(userId);
-                    setUser(data);
-                    setAccessToken(currentAccessToken);
+                if (sub) {
+                    getUserMutation.mutate(sub, {
+                        onSuccess: ({ data }) => setUser(data),
+                        onError: (error) => {
+                            console.error('Failed to get user:', error);
+                            warningAlert('Sessão expirada, faça login novamente');
+                            signOut();
+                        },
+                    });
+                } else {
+                    throw new Error('Invalid token payload');
                 }
             } catch (error) {
-                console.warn('Failed to restore session:', error);
+                console.error('Token validation error:', error);
                 warningAlert('Sessão expirada, faça login novamente');
                 signOut();
             } finally {
                 setAuthenticating(false);
-                setIsInitialized(true);
             }
-        })();
-    }, [isClient, isPublicRoute, getUserMutation, signOut, setAccessToken, warningAlert, pathname]);
-
-    useEffect(() => {
-        if (user) {
-            localStorage.setUser(user);
+        } else {
+            setAuthenticating(false);
         }
-    }, [user]);
-
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            window.addEventListener('token-expired', refreshTokens);
-
-            return () => {
-                window.removeEventListener('token-expired', refreshTokens);
-            };
-        }
-    }, [refreshTokens]);
+    }, [isClient, isPublicRoute]);
 
     return (
         <AuthContext.Provider
             value={{
                 isAuthenticated: Boolean(user),
                 authenticating,
-                isInitialized,
                 signInMutation,
                 signUpMutation,
                 signOut,
-                refreshTokens,
                 user,
-                accessToken,
             }}
         >
             {shouldShowLoading ? <LoadingScreen /> : children}

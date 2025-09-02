@@ -1,57 +1,47 @@
-import client from '@/lib/client';
 import { UserDTO } from '@/shared/types/dtos';
 import { RefreshTokenResponse, SignInRequest, SignInResponse, SignUpRequest } from './types';
-import ClientBase from '@/shared/client/base';
+import api from '@/shared/client/api';
 
 export default class AuthService {
     private readonly baseUrl = '/auth';
 
-    constructor(private readonly client: ClientBase) {}
+    constructor() {}
 
     async signUp(dto: SignUpRequest): Promise<UserDTO> {
-        const { data } = await this.client.request<UserDTO>(this.client.restClient, {
-            url: `${this.baseUrl}/sign-up`,
-            method: 'POST',
-            data: dto,
-        });
+        const { data } = await api.post<UserDTO>(`${this.baseUrl}/sign-up`, dto);
 
         return data;
     }
 
     async signIn(dto: SignInRequest): Promise<SignInResponse> {
-        const { data } = await this.client.request<SignInResponse>(this.client.restClient, {
-            url: `${this.baseUrl}/sign-in`,
-            method: 'POST',
-            data: dto,
-        });
+        const { data } = await api.post<SignInResponse>(`${this.baseUrl}/sign-in`, dto);
 
         localStorage.setItem('accessToken', data.meta.tokens.accessToken);
         localStorage.setItem('refreshToken', data.meta.tokens.refreshToken || '');
 
-        this.client.setHeaders({
+        api.defaults.headers.common = {
             Authorization: `Bearer ${data.meta.tokens.accessToken}`,
             'Refresh-Token': `${data.meta.tokens.refreshToken}`,
-        });
+        };
 
         return data;
     }
 
     async refreshToken(): Promise<RefreshTokenResponse> {
-        const { data } = await this.client.request<RefreshTokenResponse>(this.client.restClient, {
-            url: `${this.baseUrl}/refresh`,
-            method: 'POST',
-        });
+        console.log('namoral????');
+
+        const { data } = await api.post<RefreshTokenResponse>(`${this.baseUrl}/refresh`);
 
         localStorage.setItem('accessToken', data.meta.tokens.accessToken);
         localStorage.setItem('refreshToken', data.meta.tokens.refreshToken || '');
 
-        this.client.setHeaders({
+        api.defaults.headers.common = {
             Authorization: `Bearer ${data.meta.tokens.accessToken}`,
             'Refresh-Token': `${data.meta.tokens.refreshToken}`,
-        });
+        };
 
         return data;
     }
 }
 
-export const authService = new AuthService(client);
+export const authService = new AuthService();

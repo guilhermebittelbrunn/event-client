@@ -1,7 +1,10 @@
 export const setCookie = (name: string, value: string, expiresIn: number) => {
     if (typeof window === 'undefined') return;
 
-    document.cookie = `${name}=${value};expires=${expiresIn};path=/;SameSite=Strict`;
+    const expires = new Date();
+    expires.setTime(expires.getTime() + expiresIn * 1000);
+
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Strict`;
 };
 
 export const getCookie = (name: string): string | null => {
@@ -23,4 +26,13 @@ export const removeCookie = (name: string) => {
     if (typeof window === 'undefined') return;
 
     document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
+};
+
+export const clearCookies = () => {
+    if (typeof window === 'undefined') return;
+
+    document.cookie.split(';').forEach((cookie) => {
+        const name = cookie.split('=')[0].trim();
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
+    });
 };

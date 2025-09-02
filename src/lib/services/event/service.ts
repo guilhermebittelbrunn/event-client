@@ -1,5 +1,4 @@
 import client from '@/lib/client';
-import ClientBase from '@/shared/client/base';
 import {
     CreateEventRequest,
     CreateEventResponse,
@@ -11,24 +10,17 @@ import {
 import { formDataFromObject } from '@/shared/utils/helpers/formDataHelper';
 import { PaginatedResponse, PaginationRequestWithOrderAndDate, UpdateResponse } from '@/shared/types/utils';
 import { EventDTO } from '@/shared/types/dtos';
+import api from '@/shared/client/api';
 
 export default class EventService {
     private readonly baseUrl = '/event';
 
-    constructor(private readonly client: ClientBase) {}
-
     async signInByToken(token: string): Promise<SignInByTokenResponse> {
-        const { data } = await this.client.request<SignInByTokenResponse>(this.client.restClient, {
-            url: `${this.baseUrl}/sign-in-by-token`,
-            method: 'POST',
-            data: { token },
-        });
+        const { data } = await api.post<SignInByTokenResponse>(`${this.baseUrl}/sign-in-by-token`, { token });
 
-        localStorage.setItem('eventToken', data.meta.token.accessToken || '');
-
-        this.client.setHeaders({
+        api.defaults.headers.common = {
             'event-token': `${data.meta.token.accessToken}`,
-        });
+        };
 
         return data;
     }
@@ -36,10 +28,7 @@ export default class EventService {
     async create(dto: CreateEventRequest): Promise<CreateEventResponse> {
         const body = formDataFromObject(dto);
 
-        const { data } = await this.client.request<CreateEventResponse>(this.client.restClient, {
-            url: `${this.baseUrl}`,
-            method: 'POST',
-            data: body,
+        const { data } = await api.post<CreateEventResponse>(`${this.baseUrl}`, body, {
             headers: {
                 'Content-Type': undefined, // Remove Content-Type to let the browser automatically set it for FormData
             },
@@ -51,10 +40,7 @@ export default class EventService {
     async update(dto: UpdateEventRequest): Promise<UpdateResponse> {
         const body = formDataFromObject(dto);
 
-        const { data } = await this.client.request<UpdateResponse>(this.client.restClient, {
-            url: `${this.baseUrl}/${dto.id}`,
-            method: 'PUT',
-            data: body,
+        const { data } = await api.put<UpdateResponse>(`${this.baseUrl}/${dto.id}`, body, {
             headers: {
                 'Content-Type': undefined, // Remove Content-Type to let the browser automatically set it for FormData
             },
@@ -64,39 +50,26 @@ export default class EventService {
     }
 
     async findById(id: string): Promise<FindEventByIdResponse> {
-        const { data } = await this.client.request<FindEventByIdResponse>(this.client.restClient, {
-            url: `${this.baseUrl}/${id}`,
-            method: 'GET',
-        });
+        const { data } = await api.get<FindEventByIdResponse>(`${this.baseUrl}/${id}`);
         return data;
     }
 
     async findBySlug(slug: string): Promise<FindEventBySlugResponse> {
-        const { data } = await this.client.request<FindEventByIdResponse>(this.client.restClient, {
-            url: `${this.baseUrl}/slug/${slug}`,
-            method: 'GET',
-        });
+        const { data } = await api.get<FindEventBySlugResponse>(`${this.baseUrl}/slug/${slug}`);
         return data;
     }
 
     async listPaginated(
         dto: PaginationRequestWithOrderAndDate<EventDTO>,
     ): Promise<PaginatedResponse<EventDTO>> {
-        const { data } = await this.client.request<PaginatedResponse<EventDTO>>(this.client.restClient, {
-            url: `${this.baseUrl}`,
-            method: 'GET',
-            params: dto,
-        });
+        const { data } = await api.get<PaginatedResponse<EventDTO>>(`${this.baseUrl}`, { params: dto });
 
         return { data: data.data, meta: data.meta };
     }
 
     async delete(id: string): Promise<void> {
-        await this.client.request<void>(this.client.restClient, {
-            url: `${this.baseUrl}/${id}`,
-            method: 'DELETE',
-        });
+        await api.delete<void>(`${this.baseUrl}/${id}`);
     }
 }
 
-export const eventService = new EventService(client);
+export const eventService = new EventService();
