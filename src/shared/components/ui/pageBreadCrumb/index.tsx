@@ -14,7 +14,7 @@ interface BreadcrumbProps {
 
 const PageBreadcrumb: React.FC<BreadcrumbProps> = ({ pageTitle, sideElement, breadcrumbItems }) => {
     return (
-        <Box className="flex flex-row justify-between dark:bg-matte-black-contrast">
+        <Box className="flex flex-row justify-between bg-snow-white dark:bg-matte-black-contrast">
             <div className="flex flex-wrap flex-col items-start gap-3 mb-6">
                 <Title className="text-2xl font-semibold " x-text="pageName">
                     {pageTitle}

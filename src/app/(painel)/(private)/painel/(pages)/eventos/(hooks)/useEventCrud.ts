@@ -3,7 +3,7 @@ import { useRedirect } from '@/shared/hooks';
 import useAlert from '@/shared/hooks/useAlert';
 import usePagination from '@/shared/hooks/usePagination';
 import { EventDTO } from '@/shared/types/dtos';
-import { PaginationRequestWithOrder, PaginationRequestWithOrderAndDate } from '@/shared/types/utils';
+import { PaginationRequestWithOrderAndDate } from '@/shared/types/utils';
 import { handleClientError } from '@/shared/utils';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
