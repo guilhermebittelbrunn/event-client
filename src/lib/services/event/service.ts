@@ -44,6 +44,11 @@ export default class EventService {
         return data;
     }
 
+    async findByIdForGuest(id: string): Promise<FindEventByIdResponse> {
+        const { data } = await this.client.get<FindEventByIdResponse>(`${this.baseUrl}/guest/${id}`);
+        return data;
+    }
+
     async findBySlug(slug: string): Promise<FindEventBySlugResponse> {
         const { data } = await this.client.get<FindEventBySlugResponse>(`${this.baseUrl}/slug/${slug}`);
         return data;

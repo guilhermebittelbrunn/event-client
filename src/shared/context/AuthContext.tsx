@@ -7,7 +7,7 @@ import { SignInRequest, SignInResponse, SignUpRequest } from '@/lib/services/aut
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { UserDTO } from '../types/dtos';
 import { LoadingScreen } from '../components/ui';
-import { setCookie, removeCookie, getCookie } from '../utils/helpers/cookies';
+import { setCookie, getCookie } from '../utils/helpers/cookies';
 import { usePathname } from 'next/navigation';
 import { publicRoutes } from '@/middleware';
 import { UserTokenPayload } from '../types/dtos/user/auth';
@@ -44,9 +44,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const isPublicRoute = publicRoutes.find(({ path }) => path === pathname);
 
     const signOut = useCallback(() => {
-        removeCookie('accessToken');
-        removeCookie('refreshToken');
-
         setUser(undefined);
         redirect('/entrar');
     }, [redirect]);
@@ -93,16 +90,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     useEffect(() => {
-        console.log('Autenticando usuário...');
-
         if (!isClient || isPublicRoute) return;
 
         const { accessToken: cookieAccessToken } = getTokensFromCookies();
-        console.log('cookieAccessToken :>> ', cookieAccessToken);
 
         const { sub } = getTokenPayload<UserTokenPayload>(cookieAccessToken) || {};
-
-        console.log('sub :>> ', sub);
 
         (async () => {
             if (sub) {
@@ -116,7 +108,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 return;
             }
 
-            console.log('logout');
             handleInvalidAccess();
         })();
     }, [isClient, isPublicRoute]);

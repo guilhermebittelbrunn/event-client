@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 import AuthService from '../services/auth/service';
 import EventService from '../services/event/service';
 import UserService from '../services/user/service';
-import { clearCookies, getCookie } from '@/shared/utils/helpers/cookies';
+import { getCookie, removeCookie } from '@/shared/utils/helpers/cookies';
 import { DEVELOPMENT_API_URL } from '@/shared/utils';
 import FormattedError from '@/shared/utils/helpers/formattedError';
 
@@ -64,10 +64,10 @@ class Client {
         client.interceptors.response.use(
             (response) => response,
             (error) => {
-                console.log('client api error :>> ', error);
                 if (error.response && error.response.status === 401) {
-                    clearCookies();
-                    window.location.href = '/entrar';
+                    removeCookie('accessToken');
+                    removeCookie('refreshToken');
+                    // window.location.href = '/entrar';
                 }
 
                 return Promise.reject(new FormattedError(error));

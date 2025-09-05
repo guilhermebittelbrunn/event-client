@@ -1,8 +1,7 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState, useEffect } from 'react';
 import eventClient from '@/lib/clients/event';
 import client from '@/lib/clients/client';
 
@@ -14,23 +13,46 @@ export enum ApiContext {
 
 export const useApi = () => {
     const pathName = usePathname();
+    const [isClient, setIsClient] = useState(false);
 
-    const getContext = () =>
-        useCallback(() => {
-            const prefix = pathName.split('/')[1];
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
-            if (prefix === 'event') {
-                return ApiContext.EVENT;
+    const getContext = useCallback(() => {
+        if (!isClient) {
+            if (typeof window !== 'undefined') {
+                const currentPath = window.location.pathname;
+                const prefix = currentPath.split('/')[1];
+
+                if (prefix === 'evento') {
+                    return ApiContext.EVENT;
+                }
+                if (prefix === 'painel') {
+                    return ApiContext.COMMON;
+                }
             }
-
-            if (prefix === 'client') {
-                return ApiContext.COMMON;
-            }
-
             return ApiContext.PUBLIC;
-        }, []);
+        }
 
-    const context = useMemo(getContext(), [pathName, getContext]);
+        if (!pathName) {
+            return ApiContext.PUBLIC;
+        }
+
+        const prefix = pathName.split('/')[1];
+
+        if (prefix === 'evento') {
+            return ApiContext.EVENT;
+        }
+
+        if (prefix === 'painel') {
+            return ApiContext.COMMON;
+        }
+
+        return ApiContext.PUBLIC;
+    }, [isClient, pathName]);
+
+    const context = useMemo(() => getContext(), [getContext]);
 
     const clientByContext = useMemo(() => {
         if (context === ApiContext.EVENT) {

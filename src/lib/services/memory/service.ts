@@ -8,12 +8,7 @@ export default class MemoryService {
     constructor(private readonly client: AxiosInstance) {}
 
     async create(dto: CreateMemoryRequest): Promise<CreateMemoryResponse> {
-        console.log('dto :>> ', dto);
         const body = formDataFromObject(dto);
-
-        body.entries().forEach(([key, value]) => {
-            console.log(key, value);
-        });
 
         const { data } = await this.client.post<CreateMemoryResponse>(`${this.baseUrl}`, body, {
             headers: {

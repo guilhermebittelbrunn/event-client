@@ -10,11 +10,11 @@ import { getCookie, setCookie } from '../utils/helpers/cookies';
 import { SignInByTokenResponse } from '@/lib/services';
 import { EventTokenPayload } from '../types/dtos/user/auth';
 import { usePathname } from 'next/navigation';
-import { findEventById } from '../hooks/useFindEventById';
 import useApi from '../hooks/useApi';
 
 interface EventContextData {
     isEventAuthenticated: boolean;
+    authenticating: boolean;
     event?: EventDTO;
 }
 
@@ -46,7 +46,7 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
     });
 
     const findEventByIdMutation = useMutation({
-        mutationFn: (id?: string) => findEventById(id, client),
+        mutationFn: (id: string) => client.eventService.findByIdForGuest(id),
         onError: (error) => errorAlert(handleClientError(error)),
     });
 
@@ -57,8 +57,6 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
     }, [redirectWithDelay]);
 
     useEffect(() => {
-        console.log('Autenticando evento...');
-
         if (!isClient) return;
 
         const { eventToken: cookieEventToken } = getTokenFromCookies();
@@ -79,9 +77,9 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
                 return;
             }
 
-            if (cookieEventToken) {
+            if (cookieEventToken && sub) {
                 await findEventByIdMutation.mutateAsync(sub, {
-                    onSuccess: (data) => setEvent(data),
+                    onSuccess: ({ data }) => setEvent(data),
                     onError: handleFailedAuthentication,
                 });
                 return;
@@ -95,13 +93,17 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
         setIsClient(true);
     }, []);
 
+    const authenticating = findEventByIdMutation.isPending || signInByTokenMutation.isPending;
+
     return (
-        <EventContext.Provider value={{ isEventAuthenticated: Boolean(event), event }}>
-            {!isClient || findEventByIdMutation.isPending || signInByTokenMutation.isPending ? (
-                <LoadingScreen />
-            ) : (
-                children
-            )}
+        <EventContext.Provider
+            value={{
+                isEventAuthenticated: Boolean(event),
+                authenticating,
+                event,
+            }}
+        >
+            {!isClient || authenticating ? <LoadingScreen /> : children}
         </EventContext.Provider>
     );
 };
