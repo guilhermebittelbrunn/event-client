@@ -5,6 +5,7 @@ import UserService from '../services/user/service';
 import { getCookie, removeCookie } from '@/shared/utils/helpers/cookies';
 import { DEVELOPMENT_API_URL } from '@/shared/utils';
 import FormattedError from '@/shared/utils/helpers/formattedError';
+import MemoryService from '../services/memory/service';
 
 class EventClient {
     readonly client: AxiosInstance;
@@ -12,6 +13,7 @@ class EventClient {
     readonly authService: AuthService;
     readonly userService: UserService;
     readonly eventService: EventService;
+    readonly memoryService: MemoryService;
 
     constructor() {
         this.client = this.buildClient();
@@ -19,6 +21,7 @@ class EventClient {
         this.authService = new AuthService(this.client);
         this.userService = new UserService(this.client);
         this.eventService = new EventService(this.client);
+        this.memoryService = new MemoryService(this.client);
     }
 
     private buildClient() {

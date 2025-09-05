@@ -8,23 +8,21 @@ import useEvent from '@/shared/context/EventContext';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { createMemoryRequestSchema, CreateMemorySchema } from '@/lib/services';
 import { useMutation } from '@tanstack/react-query';
-import eventClient from '@/lib/clients/event';
-import { useAlert } from '@/shared/hooks';
+import { useAlert, useApi } from '@/shared/hooks';
 import { handleClientError } from '@/shared/utils';
 import { CreateMemoryRequest } from '@/lib/services';
 import { FormProvider } from '@/shared/components/hookForm';
 
 export default function SendPhotosPage() {
+    const { client } = useApi();
     const { event } = useEvent();
     const { successAlert, errorAlert } = useAlert();
 
-    const form = useForm({
-        resolver: yupResolver(createMemoryRequestSchema),
-    });
+    const form = useForm({ resolver: yupResolver(createMemoryRequestSchema) });
     const { handleSubmit } = form;
 
     const createMemoryMutation = useMutation({
-        mutationFn: (data: CreateMemoryRequest) => eventClient.memoryService.create(data),
+        mutationFn: (data: CreateMemoryRequest) => client.memoryService.create(data),
         onSuccess: () => successAlert('Memória salva com sucesso'),
         onError: (error) => errorAlert(handleClientError(error)),
     });
