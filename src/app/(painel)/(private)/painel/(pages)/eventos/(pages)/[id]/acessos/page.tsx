@@ -12,7 +12,6 @@ import {
     Helper,
 } from '@/shared/components/ui';
 import ResponsiveImage from '@/shared/components/ui/responsiveImage';
-import { useEventCrud } from '../../../(hooks)/useEventCrud';
 import { useParams } from 'next/navigation';
 import { Fallback } from '@/shared/components/common/fallback';
 import { DownloadOutlined, QrcodeOutlined, CopyOutlined, LinkOutlined } from '@ant-design/icons';
@@ -21,6 +20,7 @@ import { formatDate } from '@/shared/utils';
 import Image from 'next/image';
 import { useAlert } from '@/shared/hooks';
 import { useEffect } from 'react';
+import useFindEventById from '@/shared/hooks/useFindEventById';
 
 const HelperSection = () => (
     <Box className="p-2">
@@ -46,13 +46,10 @@ const HelperSection = () => (
 
 export default function EventAccessesPage() {
     const { id } = useParams() as { id: string };
-    const { useFindEventById } = useEventCrud();
+    const { data: event, isPending } = useFindEventById(id);
     const { currentDomain } = useClientRouter();
     const { redirect } = useRedirect();
     const { successAlert, errorAlert } = useAlert();
-
-    const { data, isLoading } = useFindEventById(id);
-    const event = data?.data;
 
     const qrCodeUrl = event?.guestAccess?.url
         ? `${currentDomain}/evento${event.guestAccess.url}`
@@ -87,11 +84,11 @@ export default function EventAccessesPage() {
     };
 
     useEffect(() => {
-        if (!isLoading && !data) {
+        if (!isPending && !event) {
             errorAlert('Nenhum acesso encontrado para este evento');
             redirect('/painel/eventos');
         }
-    }, [isLoading, data, errorAlert, redirect]);
+    }, [isPending, event, errorAlert, redirect]);
 
     return (
         <>
@@ -104,7 +101,7 @@ export default function EventAccessesPage() {
                 subTitle={<Helper message={<HelperSection />} placement="left" />}
                 className="mt-2"
             >
-                <Fallback condition={!isLoading} fallback={<LoadingScreen />}>
+                <Fallback condition={!isPending} fallback={<LoadingScreen />}>
                     {event && (
                         <div className="space-y-6">
                             <Box className="p-6 bg-white dark:bg-matte-black rounded-lg shadow-sm">

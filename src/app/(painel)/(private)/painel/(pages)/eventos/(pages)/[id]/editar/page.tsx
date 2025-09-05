@@ -13,14 +13,15 @@ import { createEventRequestSchema, CreateEventSchema } from '@/lib/services/even
 import { useParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { useAlert, useRedirect } from '@/shared/hooks';
+import useFindEventById from '@/shared/hooks/useFindEventById';
 
 export default function EditEventPage() {
     const { id } = useParams() as { id: string };
-    const { useFindEventById, updateEventMutation } = useEventCrud();
     const { errorAlert } = useAlert();
     const { redirect } = useRedirect();
 
-    const { data, isLoading } = useFindEventById(id);
+    const { data: event, isPending } = useFindEventById(id);
+    const { updateEventMutation } = useEventCrud();
 
     const form = useForm({
         resolver: yupResolver(createEventRequestSchema),
@@ -39,9 +40,7 @@ export default function EditEventPage() {
     };
 
     useEffect(() => {
-        if (data) {
-            const event = data.data;
-
+        if (event) {
             form.reset({
                 name: event.name,
                 slug: event.slug,
@@ -60,16 +59,16 @@ export default function EditEventPage() {
                 }),
             });
         }
-    }, [data, form]);
+    }, [event, form]);
 
     useEffect(() => {
-        if (!isLoading && !data) {
+        if (!isPending && !event) {
             errorAlert('Evento não encontrado');
             redirect('/painel/eventos');
         }
-    }, [isLoading, data, errorAlert, redirect]);
+    }, [isPending, event, errorAlert, redirect]);
 
-    if (isLoading) {
+    if (isPending) {
         return <LoadingScreen />;
     }
 

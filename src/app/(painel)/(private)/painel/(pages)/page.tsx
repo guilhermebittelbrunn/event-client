@@ -4,8 +4,8 @@ import { Title, AddButton, LoadingScreen, Container, Box } from '@/shared/compon
 import { useRedirect } from '@/shared/hooks';
 
 import React from 'react';
-import { useEventCrud } from './(pages)/eventos/(hooks)/useEventCrud';
-import { EventCard } from './(pages)/eventos/(components)/EventCard';
+import { useEventCrud } from './eventos/(hooks)/useEventCrud';
+import { EventCard } from './eventos/(components)/EventCard';
 import { startOfDay } from 'date-fns';
 
 const today = startOfDay(new Date());

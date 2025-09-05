@@ -9,7 +9,6 @@ import ClientLayout from './clientLayout';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { ToastContainer } from 'react-toastify';
-import { AuthProvider } from '@/shared/context/AuthContext';
 
 const outfit = Outfit({
     subsets: ['latin'],
@@ -34,12 +33,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <body className={`${outfit.className} dark:bg-gray-900`}>
                 <QueryClientProvider client={queryClient}>
                     <ThemeProvider>
-                        <AuthProvider>
-                            <SidebarProvider>
-                                <ClientLayout>{children}</ClientLayout>
-                                <ToastContainer />
-                            </SidebarProvider>
-                        </AuthProvider>
+                        <SidebarProvider>
+                            <ClientLayout>{children}</ClientLayout>
+                            <ToastContainer />
+                        </SidebarProvider>
                     </ThemeProvider>
                 </QueryClientProvider>
             </body>

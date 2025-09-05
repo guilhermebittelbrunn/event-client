@@ -1,41 +1,47 @@
 import { UserDTO } from '@/shared/types/dtos';
 import { RefreshTokenResponse, SignInRequest, SignInResponse, SignUpRequest } from './types';
 import api from '@/shared/client/api';
+import { SignInByTokenResponse } from '../event';
+import { AxiosInstance } from 'axios';
 
 export default class AuthService {
     private readonly baseUrl = '/auth';
 
-    constructor() {}
+    constructor(private readonly client: AxiosInstance) {}
 
     async signUp(dto: SignUpRequest): Promise<UserDTO> {
-        const { data } = await api.post<UserDTO>(`${this.baseUrl}/sign-up`, dto);
+        const { data } = await this.client.post<UserDTO>(`${this.baseUrl}/sign-up`, dto);
 
         return data;
     }
 
     async signIn(dto: SignInRequest): Promise<SignInResponse> {
-        const { data } = await api.post<SignInResponse>(`${this.baseUrl}/sign-in`, dto);
+        const { data } = await this.client.post<SignInResponse>(`${this.baseUrl}/sign-in`, dto);
 
-        localStorage.setItem('accessToken', data.meta.tokens.accessToken);
-        localStorage.setItem('refreshToken', data.meta.tokens.refreshToken || '');
+        this.client.defaults.headers.common = {
+            Authorization: `Bearer ${data.meta.tokens.accessToken}`,
+            'refresh-token': `${data.meta.tokens.refreshToken}`,
+        };
+
+        return data;
+    }
+
+    async signInByToken(token: string): Promise<SignInByTokenResponse> {
+        const { data } = await this.client.post<SignInByTokenResponse>(`${this.baseUrl}/sign-in-by-token`, {
+            token,
+        });
 
         api.defaults.headers.common = {
-            Authorization: `Bearer ${data.meta.tokens.accessToken}`,
-            'Refresh-Token': `${data.meta.tokens.refreshToken}`,
+            'event-token': `${data.meta.token.accessToken}`,
         };
 
         return data;
     }
 
     async refreshToken(): Promise<RefreshTokenResponse> {
-        console.log('namoral????');
+        const { data } = await this.client.post<RefreshTokenResponse>(`${this.baseUrl}/refresh`);
 
-        const { data } = await api.post<RefreshTokenResponse>(`${this.baseUrl}/refresh`);
-
-        localStorage.setItem('accessToken', data.meta.tokens.accessToken);
-        localStorage.setItem('refreshToken', data.meta.tokens.refreshToken || '');
-
-        api.defaults.headers.common = {
+        this.client.defaults.headers.common = {
             Authorization: `Bearer ${data.meta.tokens.accessToken}`,
             'Refresh-Token': `${data.meta.tokens.refreshToken}`,
         };
@@ -43,5 +49,3 @@ export default class AuthService {
         return data;
     }
 }
-
-export const authService = new AuthService();

@@ -16,6 +16,7 @@ export interface EventTokenDTO {
 export interface EventTokenPayload {
     sub: string;
     slug: string;
+    tokenId: string;
     type: EventAccessTypeEnum;
     iat: number;
     exp: number;
