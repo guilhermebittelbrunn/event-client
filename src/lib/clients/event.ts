@@ -46,10 +46,9 @@ class EventClient {
         api.interceptors.response.use(
             (response) => response,
             (error) => {
-                console.log('event client error :>> ', error);
                 if (error.response && error.response.status === 401) {
                     clearCookies();
-                    // window.location.href = '/';
+                    window.location.href = '/';
                 }
 
                 return Promise.reject(new FormattedError(error));

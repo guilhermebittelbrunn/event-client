@@ -1,6 +1,5 @@
 import { UserDTO } from '@/shared/types/dtos';
 import { RefreshTokenResponse, SignInRequest, SignInResponse, SignUpRequest } from './types';
-import api from '@/shared/client/api';
 import { SignInByTokenResponse } from '../event';
 import { AxiosInstance } from 'axios';
 
@@ -31,7 +30,7 @@ export default class AuthService {
             token,
         });
 
-        api.defaults.headers.common = {
+        this.client.defaults.headers.common = {
             'event-token': `${data.meta.token.accessToken}`,
         };
 
