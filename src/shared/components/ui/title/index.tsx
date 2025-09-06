@@ -11,7 +11,7 @@ export function Title({ children, className, primary = false, ...props }: TitleP
         <h1
             className={cn(
                 'py-4 flex items-center font-bold justify-center text-2xl transition ',
-                primary ? 'text-brand-500 dark:text-brand-900' : 'text-gray-800 dark:text-white/90',
+                primary ? 'text-soft-gold dark:text-soft-gold-dark' : 'text-gray-800 dark:text-white/90',
                 className,
             )}
             {...props}

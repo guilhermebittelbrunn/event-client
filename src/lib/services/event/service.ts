@@ -1,10 +1,4 @@
-import {
-    CreateEventRequest,
-    CreateEventResponse,
-    FindEventByIdResponse,
-    FindEventBySlugResponse,
-    UpdateEventRequest,
-} from './types';
+import { CreateEventRequest, CreateEventResponse, FindEventByIdResponse, UpdateEventRequest } from './types';
 import { formDataFromObject } from '@/shared/utils/helpers/formDataHelper';
 import { PaginatedResponse, PaginationRequestWithOrderAndDate, UpdateResponse } from '@/shared/types/utils';
 import { EventDTO } from '@/shared/types/dtos';
@@ -46,11 +40,6 @@ export default class EventService {
 
     async findByIdForGuest(id: string): Promise<FindEventByIdResponse> {
         const { data } = await this.client.get<FindEventByIdResponse>(`${this.baseUrl}/guest/${id}`);
-        return data;
-    }
-
-    async findBySlug(slug: string): Promise<FindEventBySlugResponse> {
-        const { data } = await this.client.get<FindEventBySlugResponse>(`${this.baseUrl}/slug/${slug}`);
         return data;
     }
 

@@ -19,11 +19,14 @@ export default function SendPhotosPage() {
     const { successAlert, errorAlert } = useAlert();
 
     const form = useForm({ resolver: yupResolver(createMemoryRequestSchema) });
-    const { handleSubmit } = form;
+    const { handleSubmit, reset } = form;
 
     const createMemoryMutation = useMutation({
         mutationFn: (data: CreateMemoryRequest) => client.memoryService.create(data),
-        onSuccess: () => successAlert('Memória salva com sucesso'),
+        onSuccess: () => {
+            successAlert('Memória salva com sucesso');
+            reset();
+        },
         onError: (error) => errorAlert(handleClientError(error)),
     });
 
@@ -35,50 +38,52 @@ export default function SendPhotosPage() {
     };
 
     return (
-        <Box type="secondary" className="min-h-[calc(100vh-128px)] flex flex-col">
-            <FormProvider {...form}>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="flex-1 flex flex-col items-center justify-center px-6">
-                        <Title className="text-xl font-bold text-matte-black dark:text-snow-white mb-8 text-center">
-                            {event?.name}
-                        </Title>
+        <>
+            <Box type="secondary" className="min-h-[calc(100vh-128px)] flex flex-col">
+                <FormProvider {...form}>
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <div className="flex-1 flex flex-col items-center justify-center px-6">
+                            <Title className="text-xl font-bold text-matte-black dark:text-snow-white mb-8 text-center">
+                                {event?.name}
+                            </Title>
 
-                        <div className="w-full max-w-md mb-8">
-                            <HookFormTextArea
-                                name="message"
-                                label="Deixe uma mensagem (opcional)"
-                                placeholder="Digite sua mensagem..."
-                                className="w-full h-24 px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:border-transparent text-lg"
-                                labelClassName="text-lg"
-                            />
+                            <div className="w-full max-w-md mb-8">
+                                <HookFormTextArea
+                                    name="message"
+                                    label="Deixe uma mensagem (opcional)"
+                                    placeholder="Digite sua mensagem..."
+                                    className="w-full h-24 px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:border-transparent text-lg"
+                                    labelClassName="text-lg"
+                                />
+                            </div>
+
+                            <div className="w-full max-w-md space-y-4">
+                                <HookFormUnifiedPhotoInput
+                                    name="image"
+                                    cameraButtonProps={{
+                                        className:
+                                            'w-full p-6 text-lg font-medium rounded-lg flex items-center justify-center gap-3',
+                                    }}
+                                    uploadButtonProps={{
+                                        className:
+                                            'w-full p-6 text-lg font-medium rounded-lg flex items-center justify-center gap-3',
+                                    }}
+                                />
+
+                                <Button
+                                    disabled={createMemoryMutation.isPending}
+                                    loading={createMemoryMutation.isPending}
+                                    htmlType="submit"
+                                    type="secondary"
+                                    className="w-full p-6 text-lg font-medium rounded-lg flex items-center justify-center bg-white gap-3"
+                                >
+                                    Salvar
+                                </Button>
+                            </div>
                         </div>
-
-                        <div className="w-full max-w-md space-y-4">
-                            <HookFormUnifiedPhotoInput
-                                name="image"
-                                cameraButtonProps={{
-                                    className:
-                                        'w-full p-6 text-lg font-medium rounded-lg flex items-center justify-center gap-3',
-                                }}
-                                uploadButtonProps={{
-                                    className:
-                                        'w-full p-6 text-lg font-medium rounded-lg flex items-center justify-center gap-3',
-                                }}
-                            />
-
-                            <Button
-                                disabled={createMemoryMutation.isPending}
-                                loading={createMemoryMutation.isPending}
-                                htmlType="submit"
-                                type="secondary"
-                                className="w-full p-6 text-lg font-medium rounded-lg flex items-center justify-center bg-white gap-3"
-                            >
-                                Salvar
-                            </Button>
-                        </div>
-                    </div>
-                </form>
-            </FormProvider>
-        </Box>
+                    </form>
+                </FormProvider>
+            </Box>
+        </>
     );
 }
