@@ -12,12 +12,16 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { createEventRequestSchema, CreateEventSchema } from '@/lib/services/event';
 import { useParams } from 'next/navigation';
 import { useEffect } from 'react';
+import { useAlert, useRedirect } from '@/shared/hooks';
+import useFindEventById from '@/shared/hooks/useFindEventById';
 
 export default function EditEventPage() {
     const { id } = useParams() as { id: string };
-    const { useFindEventById, updateEventMutation } = useEventCrud();
+    const { errorAlert } = useAlert();
+    const { redirect } = useRedirect();
 
-    const { data, isLoading } = useFindEventById(id);
+    const { data: event, isPending } = useFindEventById(id);
+    const { updateEventMutation } = useEventCrud();
 
     const form = useForm({
         resolver: yupResolver(createEventRequestSchema),
@@ -27,6 +31,7 @@ export default function EditEventPage() {
         updateEventMutation.mutate({
             id: id,
             name: data.name,
+            description: data.description,
             slug: data.slug,
             startAt: data.dates[0]!,
             endAt: data.dates[1]!,
@@ -35,9 +40,7 @@ export default function EditEventPage() {
     };
 
     useEffect(() => {
-        if (data) {
-            const event = data.data;
-
+        if (event) {
             form.reset({
                 name: event.name,
                 slug: event.slug,
@@ -56,9 +59,16 @@ export default function EditEventPage() {
                 }),
             });
         }
-    }, [data, form]);
+    }, [event, form]);
 
-    if (isLoading) {
+    useEffect(() => {
+        if (!isPending && !event) {
+            errorAlert('Evento não encontrado');
+            redirect('/painel/eventos');
+        }
+    }, [isPending, event, errorAlert, redirect]);
+
+    if (isPending) {
         return <LoadingScreen />;
     }
 
@@ -66,10 +76,7 @@ export default function EditEventPage() {
         <>
             <PageBreadcrumb
                 pageTitle="Editar Evento"
-                breadcrumbItems={[
-                    { label: 'Eventos', href: '/painel/eventos' },
-                    { label: 'Editar', href: `/painel/eventos/editar/${id}` },
-                ]}
+                breadcrumbItems={[{ label: 'Eventos', href: '/painel/eventos' }]}
             />
             <Container title="Edite os dados do evento" className="mt-2">
                 <FormProvider {...form}>

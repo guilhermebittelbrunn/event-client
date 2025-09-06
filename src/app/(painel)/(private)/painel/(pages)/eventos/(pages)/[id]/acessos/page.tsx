@@ -12,7 +12,6 @@ import {
     Helper,
 } from '@/shared/components/ui';
 import ResponsiveImage from '@/shared/components/ui/responsiveImage';
-import { useEventCrud } from '../../(hooks)/useEventCrud';
 import { useParams } from 'next/navigation';
 import { Fallback } from '@/shared/components/common/fallback';
 import { DownloadOutlined, QrcodeOutlined, CopyOutlined, LinkOutlined } from '@ant-design/icons';
@@ -20,42 +19,41 @@ import { useClientRouter, useQRCode, useRedirect } from '@/shared/hooks';
 import { formatDate } from '@/shared/utils';
 import Image from 'next/image';
 import { useAlert } from '@/shared/hooks';
+import { useEffect } from 'react';
+import useFindEventById from '@/shared/hooks/useFindEventById';
 
 const HelperSection = () => (
-    <Box className="p-6">
+    <Box className="p-2">
         <Title className="text-lg font-semibold text-matte-black dark:text-snow-white mb-3">
             Como usar o QR Code
         </Title>
         <div className="space-y-2">
-            <Paragraph className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
                 1. Faça o download do QR Code no formato desejado
-            </Paragraph>
-            <Paragraph className="text-sm text-gray-600 dark:text-gray-400">
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
                 2. Imprima e distribua pelos locais do seu evento
-            </Paragraph>
-            <Paragraph className="text-sm text-gray-600 dark:text-gray-400">
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
                 3. Os convidados escaneiam o QR Code para acessar o evento
-            </Paragraph>
-            <Paragraph className="text-sm text-gray-600 dark:text-gray-400">
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
                 4. As fotos serão automaticamente organizadas na sua conta
-            </Paragraph>
+            </p>
         </div>
     </Box>
 );
 
 export default function EventAccessesPage() {
     const { id } = useParams() as { id: string };
-    const { useFindEventById } = useEventCrud();
+    const { data: event, isPending } = useFindEventById(id);
     const { currentDomain } = useClientRouter();
     const { redirect } = useRedirect();
-    const { successAlert } = useAlert();
-
-    const { data, isLoading } = useFindEventById(id);
-    const event = data?.data;
+    const { successAlert, errorAlert } = useAlert();
 
     const qrCodeUrl = event?.guestAccess?.url
-        ? `${currentDomain}/eventos/${event.guestAccess.url}`
-        : `${currentDomain}/eventos/${event?.slug}`;
+        ? `${currentDomain}/evento${event.guestAccess.url}`
+        : `${currentDomain}/evento/${event?.slug}`;
 
     const {
         qrCodeDataUrl,
@@ -85,21 +83,25 @@ export default function EventAccessesPage() {
         }
     };
 
+    useEffect(() => {
+        if (!isPending && !event) {
+            errorAlert('Nenhum acesso encontrado para este evento');
+            redirect('/painel/eventos');
+        }
+    }, [isPending, event, errorAlert, redirect]);
+
     return (
         <>
             <PageBreadcrumb
                 pageTitle="Acessos"
-                breadcrumbItems={[
-                    { label: 'Eventos', href: '/painel/eventos' },
-                    { label: event?.name || 'Evento', href: `/painel/eventos/editar/${id}` },
-                ]}
+                breadcrumbItems={[{ label: 'Eventos', href: '/painel/eventos' }]}
             />
             <Container
                 title="Acessos"
                 subTitle={<Helper message={<HelperSection />} placement="left" />}
                 className="mt-2"
             >
-                <Fallback condition={!isLoading} fallback={<LoadingScreen />}>
+                <Fallback condition={!isPending} fallback={<LoadingScreen />}>
                     {event && (
                         <div className="space-y-6">
                             <Box className="p-6 bg-white dark:bg-matte-black rounded-lg shadow-sm">

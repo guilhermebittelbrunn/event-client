@@ -10,3 +10,4 @@ export * from './HookFormSelect';
 export * from './HookFormUpload';
 export * from './HookFormTextArea';
 export * from './HookFormInputPassword';
+export * from './HookFormUnifiedPhotoInput';

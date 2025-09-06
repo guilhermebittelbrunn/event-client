@@ -7,8 +7,8 @@ import { Container } from '@/shared/components/ui';
 
 import { FormProvider } from '@/shared/components/hookForm';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { EventForm } from '../(components)/EventForm';
-import { useEventCrud } from '../(hooks)/useEventCrud';
+import { EventForm } from '../../(components)/EventForm';
+import { useEventCrud } from '../../(hooks)/useEventCrud';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { createEventRequestSchema, CreateEventSchema } from '@/lib/services/event';
 

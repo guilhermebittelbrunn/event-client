@@ -65,10 +65,10 @@ export function InputUpload({
 
     const uploadButton = (
         <button
-            className="p-4 gap-2 flex flex-col items-center font-bold justify-between text-sm border-1 text-white transition rounded-lg border-soft-gold dark:border-soft-gold-dark shadow-theme-xs hover:opacity-80 hover:cursor-pointer"
+            className="p-4 gap-2 flex flex-col items-center font-bold justify-between text-sm border-1 transition rounded-lg border-soft-gold dark:border-soft-gold-dark shadow-theme-xs hover:opacity-80 hover:cursor-pointer"
             type="button"
         >
-            {<PlusOutlined />}
+            <PlusOutlined />
             <Label>Upload</Label>
         </button>
     );

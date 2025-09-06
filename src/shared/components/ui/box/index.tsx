@@ -19,7 +19,7 @@ export function Box({ children, type, className }: BoxProps) {
             justify="center"
             className={cn(
                 'flex flex-col w-full',
-                type ? boxTypes[type] : 'bg-gray-50 dark:bg-matte-black',
+                type ? boxTypes[type] : 'bg-white dark:bg-matte-black',
                 className,
             )}
         >

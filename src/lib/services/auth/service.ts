@@ -1,58 +1,50 @@
-import client from '@/lib/client';
 import { UserDTO } from '@/shared/types/dtos';
 import { RefreshTokenResponse, SignInRequest, SignInResponse, SignUpRequest } from './types';
-import ClientBase from '@/shared/client/base';
+import { SignInByTokenResponse } from '../event';
+import { AxiosInstance } from 'axios';
 
 export default class AuthService {
     private readonly baseUrl = '/auth';
 
-    constructor(private readonly client: ClientBase) {}
+    constructor(private readonly client: AxiosInstance) {}
 
     async signUp(dto: SignUpRequest): Promise<UserDTO> {
-        const { data } = await this.client.request<UserDTO>(this.client.restClient, {
-            url: `${this.baseUrl}/sign-up`,
-            method: 'POST',
-            data: dto,
-        });
+        const { data } = await this.client.post<UserDTO>(`${this.baseUrl}/sign-up`, dto);
 
         return data;
     }
 
     async signIn(dto: SignInRequest): Promise<SignInResponse> {
-        const { data } = await this.client.request<SignInResponse>(this.client.restClient, {
-            url: `${this.baseUrl}/sign-in`,
-            method: 'POST',
-            data: dto,
-        });
+        const { data } = await this.client.post<SignInResponse>(`${this.baseUrl}/sign-in`, dto);
 
-        localStorage.setItem('accessToken', data.data.tokens.accessToken);
-        localStorage.setItem('refreshToken', data.data.tokens.refreshToken || '');
-
-        this.client.setHeaders({
-            Authorization: `Bearer ${data.data.tokens.accessToken}`,
-            'Refresh-Token': `Refresh ${data.data.tokens.refreshToken}`,
-        });
+        this.client.defaults.headers.common = {
+            Authorization: `Bearer ${data.meta.tokens.accessToken}`,
+            'refresh-token': `${data.meta.tokens.refreshToken}`,
+        };
 
         return data;
     }
 
-    async refreshToken(refreshToken: string): Promise<RefreshTokenResponse> {
-        const { data } = await this.client.request<RefreshTokenResponse>(this.client.restClient, {
-            url: `${this.baseUrl}/refresh`,
-            method: 'POST',
-            data: { refreshToken },
+    async signInByToken(token: string): Promise<SignInByTokenResponse> {
+        const { data } = await this.client.post<SignInByTokenResponse>(`${this.baseUrl}/sign-in-by-token`, {
+            token,
         });
 
-        localStorage.setItem('accessToken', data.data.tokens.accessToken);
-        localStorage.setItem('refreshToken', data.data.tokens.refreshToken || '');
+        this.client.defaults.headers.common = {
+            'event-token': `${data.meta.token.accessToken}`,
+        };
 
-        this.client.setHeaders({
-            Authorization: `Bearer ${data.data.tokens.accessToken}`,
-            'Refresh-Token': `Refresh ${data.data.tokens.refreshToken}`,
-        });
+        return data;
+    }
+
+    async refreshToken(): Promise<RefreshTokenResponse> {
+        const { data } = await this.client.post<RefreshTokenResponse>(`${this.baseUrl}/refresh`);
+
+        this.client.defaults.headers.common = {
+            Authorization: `Bearer ${data.meta.tokens.accessToken}`,
+            'Refresh-Token': `${data.meta.tokens.refreshToken}`,
+        };
 
         return data;
     }
 }
-
-export const authService = new AuthService(client);

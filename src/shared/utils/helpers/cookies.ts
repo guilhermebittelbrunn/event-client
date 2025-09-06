@@ -1,7 +1,10 @@
 export const setCookie = (name: string, value: string, expiresIn: number) => {
     if (typeof window === 'undefined') return;
 
-    document.cookie = `${name}=${value};expires=${expiresIn};path=/;SameSite=Strict`;
+    const expires = new Date();
+    expires.setTime(expires.getTime() + expiresIn * 1000);
+
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Strict`;
 };
 
 export const getCookie = (name: string): string | null => {

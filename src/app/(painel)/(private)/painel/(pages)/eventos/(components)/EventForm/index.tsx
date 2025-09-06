@@ -17,7 +17,7 @@ export function EventForm() {
 
     const handleChangeName = (e: ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
-        setValue('slug', value?.toLowerCase().replace(/ /g, '-') || '');
+        setValue('slug', value?.trim().toLowerCase().replace(/ /g, '-') || '');
     };
 
     return (

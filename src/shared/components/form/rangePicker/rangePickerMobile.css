@@ -1,0 +1,40 @@
+/* Estilos para responsividade do RangePicker */
+@media (max-width: 767px) {
+    .ant-picker-panel:last-child {
+        width: 0 !important;
+        overflow: hidden !important;
+        min-width: 0 !important;
+        max-width: 0 !important;
+    }
+    .ant-picker-panel:last-child .ant-picker-header {
+        position: absolute !important;
+        right: 0 !important;
+    }
+    .ant-picker-panel:last-child .ant-picker-header-prev-btn,
+    .ant-picker-panel:last-child .ant-picker-header-view {
+        visibility: hidden !important;
+    }
+    .ant-picker-panel:last-child .ant-picker-body {
+        display: none !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .ant-picker-panel:last-child {
+        width: 280px !important;
+        overflow: visible !important;
+        min-width: 280px !important;
+        max-width: 280px !important;
+    }
+    .ant-picker-panel:last-child .ant-picker-header {
+        position: relative !important;
+        right: auto !important;
+    }
+    .ant-picker-panel:last-child .ant-picker-header-prev-btn,
+    .ant-picker-panel:last-child .ant-picker-header-view {
+        visibility: visible !important;
+    }
+    .ant-picker-panel:last-child .ant-picker-body {
+        display: block !important;
+    }
+}

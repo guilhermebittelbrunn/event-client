@@ -862,3 +862,44 @@ span.flatpickr-weekday,
   opacity: 0.8;
   cursor: grabbing; /* Changes the cursor to indicate dragging */
 }
+
+.mobileRangePickerWrapper :global(.ant-picker-panel) {
+    &:last-child {
+        width: 0;
+    }
+
+    &:last-child :global(.ant-picker-header) {
+        position: absolute;
+        right: 0;
+    }
+
+    &:last-child :global(.ant-picker-header-prev-btn),
+    &:last-child :global(.ant-picker-header-view) {
+        visibility: hidden;
+    }
+
+    &:last-child :global(.ant-picker-body) {
+        display: none;
+    }
+}
+
+@media (min-width: 768px) {
+    .mobileRangePickerWrapper :global(.ant-picker-panel) {
+        &:last-child {
+            width: 280px !important;
+        }
+
+        &:last-child :global(.ant-picker-header) {
+            position: relative;
+        }
+
+        &:last-child :global(.ant-picker-header-prev-btn),
+        &:last-child :global(.ant-picker-header-view) {
+            visibility: initial;
+        }
+
+        &:last-child :global(.ant-picker-body) {
+            display: block;
+        }
+    }
+}
