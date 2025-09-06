@@ -38,7 +38,7 @@ export function ActionsMenu({ onEdit, onDelete, items, className }: ActionsMenuP
                         : []),
                     ...(items || []).map((item) => ({
                         ...item,
-                        style: { margin: 4, fontSize: 16 },
+                        style: { margin: 4, fontSize: 16, ...item.style },
                     })),
                     ...(onDelete
                         ? [
