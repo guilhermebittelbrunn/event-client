@@ -7,7 +7,7 @@ import { Container, LoadingScreen } from '@/shared/components/ui';
 import { FormProvider } from '@/shared/components/hookForm';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { EventForm } from '@/app/(painel)/(private)/painel/(pages)/eventos/(components)/EventForm';
-import { useEventCrud } from '@/app/(painel)/(private)/painel/(pages)/eventos/(hooks)/useEventCrud';
+import { useEventCrud } from '@/shared/hooks/useEventCrud';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { createEventRequestSchema, CreateEventSchema } from '@/lib/services/event';
 import { useParams } from 'next/navigation';

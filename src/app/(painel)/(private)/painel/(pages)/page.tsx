@@ -4,7 +4,7 @@ import { Title, AddButton, LoadingScreen, Container, Box } from '@/shared/compon
 import { useRedirect } from '@/shared/hooks';
 
 import React from 'react';
-import { useEventCrud } from './eventos/(hooks)/useEventCrud';
+import { useEventCrud } from '../../../../../shared/hooks/useEventCrud';
 import { EventCard } from './eventos/(components)/EventCard';
 import { startOfDay } from 'date-fns';
 

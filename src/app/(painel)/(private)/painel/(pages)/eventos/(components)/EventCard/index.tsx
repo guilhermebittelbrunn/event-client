@@ -1,7 +1,7 @@
 import { useRouter } from 'next/navigation';
 import { Fallback } from '@/shared/components/common/fallback';
 
-import { EditFilled, ShareAltOutlined } from '@ant-design/icons';
+import { EditFilled, EyeOutlined, QrcodeOutlined, ShareAltOutlined } from '@ant-design/icons';
 import ResponsiveImage from '@/shared/components/ui/responsiveImage';
 import { formatDate } from '@/shared/utils';
 import { EventDTO } from '@/shared/types/dtos';
@@ -15,28 +15,45 @@ interface EventCardProps {
 export const EventCard = ({ event, detailed }: EventCardProps) => {
     const router = useRouter();
 
+    const handleShowDetails = () => router.push(`/painel/eventos/${event.id}/detalhes`);
+
+    const handleShare = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
+        router.push(`/painel/eventos/${event.id}/acessos`);
+    };
+
+    const handleEdit = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
+        router.push(`/painel/eventos/${event.id}/editar`);
+    };
+
     const actions = [
-        {
-            key: 'share',
-            label: 'Acessos',
-            icon: <ShareAltOutlined className="text-soft-gold dark:text-soft-gold-dark scale-150" />,
-            onClick: () => {
-                router.push(`/painel/eventos/${event.id}/acessos`);
-            },
-        },
         {
             key: 'edit',
             label: 'Editar',
             icon: <EditFilled className="text-soft-gold dark:text-soft-gold-dark scale-150" />,
-            onClick: () => {
-                router.push(`/painel/eventos/${event.id}/editar`);
-            },
+            onClick: () => router.push(`/painel/eventos/${event.id}/editar`),
+        },
+        {
+            key: 'details',
+            label: 'Detalhes',
+            icon: <EyeOutlined className="text-soft-gold dark:text-soft-gold-dark scale-150" />,
+            onClick: () => router.push(`/painel/eventos/${event.id}/detalhes`),
+        },
+        {
+            key: 'share',
+            label: 'Acessos',
+            icon: <QrcodeOutlined className="text-soft-gold dark:text-soft-gold-dark scale-150" />,
+            onClick: () => router.push(`/painel/eventos/${event.id}/acessos`),
         },
     ];
 
     if (detailed) {
         return (
-            <div className="bg-gray-200 dark:bg-neutral-800 rounded-xl shadow-lg p-4 flex gap-4 hover:cursor-pointer hover:opacity-60 transition-opacity duration-300">
+            <div
+                className="bg-gray-200 dark:bg-neutral-800 rounded-xl shadow-lg p-4 flex gap-4 hover:cursor-pointer hover:opacity-60 transition-opacity duration-300"
+                onClick={handleShowDetails}
+            >
                 <Fallback condition={Boolean(event.file && event.file?.url)}>
                     <ResponsiveImage
                         src={event.file?.url}
@@ -55,15 +72,11 @@ export const EventCard = ({ event, detailed }: EventCardProps) => {
                             <div className="flex flex-row gap-6">
                                 <ShareAltOutlined
                                     className="text-soft-gold dark:text-soft-gold-dark scale-150"
-                                    onClick={() => {
-                                        router.push(`/painel/eventos/${event.id}/acessos`);
-                                    }}
+                                    onClick={handleShare}
                                 />
                                 <EditFilled
                                     className="text-soft-gold dark:text-soft-gold-dark scale-150"
-                                    onClick={() => {
-                                        router.push(`/painel/eventos/${event.id}/editar`);
-                                    }}
+                                    onClick={handleEdit}
                                 />
                             </div>
                         </div>
@@ -85,13 +98,16 @@ export const EventCard = ({ event, detailed }: EventCardProps) => {
     }
 
     return (
-        <div className="bg-gray-200 dark:bg-neutral-800 rounded-xl shadow-lg p-4 flex gap-4 hover:cursor-pointer hover:opacity-60 transition-opacity duration-300">
+        <div
+            className="bg-gray-200 dark:bg-neutral-800 rounded-xl shadow-lg p-4 flex gap-4 hover:cursor-pointer hover:opacity-60 transition-opacity duration-300"
+            onClick={handleShowDetails}
+        >
             <div className="flex flex-row items-center gap-4  w-full">
                 <p className="font-bold text-neutral-800 dark:text-white text-lg mb-1">{event.name}</p>
                 <p className="text-gray-600 dark:text-gray-400 text-sm">{formatDate(event.startAt)}</p>
             </div>
             <div className="w-full flex items-end justify-end ">
-                <div>
+                <div onClick={(e) => e.stopPropagation()}>
                     <ActionsMenu items={actions} className="text-matte-black dark:text-snow-white" />
                 </div>
             </div>
