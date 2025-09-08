@@ -7,7 +7,7 @@ import { SignInRequest, SignInResponse, SignUpRequest } from '@/lib/services/aut
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { UserDTO } from '../types/dtos';
 import { LoadingScreen } from '../components/ui';
-import { setCookie, getCookie } from '../utils/helpers/cookies';
+import { setCookie, getCookie, removeCookie } from '../utils/helpers/cookies';
 import { usePathname } from 'next/navigation';
 import { publicRoutes } from '@/middleware';
 import { UserTokenPayload } from '../types/dtos/user/auth';
@@ -45,6 +45,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const signOut = useCallback(() => {
         setUser(undefined);
+        removeCookie('accessToken');
+        removeCookie('refreshToken');
         redirect('/entrar');
     }, [redirect]);
 

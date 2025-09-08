@@ -3,7 +3,6 @@ import AuthService from '../services/auth/service';
 import EventService from '../services/event/service';
 import UserService from '../services/user/service';
 import { getCookie, removeCookie } from '@/shared/utils/helpers/cookies';
-import { DEVELOPMENT_API_URL } from '@/shared/utils';
 import FormattedError from '@/shared/utils/helpers/formattedError';
 import MemoryService from '../services/memory/service';
 
@@ -25,8 +24,10 @@ class EventClient {
     }
 
     private buildClient() {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
         const api = axios.create({
-            baseURL: `${DEVELOPMENT_API_URL}/v1`,
+            baseURL: `${apiUrl}/v1`,
             headers: {
                 // 'Accept': 'application/json',
                 // 'Content-Type': 'application/json',
@@ -64,7 +65,7 @@ class EventClient {
             (error) => {
                 if (error.response && error.response.status === 401) {
                     removeCookie('eventToken');
-                    // window.location.href = '/';
+                    window.location.href = '/';
                 }
 
                 return Promise.reject(new FormattedError(error));
