@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSidebar } from '../context/SidebarContext';
-import { ChevronDownIcon, CalenderIcon, HorizontaLDots, HomeIcon } from '../icons/index';
+import { ChevronDownIcon, CalenderIcon, HomeIcon } from '../icons/index';
 import { Logo } from '../assets/icons';
 
 type NavItem = {
@@ -252,7 +252,7 @@ const AppSidebar: React.FC = () => {
                                     !isExpanded && !isHovered ? 'lg:justify-center' : 'justify-start'
                                 }`}
                             >
-                                {isExpanded || isHovered || isMobileOpen ? '' : <HorizontaLDots />}
+                                {/* {isExpanded || isHovered || isMobileOpen ? '' : <HorizontaLDots />} */}
                             </h2>
                             {renderMenuItems(navItems, 'main')}
                         </div>
@@ -263,7 +263,7 @@ const AppSidebar: React.FC = () => {
                                     !isExpanded && !isHovered ? 'lg:justify-center' : 'justify-start'
                                 }`}
                             >
-                                {isExpanded || isHovered || isMobileOpen ? '' : <HorizontaLDots />}
+                                {/* {isExpanded || isHovered || isMobileOpen ? '' : <HorizontaLDots />} */}
                             </h2>
                             {renderMenuItems(othersItems, 'others')}
                         </div>

@@ -16,7 +16,11 @@ export const PhotoItem = ({ photo, selectedPhotos, isSelectMode, handlePhotoClic
     return (
         <div
             key={photo.id}
-            className="relative aspect-square rounded-lg overflow-hidden cursor-pointer group hover:opacity-70 transition-opacity duration-300"
+            className={cn(
+                'relative aspect-square rounded-lg overflow-hidden cursor-pointer group transition-opacity duration-300 hover:cursor-pointer',
+                isSelected && 'opacity-40',
+                !isSelectMode && 'hover:opacity-70',
+            )}
             onClick={() => handlePhotoClick(photo)}
         >
             <div className="w-full h-full relative">

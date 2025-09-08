@@ -22,8 +22,8 @@ export default function EventLayout({ children }: { children: React.ReactNode })
                         </div>
                     </header>
 
-                    <main className="flex-1 overflow-y-auto">
-                        <Box className="min-h-full bg-gray-50 dark:bg-gray-900">{children}</Box>
+                    <main className="flex-1 overflow-hidden">
+                        <Box className="h-full bg-gray-50 dark:bg-gray-900">{children}</Box>
                     </main>
 
                     <MobileNavbar />

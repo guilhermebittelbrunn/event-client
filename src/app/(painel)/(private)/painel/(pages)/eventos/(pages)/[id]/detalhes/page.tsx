@@ -17,6 +17,14 @@ import { useMemoryCrud } from '@/shared/hooks/useMemoryCrud';
 import { useQueryClient } from '@tanstack/react-query';
 import { INFINITE_MEMORY_QUERY_KEY } from '@/shared/hooks/useInfiniteMemoryQuery';
 
+const LoadingContainer = () => {
+    return (
+        <div className="flex w-full justify-center py-8">
+            <Loading />
+        </div>
+    );
+};
+
 export default function DetailsPage() {
     const { id } = useParams() as { id: string };
     const queryClient = useQueryClient();
@@ -109,24 +117,29 @@ export default function DetailsPage() {
             <Container>
                 <EventHeader event={event} photoCount={total} />
 
-                <ActionBar
-                    isSelectMode={isSelectMode}
-                    selectedCount={selectedPhotos.length}
-                    onToggleSelect={handleToggleSelectMode}
-                    onDelete={() => setShowDeleteModal(true)}
-                    onDownload={handleDownloadPhotos}
-                />
-
-                <PhotoGrid
-                    photos={memories}
-                    selectedPhotos={selectedPhotos}
-                    isSelectMode={isSelectMode}
-                    onSelectPhoto={handleSelectPhoto}
-                    onOpenModal={setOpenedMemory}
-                    hasMore={hasNextPage || false}
-                    onLoadMore={fetchNextPage}
-                    isLoading={isFetchingNextPage || isLoadingMemory}
-                />
+                {downloadMemoryMutation.isPending ? (
+                    <LoadingContainer />
+                ) : (
+                    <>
+                        <ActionBar
+                            isSelectMode={isSelectMode}
+                            selectedCount={selectedPhotos.length}
+                            onToggleSelect={handleToggleSelectMode}
+                            onDelete={() => setShowDeleteModal(true)}
+                            onDownload={handleDownloadPhotos}
+                        />
+                        <PhotoGrid
+                            photos={memories}
+                            selectedPhotos={selectedPhotos}
+                            isSelectMode={isSelectMode}
+                            onSelectPhoto={handleSelectPhoto}
+                            onOpenModal={setOpenedMemory}
+                            hasMore={hasNextPage || false}
+                            onLoadMore={fetchNextPage}
+                            isLoading={isFetchingNextPage || isLoadingMemory}
+                        />
+                    </>
+                )}
             </Container>
 
             {openedMemory && <MemoryModal memory={openedMemory} onClose={() => setOpenedMemory(null)} />}
@@ -142,9 +155,7 @@ export default function DetailsPage() {
                     size="small"
                 >
                     {deleteBulkMemoryMutation.isPending ? (
-                        <div className="flex w-full justify-center py-8">
-                            <Loading />
-                        </div>
+                        <LoadingContainer />
                     ) : (
                         <Paragraph className="text-md text-center p-0">
                             Tem certeza que deseja deletar {selectedPhotos.length} fotos selecionadas?
