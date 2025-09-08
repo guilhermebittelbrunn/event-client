@@ -35,7 +35,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                     <ThemeProvider>
                         <SidebarProvider>
                             <ClientLayout>{children}</ClientLayout>
-                            <ToastContainer />
+                            <ToastContainer className="scale-90 md:scale-100" />
                         </SidebarProvider>
                     </ThemeProvider>
                 </QueryClientProvider>
