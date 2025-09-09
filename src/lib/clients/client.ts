@@ -29,8 +29,11 @@ class Client {
         const api = axios.create({
             baseURL: `${apiUrl}/v1`,
             headers: {
-                // 'Accept': 'application/json',
-                // 'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type, Authorization, refresh-token, event-token',
             },
         });
 

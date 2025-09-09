@@ -19,6 +19,18 @@ const PUBLIC_REDIRECT_URL_WHEN_AUTHENTICATED = '/painel';
 const REDIRECT_URL_WHEN_UNAUTHENTICATED = '/entrar';
 
 export default function middleware(request: NextRequest) {
+    // Handle CORS preflight requests
+    if (request.method === 'OPTIONS') {
+        return new NextResponse(null, {
+            status: 200,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type, Authorization, refresh-token, event-token',
+            },
+        });
+    }
+
     const authToken = request.cookies.get('accessToken')?.value;
     const tokenPayload = getTokenPayload<UserTokenPayload>(authToken);
     const isAuthenticated = !!authToken && !!tokenPayload?.sub;
@@ -57,11 +69,10 @@ export const config = {
     matcher: [
         /*
          * Match all request paths except for the ones starting with:
-         * - api (API routes)
          * - _next/static (static files)
          * - _next/image (image optimization files)
          * - favicon.ico, sitemap.xml, robots.txt (metadata files)
          */
-        '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+        '/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
     ],
 };
