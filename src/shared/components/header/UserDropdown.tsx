@@ -15,6 +15,11 @@ export default function UserDropdown() {
     function closeDropdown() {
         setIsOpen(false);
     }
+
+    if (!user) {
+        return <></>;
+    }
+
     return (
         <div className="relative">
             <button

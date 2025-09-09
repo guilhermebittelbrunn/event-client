@@ -52,7 +52,7 @@ export const ActionBar: React.FC<ActionBarProps> = ({
                 >
                     {isSelectMode ? 'Cancelar' : 'Selecionar'}
                     {isSelectMode && selectedCount > 0 && (
-                        <span className="ml-2 bg-soft-gold text-white text-xs px-2 py-1 rounded-full">
+                        <span className="ml-2 bg-soft-gold text-white text-xs px-1.5 py-0.5 rounded-full">
                             {selectedCount}
                         </span>
                     )}
