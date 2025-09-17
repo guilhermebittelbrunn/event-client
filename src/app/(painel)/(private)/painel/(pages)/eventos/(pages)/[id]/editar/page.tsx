@@ -14,6 +14,7 @@ import { useParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { useAlert, useRedirect } from '@/shared/hooks';
 import useFindEventById from '@/shared/hooks/useFindEventById';
+import { EventStatusEnum } from '@/shared/types/dtos';
 
 export default function EditEventPage() {
     const { id } = useParams() as { id: string };
@@ -36,6 +37,7 @@ export default function EditEventPage() {
             startAt: data.dates[0]!,
             endAt: data.dates[1]!,
             image: data?.image?.[0]?.originFileObj,
+            ...(data.status && { status: data.status as EventStatusEnum }),
         });
     };
 
@@ -46,6 +48,7 @@ export default function EditEventPage() {
                 slug: event.slug,
                 description: event.description || '',
                 dates: [new Date(event.startAt), new Date(event.endAt)],
+                status: event.status,
                 ...(event.file && {
                     image: [
                         {

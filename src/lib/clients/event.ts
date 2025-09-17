@@ -5,6 +5,7 @@ import UserService from '../services/user/service';
 import { getCookie, removeCookie } from '@/shared/utils/helpers/cookies';
 import FormattedError from '@/shared/utils/helpers/formattedError';
 import MemoryService from '../services/memory/service';
+import { EVENT_REDIRECT_SECONDS } from '@/shared/consts/event';
 
 class EventClient {
     readonly client: AxiosInstance;
@@ -68,7 +69,9 @@ class EventClient {
             (error) => {
                 if (error.response && error.response.status === 401) {
                     removeCookie('eventToken');
-                    window.location.href = '/';
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, EVENT_REDIRECT_SECONDS * 1000);
                 }
 
                 return Promise.reject(new FormattedError(error));
