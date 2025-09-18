@@ -46,8 +46,8 @@ export function PreviewMemory({ isLoading }: PreviewMemoryProps) {
 
     const handleBackdropClick = (e: React.MouseEvent) => {
         if (e.target === e.currentTarget) {
-            setMounted(false);
             reset();
+            setMounted(false);
         }
     };
 
