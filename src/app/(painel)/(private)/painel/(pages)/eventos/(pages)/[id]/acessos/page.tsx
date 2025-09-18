@@ -13,7 +13,7 @@ import {
 } from '@/shared/components/ui';
 import ResponsiveImage from '@/shared/components/ui/responsiveImage';
 import { useParams } from 'next/navigation';
-import { Fallback } from '@/shared/components/common/fallback';
+import { Fallback } from '@/shared/components/common/Fallback';
 import { DownloadOutlined, QrcodeOutlined, CopyOutlined, LinkOutlined } from '@ant-design/icons';
 import { useClientRouter, useQRCode, useRedirect } from '@/shared/hooks';
 import { formatDate } from '@/shared/utils';

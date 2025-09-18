@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { MemoryDTO } from '@/shared/types/dtos';
-import { Polaroid } from '@/shared/components/common/Pollaroid';
+import { Polaroid } from '../../../../../../../shared/components/common/Pollaroid';
 
 interface MemoryModalProps {
-    memory: MemoryDTO;
+    memory: Partial<MemoryDTO>;
     onClose: () => void;
 }
 

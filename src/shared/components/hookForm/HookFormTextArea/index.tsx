@@ -4,7 +4,7 @@ import { Control, Controller, ControllerProps, FieldValues, Path } from 'react-h
 interface HookFormTextAreaProps<T extends FieldValues> extends TextAreaProps {
     control?: Control<T>;
     name: Path<T>;
-    label: string;
+    label?: string;
     controllerProps?: Omit<ControllerProps<T>, 'name' | 'control' | 'render'>;
     labelClassName?: string;
 }

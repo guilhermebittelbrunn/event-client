@@ -10,7 +10,7 @@ import { ActionsMenu } from '@/shared/components/ui/actionMenu';
 import { Box } from '@/shared/components/ui/box';
 import { formatDate } from '@/shared/utils/helpers';
 import { useEventCrud } from '../../../../../../../shared/hooks/useEventCrud';
-import { Fallback } from '@/shared/components/common/fallback';
+import { Fallback } from '@/shared/components/common/Fallback';
 import { EventDTO, EventStatusOptions, UserTypeEnum } from '@/shared/types/dtos';
 import ResponsiveImage from '@/shared/components/ui/responsiveImage';
 import useAuth from '@/shared/context/AuthContext';

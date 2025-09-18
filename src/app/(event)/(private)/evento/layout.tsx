@@ -4,7 +4,6 @@ import { Box } from '@/shared/components/ui/box';
 import { Title } from '@/shared/components/ui';
 import { ThemeProvider } from '@/shared/context/ThemeContext';
 import ThemeToggleButton from '@/shared/components/ui/themeToggleButton';
-import MobileNavbar from '@/app/(event)/(private)/evento/[slug]/(components)/mobileNavbar';
 import React from 'react';
 import { EventProvider } from '@/shared/context/EventContext';
 
@@ -26,9 +25,10 @@ export default function EventLayout({ children }: { children: React.ReactNode })
                         <Box className="h-full bg-gray-50 dark:bg-gray-900">{children}</Box>
                     </main>
 
-                    <MobileNavbar />
+                    {/* @TODO - create mobile navbar navigation after create other event pages */}
+                    {/* <MobileNavbar /> */}
 
-                    <div className="h-16"></div>
+                    {/* <div className="h-16"></div> */}
                 </div>
             </EventProvider>
         </ThemeProvider>

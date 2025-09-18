@@ -1,5 +1,5 @@
 import { useRouter } from 'next/navigation';
-import { Fallback } from '@/shared/components/common/fallback';
+import { Fallback } from '@/shared/components/common/Fallback';
 
 import { EditFilled, EyeOutlined, QrcodeOutlined, ShareAltOutlined } from '@ant-design/icons';
 import ResponsiveImage from '@/shared/components/ui/responsiveImage';
