@@ -13,7 +13,7 @@ import { handleClientError } from '@/shared/utils';
 import { CreateMemoryRequest } from '@/lib/services';
 import { FormProvider } from '@/shared/components/hookForm';
 import ResponsiveImage from '@/shared/components/ui/responsiveImage';
-import { PreviewMemory } from '../(components)/previewMemory';
+import { PreviewMemory } from '../(components)/PreviewMemory';
 import { Fallback } from '@/shared/components/common/fallback';
 
 export default function SendPhotosPage() {
