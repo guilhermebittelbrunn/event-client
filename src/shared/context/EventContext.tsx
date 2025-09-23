@@ -10,7 +10,7 @@ import { SignInByTokenResponse } from '@/lib/services';
 import { EventTokenPayload } from '../types/dtos/user/auth';
 import { usePathname } from 'next/navigation';
 import useApi from '../hooks/useApi';
-import EventRedirect from '../components/common/EventRedirect';
+import EventRedirect from '../components/common/eventRedirect';
 
 interface EventContextData {
     isEventAuthenticated: boolean;

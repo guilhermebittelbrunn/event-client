@@ -1,4 +1,4 @@
-import { Polaroid } from '@/shared/components/common/Pollaroid';
+import { Polaroid } from '@/shared/components/common/pollaroid';
 import { FormContainer, useFormContext } from '@/shared/components/form';
 import { HookFormTextArea } from '@/shared/components/hookForm';
 import { Button } from '@/shared/components/ui';
