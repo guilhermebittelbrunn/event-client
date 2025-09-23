@@ -43,7 +43,7 @@ export default function SendPhotosPage() {
     };
 
     return (
-        /** @TODO - Melhorar o cálculo da altura */
+        /** @TODO -Melhorar o cálculo da altura */
         <Box
             type="secondary"
             className="h-screen flex flex-col touch-manipulation overflow-hidden overscroll-none"
