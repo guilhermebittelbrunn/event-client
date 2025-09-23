@@ -1,5 +1,6 @@
 import { BaseDTO } from '../../utils';
 import { FileDTO } from '../shared';
+import { UserDTO } from '../user';
 import { EventAccessDTO } from './eventAccessDTO';
 import { EventConfigDTO } from './eventConfig';
 
@@ -70,4 +71,6 @@ export interface EventDTO extends BaseDTO {
     guestAccess?: EventAccessDTO;
 
     file?: FileDTO;
+
+    user?: UserDTO;
 }

@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useMutation } from '@tanstack/react-query';
 import useAlert from '../hooks/useAlert';
-import { useRedirect } from '../hooks/useRedirect';
-import { getTokenPayload, handleClientError } from '../utils';
+import { getTokenPayload } from '../utils';
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { EventDTO } from '../types/dtos';
 import { LoadingScreen } from '../components/ui';
@@ -11,6 +10,7 @@ import { SignInByTokenResponse } from '@/lib/services';
 import { EventTokenPayload } from '../types/dtos/user/auth';
 import { usePathname } from 'next/navigation';
 import useApi from '../hooks/useApi';
+import EventRedirect from '../components/common/eventRedirect';
 
 interface EventContextData {
     isEventAuthenticated: boolean;
@@ -30,8 +30,7 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
     const [isClient, setIsClient] = useState(false);
     const { client } = useApi();
 
-    const { warningAlert, errorAlert } = useAlert();
-    const { redirectWithDelay } = useRedirect();
+    const { warningAlert } = useAlert();
     const pathname = usePathname();
 
     const signInByTokenMutation = useMutation({
@@ -42,19 +41,16 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
             setCookie('eventToken', token.accessToken, token.expiresIn);
             setEvent(eventData);
         },
-        onError: (error) => errorAlert(handleClientError(error)),
     });
 
     const findEventByIdMutation = useMutation({
         mutationFn: (id: string) => client.eventService.findByIdForGuest(id),
-        onError: (error) => errorAlert(handleClientError(error)),
     });
 
     const handleFailedAuthentication = useCallback(() => {
         setEvent(undefined);
-        warningAlert('Desculpe, infelizmente o evento não está disponível no momento.');
-        redirectWithDelay('/', 1000);
-    }, [redirectWithDelay]);
+        warningAlert('Não foi possível acessar o evento');
+    }, []);
 
     useEffect(() => {
         if (!isClient) return;
@@ -103,7 +99,7 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
                 event,
             }}
         >
-            {!isClient || authenticating ? <LoadingScreen /> : children}
+            {!isClient || authenticating ? <LoadingScreen /> : event ? children : <EventRedirect />}
         </EventContext.Provider>
     );
 };

@@ -2,7 +2,7 @@ import { Select, SelectProps } from '@/shared/components/form';
 import { Control, Controller, ControllerProps, FieldValues, Path } from 'react-hook-form';
 
 interface HookFormSelectProps<T extends FieldValues> extends SelectProps {
-    control: Control<T>;
+    control?: Control<T>;
     name: Path<T>;
     label: string;
     options: SelectProps['options'];
@@ -21,7 +21,9 @@ export function HookFormSelect<T extends FieldValues>({
         <Controller
             control={control}
             name={name}
-            render={({ field }) => <Select {...field} changeUrl={false} placeholder={label} {...props} />}
+            render={({ field }) => (
+                <Select {...field} changeUrl={false} label={label} placeholder={label} {...props} />
+            )}
             {...controllerProps}
         />
     );

@@ -19,10 +19,17 @@ export function createColumn<T, K extends keyof T>(
         title: string;
         key: K;
         render?: (value: T[K], record: T, index: number) => React.ReactNode;
+        condition?: boolean;
     } & Omit<RcColumnType<T>, 'title' | 'dataIndex' | 'key' | 'render'>,
 ) {
+    const { condition = true, ...rest } = column;
+
+    if (!condition) {
+        return { hidden: true };
+    }
+
     return {
-        ...column,
+        ...rest,
         dataIndex: column.key,
     };
 }

@@ -5,20 +5,24 @@ import { useRouter } from 'next/navigation';
 
 import PageBreadcrumb from '@/shared/components/ui/pageBreadCrumb';
 import { InputSearch } from '@/shared/components/form';
-import { AddButton, Container, PaginationTable, createColumn } from '@/shared/components/ui';
+import { AddButton, Container, PaginationTable, Tooltip, createColumn } from '@/shared/components/ui';
 import { ActionsMenu } from '@/shared/components/ui/actionMenu';
 import { Box } from '@/shared/components/ui/box';
 import { formatDate } from '@/shared/utils/helpers';
 import { useEventCrud } from '../../../../../../../shared/hooks/useEventCrud';
-import { Fallback } from '@/shared/components/common/fallback';
-import { EventDTO, EventStatusOptions } from '@/shared/types/dtos';
+import { EventDTO, EventStatusOptions, UserTypeEnum } from '@/shared/types/dtos';
 import ResponsiveImage from '@/shared/components/ui/responsiveImage';
+import useAuth from '@/shared/context/AuthContext';
+import { Fallback } from '@/shared/components/common/fallback';
 
 export default function EventsPage() {
     const router = useRouter();
     const { useListPaginatedEvent, deleteEventMutation } = useEventCrud();
+    const { user } = useAuth();
 
     const { data, isLoading } = useListPaginatedEvent({ order: 'asc', orderBy: 'name' });
+
+    const isAdmin = user?.type === UserTypeEnum.ADMIN;
 
     const { data: events, meta } = data || {};
 
@@ -37,9 +41,11 @@ export default function EventsPage() {
             title: 'Nome',
             key: 'name',
         }),
-        createColumn<EventDTO, 'description'>({
-            title: 'Descrição',
-            key: 'description',
+        createColumn<EventDTO, 'user'>({
+            title: 'Criado por',
+            key: 'user',
+            render: (user) => <Tooltip title={user?.email}>{user?.name}</Tooltip>,
+            condition: isAdmin,
         }),
         createColumn<EventDTO, 'status'>({
             title: 'Status',
@@ -110,8 +116,13 @@ export default function EventsPage() {
             />
             <Container>
                 <Box className="mb-4 space-y-4">
-                    <Box className="grid grid-cols-1 md:grid-cols-4 gap-4 bg-white">
-                        <InputSearch changeUrl placeholder="Nome do evento" trigger={['onChange']} />
+                    <Box className="flex justify-end items-end">
+                        <InputSearch
+                            changeUrl
+                            placeholder="Nome do evento"
+                            trigger={['onChange']}
+                            className="w-full md:w-2/5"
+                        />
                     </Box>
                 </Box>
                 <Box className="w-full">

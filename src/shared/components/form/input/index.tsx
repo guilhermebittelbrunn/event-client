@@ -23,9 +23,11 @@ export function Input({
 }: InputProps) {
     return (
         <>
-            <Label required={required} htmlFor={id} className="text-matte-black dark:text-snow-white">
-                {label}
-            </Label>
+            {label && (
+                <Label required={required} htmlFor={id} className="text-matte-black dark:text-snow-white">
+                    {label}
+                </Label>
+            )}
 
             <ErrorBadge hidden={!error || !showErrorBadge} message={error?.message || 'Campo inválido'}>
                 <AntdInput

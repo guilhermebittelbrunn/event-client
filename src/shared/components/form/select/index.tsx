@@ -50,10 +50,14 @@ export function Select({
 
     return (
         <>
-            {label && <Label required={required}>{label}</Label>}
+            {label && (
+                <Label required={required} className="text-matte-black dark:text-snow-white">
+                    {label}
+                </Label>
+            )}
             <AntdSelect
                 options={options}
-                className={cn('', className)}
+                className={cn('w-full', className)}
                 value={currentStatus}
                 size={size}
                 placeholder={placeholder || 'Selecione uma opção'}

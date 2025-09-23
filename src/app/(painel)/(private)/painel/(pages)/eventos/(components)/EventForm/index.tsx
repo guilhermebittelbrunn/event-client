@@ -2,16 +2,23 @@ import { FormContainer, useFormContext } from '@/shared/components/form';
 import {
     HookFormInput,
     HookFormRangePicker,
+    HookFormSelect,
     HookFormTextArea,
     HookFormUpload,
 } from '@/shared/components/hookForm';
 import { Paragraph } from '@/shared/components/ui';
+import { EVENT_STATUS_OPTIONS } from '@/shared/consts/event';
+import useAuth from '@/shared/context/AuthContext';
 import { useClientRouter } from '@/shared/hooks';
+import { UserTypeEnum } from '@/shared/types/dtos';
 import { ChangeEvent } from 'react';
 
 export function EventForm() {
     const { watch, setValue } = useFormContext();
     const { currentDomain } = useClientRouter();
+    const { user } = useAuth();
+
+    const isAdmin = user?.type === UserTypeEnum.ADMIN;
 
     const slug = watch('slug');
 
@@ -40,6 +47,8 @@ export function EventForm() {
                         Link de acesso: {currentDomain}/eventos/{slug}
                     </Paragraph>
                 )}
+
+                {isAdmin && <HookFormSelect name="status" label="Status" options={EVENT_STATUS_OPTIONS} />}
 
                 <HookFormUpload name="image" label="Foto do evento" />
             </div>
