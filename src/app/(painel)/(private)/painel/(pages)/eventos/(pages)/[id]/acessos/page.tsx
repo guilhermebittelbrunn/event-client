@@ -20,7 +20,7 @@ import Image from 'next/image';
 import { useAlert } from '@/shared/hooks';
 import { useEffect } from 'react';
 import useFindEventById from '@/shared/hooks/useFindEventById';
-import { Fallback } from '@/shared/components/common/Fallback';
+import { Fallback } from '@/shared/components/common/fallback';
 
 const HelperSection = () => (
     <Box className="p-2">

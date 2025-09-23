@@ -13,7 +13,7 @@ import { useEventCrud } from '../../../../../../../shared/hooks/useEventCrud';
 import { EventDTO, EventStatusOptions, UserTypeEnum } from '@/shared/types/dtos';
 import ResponsiveImage from '@/shared/components/ui/responsiveImage';
 import useAuth from '@/shared/context/AuthContext';
-import { Fallback } from '@/shared/components/common/Fallback';
+import { Fallback } from '@/shared/components/common/fallback';
 
 export default function EventsPage() {
     const router = useRouter();

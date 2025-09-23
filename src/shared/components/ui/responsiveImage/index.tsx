@@ -1,7 +1,7 @@
 import { cn } from '@/shared/utils/helpers/cn';
 import Image from 'next/image';
 import React from 'react';
-import { Fallback } from '../../common/Fallback';
+import { Fallback } from '../../common/fallback';
 
 interface ResponsiveImageProps {
     src?: string;
