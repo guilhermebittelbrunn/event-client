@@ -11,11 +11,11 @@ import PageBreadcrumb from '@/shared/components/ui/pageBreadCrumb';
 import { EventHeader } from './(components)/EventHeader';
 import { ActionBar } from './(components)/ActionBar';
 import { PhotoGrid } from './(components)/PhotoGrid';
-import { MemoryModal } from './(components)/MemoryModal';
 import { MemoryDTO } from '@/shared/types/dtos';
 import { useMemoryCrud } from '@/shared/hooks/useMemoryCrud';
 import { useQueryClient } from '@tanstack/react-query';
 import { INFINITE_MEMORY_QUERY_KEY } from '@/shared/hooks/useInfiniteMemoryQuery';
+import { MemoryModal } from './(components)/MemoryModal';
 
 const LoadingContainer = () => {
     return (
