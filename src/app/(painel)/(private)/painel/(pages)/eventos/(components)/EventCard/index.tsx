@@ -1,11 +1,11 @@
 import { useRouter } from 'next/navigation';
-import { Fallback } from '@/shared/components/common/Fallback';
 
 import { EditFilled, EyeOutlined, QrcodeOutlined, ShareAltOutlined } from '@ant-design/icons';
 import ResponsiveImage from '@/shared/components/ui/responsiveImage';
 import { formatDate } from '@/shared/utils';
 import { EventDTO } from '@/shared/types/dtos';
 import { ActionsMenu } from '@/shared/components/ui';
+import { Fallback } from '@/shared/components/common/Fallback';
 
 interface EventCardProps {
     event: EventDTO;

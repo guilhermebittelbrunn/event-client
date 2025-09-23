@@ -13,8 +13,8 @@ import { handleClientError } from '@/shared/utils';
 import { CreateMemoryRequest } from '@/lib/services';
 import { FormProvider } from '@/shared/components/hookForm';
 import ResponsiveImage from '@/shared/components/ui/responsiveImage';
-import { Fallback } from '@/shared/components/common/Fallback';
 import { PreviewMemory } from '../(components)/PreviewMemory';
+import { Fallback } from '@/shared/components/common/Fallback';
 
 export default function SendPhotosPage() {
     const { client } = useApi();
