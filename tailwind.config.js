@@ -200,6 +200,7 @@ const config = {
             fontFamily: {
                 sans: ['var(--font-sans)', ...fontFamily.sans],
                 cursive: ['var(--font-cursive)', 'cursive'],
+                'nanum-brush': ['var(--font-nanum-brush-script)', 'cursive'],
             },
             fontSize: {
                 xxs: ['0.55rem', '0.8rem'],

@@ -17,14 +17,7 @@ const nextConfig: NextConfig = {
             },
         ];
     },
-    async rewrites() {
-        return [
-            {
-                source: '/api/v1/:path*',
-                destination: 'http://localhost:4000/v1/:path*',
-            },
-        ];
-    },
+
     webpack(config) {
         config.module.rules.push({
             test: /\.svg$/,

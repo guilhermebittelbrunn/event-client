@@ -233,10 +233,11 @@ const AppSidebar: React.FC = () => {
             <div className={`py-8 flex  ${!isExpanded && !isHovered ? 'lg:justify-center' : 'justify-start'}`}>
                 <Link href="/">
                     {isExpanded || isHovered || isMobileOpen ? (
-                        <div className="flex items-center gap-2">
-                            <Logo className="dark:hidden" width={32} height={32} />
-                            <Logo className="hidden dark:block" width={32} height={32} />
-                            <p className="text-gray-400 dark:text-white/60">Any Company</p>
+                        <div className="flex flex-row justify-center items-center gap-2 ">
+                            <Logo className="mb-1" width={32} height={32} />
+                            <p className="text-3xl text-gray-400 dark:text-white/60 font-nanum-brush">
+                                Qinstante
+                            </p>
                         </div>
                     ) : (
                         <Logo width={32} height={32} />

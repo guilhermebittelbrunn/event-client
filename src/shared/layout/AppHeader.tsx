@@ -88,7 +88,7 @@ const AppHeader: React.FC = () => {
                         <Link href="/">
                             <Logo width={32} height={32} />
                         </Link>
-                        <Title className="text-lg">Any Company</Title>
+                        <Title className="text-lg font-nanum-brush">Qinstante</Title>
                     </Box>
 
                     <button

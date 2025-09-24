@@ -14,7 +14,7 @@ export default function EventLayout({ children }: { children: React.ReactNode })
                 <div className="min-h-screen bg-snow-white dark:bg-matte-black flex flex-col">
                     <header className="sticky top-0 z-40 bg-snow-white dark:bg-matte-black border-b border-gray-200 dark:border-gray-700">
                         <div className="flex items-center justify-between px-4 py-3">
-                            <Title className="text-2xl font-bold text-matte-black dark:text-snow-white font-cursive">
+                            <Title className="text-2xl font-bold text-matte-black dark:text-snow-white font-nanum-brush">
                                 Qinstante
                             </Title>
                             <ThemeToggleButton type="secondary" />
