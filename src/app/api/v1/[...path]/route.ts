@@ -35,7 +35,7 @@ export async function OPTIONS(request: NextRequest, { params }: { params: Promis
 async function handleRequest(request: NextRequest, { path }: { path: string[] }, method: string) {
     try {
         const targetPath = path.join('/');
-        const targetUrl = `${API_BASE_URL}/${targetPath}`;
+        const targetUrl = new URL(targetPath, API_BASE_URL).toString();
 
         // Extrair query parameters da URL original
         const url = new URL(request.url);
