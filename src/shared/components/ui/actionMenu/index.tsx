@@ -31,14 +31,14 @@ export function ActionsMenu({ onEdit, onDelete, items, className }: ActionsMenuP
                                   icon: <EditOutlined style={{ scale: 1.25 }} />,
                                   key: 'edit',
                                   label: 'Editar',
-                                  style: { margin: 4, fontSize: 16 },
+                                  style: { margin: 4, fontSize: 14 },
                                   onClick: onEdit,
                               },
                           ]
                         : []),
                     ...(items || []).map((item) => ({
                         ...item,
-                        style: { margin: 4, fontSize: 16, ...item.style },
+                        style: { margin: 4, fontSize: 14, ...item.style },
                     })),
                     ...(onDelete
                         ? [
@@ -47,7 +47,7 @@ export function ActionsMenu({ onEdit, onDelete, items, className }: ActionsMenuP
                                   key: 'delete',
                                   label: 'Excluir',
                                   danger: true,
-                                  style: { margin: 4, fontSize: 16 },
+                                  style: { margin: 4, fontSize: 14 },
                                   onClick: onDelete,
                               },
                           ]

@@ -10,7 +10,7 @@ export default function Home() {
             <header className="sticky w-full top-0 z-50 mx-auto flex justify-center px-6 bg-white dark:bg-matte-black">
                 <Box className="flex flex-row w-full justify-between max-w-screen-xl bg-white dark:bg-matte-black">
                     <div className="flex items-center gap-4">
-                        <Title className="text-2xl font-bold text-matte-black dark:text-snow-white font-cursive">
+                        <Title className="text-2xl font-bold text-matte-black dark:text-snow-white font-nanum-brush">
                             Qinstante
                         </Title>
                     </div>

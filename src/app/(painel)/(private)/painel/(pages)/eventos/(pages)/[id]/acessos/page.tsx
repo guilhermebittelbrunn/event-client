@@ -104,7 +104,7 @@ export default function EventAccessesPage() {
                 <Fallback condition={!isPending} fallback={<LoadingScreen />}>
                     {event && (
                         <div className="space-y-6">
-                            <Box className="p-6 bg-white dark:bg-matte-black rounded-lg shadow-sm">
+                            <Box className="p-6 bg-white dark:bg-matte-black rounded-lg">
                                 <div className="flex flex-col md:flex-row gap-6 items-center ">
                                     <div className="flex-1 flex flex-col justify-center items-center gap-2 min-w-0">
                                         <Fallback condition={Boolean(event.file && event.file?.url)}>
@@ -139,7 +139,7 @@ export default function EventAccessesPage() {
                                 </div>
                             </Box>
 
-                            <Box className="p-6 bg-white dark:bg-matte-black rounded-lg shadow-sm">
+                            <Box className="p-6 bg-white dark:bg-matte-black rounded-lg">
                                 <div className="space-y-6">
                                     <div className="flex justify-center">
                                         <div className="p-4 bg-white border-2 border-gray-200 rounded-lg">

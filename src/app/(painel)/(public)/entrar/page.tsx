@@ -24,7 +24,7 @@ export default function SignInForm() {
             <FormProvider {...form}>
                 <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-md">
                     <div className="flex items-center gap-4">
-                        <Title className="text-2xl font-bold text-matte-black dark:text-snow-white font-cursive">
+                        <Title className="text-2xl font-bold text-matte-black dark:text-snow-white font-nanum-brush">
                             Qinstante
                         </Title>
                     </div>

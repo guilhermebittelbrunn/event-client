@@ -1,6 +1,6 @@
 'use client';
 
-import { Outfit } from 'next/font/google';
+import { Outfit, Nanum_Brush_Script } from 'next/font/google';
 import './globals.css';
 
 import { ThemeProvider } from '@/shared/context/ThemeContext';
@@ -12,6 +12,13 @@ import { ToastContainer } from 'react-toastify';
 
 const outfit = Outfit({
     subsets: ['latin'],
+});
+
+const nanumBrushScript = Nanum_Brush_Script({
+    subsets: ['latin'],
+    weight: '400',
+    variable: '--font-nanum-brush-script',
+    display: 'swap',
 });
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -30,7 +37,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
     return (
         <html lang="pt-BR">
-            <body className={`${outfit.className} dark:bg-gray-900`}>
+            <body className={`${outfit.className} ${nanumBrushScript.variable} dark:bg-gray-900`}>
                 <QueryClientProvider client={queryClient}>
                     <ThemeProvider>
                         <SidebarProvider>

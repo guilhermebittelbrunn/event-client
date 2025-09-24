@@ -10,6 +10,7 @@
 @theme {
   --font-*: initial;
   --font-outfit: Outfit, sans-serif;
+  --font-nanum-brush-script: 'Nanum Brush Script', cursive;
 
   --breakpoint-*: initial;
   --breakpoint-2xsm: 375px;
@@ -313,6 +314,9 @@
   }
   body {
     @apply relative font-normal font-outfit z-1 bg-gray-50;
+  }
+  .font-nanum-brush {
+    font-family: var(--font-nanum-brush-script), cursive !important;
   }
 }
 

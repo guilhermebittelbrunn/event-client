@@ -1,6 +1,7 @@
 'use client';
 
 import { Logo } from '@/shared/assets/icons';
+import { Title } from '@/shared/components/ui';
 import { Box } from '@/shared/components/ui/box';
 import ThemeToggleButton from '@/shared/components/ui/themeToggleButton';
 import { useSidebar } from '@/shared/context/SidebarContext';
@@ -23,10 +24,12 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                     <Box className="lg:w-1/2 w-full h-full lg:grid items-center hidden">
                         <Box className="relative items-center justify-center flex z-1">
                             <Box className="flex flex-col items-center max-w-xs">
-                                <Link href="/">
-                                    <Logo width={48} height={48} />
+                                <Link href="/" className="block">
+                                    <Logo width={72} height={72} />
                                 </Link>
-                                <p className="text-center text-gray-400 dark:text-white/60">Any description</p>
+                                <Title className="text-center text-gray-400 dark:text-white/60 font-nanum-brush text-2xl sm:text-3xl md:text-4xl">
+                                    Qinstante
+                                </Title>
                             </Box>
                         </Box>
                     </Box>
