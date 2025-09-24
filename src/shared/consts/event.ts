@@ -6,7 +6,7 @@ export const EVENT_REDIRECT_SECONDS = 5;
  * @note for now, we don't have use for draft/published statuses
  */
 export const EVENT_TYPES = {
-    // [EventStatusEnum.DRAFT]: 'Rascunho',
+    [EventStatusEnum.DRAFT]: 'Rascunho',
     [EventStatusEnum.PENDING_PAYMENT]: 'Aguardando pagamento',
     // [EventStatusEnum.PUBLISHED]: 'Publicado',
     [EventStatusEnum.IN_PROGRESS]: 'Em andamento',

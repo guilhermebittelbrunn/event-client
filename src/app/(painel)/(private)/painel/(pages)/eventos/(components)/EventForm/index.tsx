@@ -13,7 +13,11 @@ import { useClientRouter } from '@/shared/hooks';
 import { UserTypeEnum } from '@/shared/types/dtos';
 import { ChangeEvent } from 'react';
 
-export function EventForm() {
+interface EventFormProps {
+    action?: 'create' | 'update';
+}
+
+export function EventForm({ action = 'create' }: EventFormProps) {
     const { watch, setValue } = useFormContext();
     const { currentDomain } = useClientRouter();
     const { user } = useAuth();
@@ -48,7 +52,9 @@ export function EventForm() {
                     </Paragraph>
                 )}
 
-                {isAdmin && <HookFormSelect name="status" label="Status" options={EVENT_STATUS_OPTIONS} />}
+                {isAdmin && action === 'update' && (
+                    <HookFormSelect name="status" label="Status" options={EVENT_STATUS_OPTIONS} />
+                )}
 
                 <HookFormUpload name="image" label="Foto do evento" />
             </div>

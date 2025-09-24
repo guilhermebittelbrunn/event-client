@@ -84,7 +84,7 @@ export default function EditEventPage() {
             <Container title="Edite os dados do evento" className="mt-2">
                 <FormProvider {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
-                        <EventForm />
+                        <EventForm action="update" />
                         <FormFooter isLoading={updateEventMutation.isPending} />
                     </form>
                 </FormProvider>

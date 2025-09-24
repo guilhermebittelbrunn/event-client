@@ -54,11 +54,27 @@ async function handleRequest(request: NextRequest, { path }: { path: string[] },
             }
         });
 
+        // Para FormData, remover Content-Type e Content-Length para deixar o browser definir automaticamente
+        const contentType = request.headers.get('content-type');
+        if (contentType && contentType.includes('multipart/form-data')) {
+            console.log('[PROXY] FormData detected, removing content-type and content-length headers');
+            delete headers['content-type'];
+            delete headers['content-length'];
+        }
+
         // Preparar body para requisições que não são GET
-        let body: string | undefined;
+        let body: string | FormData | undefined;
         if (method !== 'GET' && method !== 'HEAD') {
             try {
-                body = await request.text();
+                const contentType = request.headers.get('content-type');
+
+                // Se for FormData (multipart/form-data), manter como FormData
+                if (contentType && contentType.includes('multipart/form-data')) {
+                    body = await request.formData();
+                } else {
+                    // Para outros tipos de conteúdo, usar text
+                    body = await request.text();
+                }
             } catch (error) {
                 console.error('Error reading request body:', error);
             }
@@ -69,6 +85,8 @@ async function handleRequest(request: NextRequest, { path }: { path: string[] },
             method,
             headers,
             body,
+            // Timeout mais longo para uploads de arquivos
+            signal: AbortSignal.timeout(120000), // 2 minutos
         });
 
         // Preparar headers de resposta
