@@ -28,7 +28,7 @@ class EventClient {
         // frontend usa proxy, backend chama direto
         const apiUrl = typeof window === 'undefined' ? process.env.NEXT_PUBLIC_API_URL : '/api/v1';
 
-        const baseURL = apiUrl.endsWith('/v1') ? apiUrl : `${apiUrl}/v1`;
+        const baseURL = typeof window === 'undefined' ? `${apiUrl}/v1` : apiUrl;
         const api = axios.create({
             baseURL: baseURL,
             headers: {
