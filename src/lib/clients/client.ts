@@ -24,16 +24,14 @@ class Client {
     }
 
     private buildClient() {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+        // frontend usa proxy, backend chama direto
+        const apiUrl = typeof window === 'undefined' ? process.env.NEXT_PUBLIC_API_URL : '/api/v1';
 
         const api = axios.create({
             baseURL: `${apiUrl}/v1`,
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type, Authorization, refresh-token, event-token',
             },
         });
 
