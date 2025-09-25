@@ -18,6 +18,10 @@ export default class FormattedError {
                 if (error.response) {
                     const responseError = error.response;
 
+                    if (responseError.status === 413) {
+                        return 'Tamanho do arquivo muito grande.';
+                    }
+
                     if (responseError.data && responseError.data.message) {
                         if (Array.isArray(responseError.data.message)) {
                             return responseError.data.message.join(', ');

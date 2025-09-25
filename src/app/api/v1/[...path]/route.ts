@@ -2,6 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
+// Configurar limite de tamanho do body para uploads (App Router)
+export const maxDuration = 300; // 5 minutos
+export const dynamic = 'force-dynamic';
+
+// Configuração para aumentar limite de body size
+export const runtime = 'nodejs';
+export const preferredRegion = 'auto';
+
 export async function GET(request: NextRequest, { params }: { params: Promise<{ path: string[] }> }) {
     const resolvedParams = await params;
     return handleRequest(request, resolvedParams, 'GET');
@@ -56,8 +64,8 @@ async function handleRequest(request: NextRequest, { path }: { path: string[] },
 
         // Para FormData, remover Content-Type e Content-Length para deixar o browser definir automaticamente
         const contentType = request.headers.get('content-type');
+
         if (contentType && contentType.includes('multipart/form-data')) {
-            console.log('[PROXY] FormData detected, removing content-type and content-length headers');
             delete headers['content-type'];
             delete headers['content-length'];
         }
@@ -117,9 +125,28 @@ async function handleRequest(request: NextRequest, { path }: { path: string[] },
         }
 
         // Obter o conteúdo da resposta
-        const responseText = await response.text();
+        let responseText = '';
+
+        // Para respostas 204 (No Content) ou outras respostas vazias, não tentar ler o body
+        if (response.status !== 204 && response.status !== 205) {
+            try {
+                responseText = await response.text();
+            } catch (error) {
+                console.warn('Could not read response text:', error);
+                responseText = '';
+            }
+        }
 
         // Retornar a resposta com os headers corretos
+        // Para status 204, usar Response nativo do Next.js
+        if (response.status === 204) {
+            return new Response(null, {
+                status: 204,
+                statusText: 'No Content',
+                headers: responseHeaders,
+            });
+        }
+
         return new NextResponse(responseText, {
             status: response.status,
             statusText: response.statusText,

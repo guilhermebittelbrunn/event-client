@@ -91,15 +91,24 @@ export function PreviewMemory({ isLoading }: PreviewMemoryProps) {
                                     rows={2}
                                     maxLength={200}
                                 />
-                                <Button
-                                    disabled={isLoading}
-                                    loading={isLoading}
-                                    htmlType="submit"
-                                    type="secondary"
-                                    className="w-full p-6 text-lg font-medium rounded-lg flex items-center justify-center bg-white gap-3 touch-manipulation active:scale-95 transition-transform relative z-10"
-                                >
-                                    Salvar
-                                </Button>
+                                <div className="flex flex-col gap-2">
+                                    <Button
+                                        disabled={isLoading}
+                                        loading={isLoading}
+                                        htmlType="submit"
+                                        type="primary"
+                                        className="w-full p-6 text-lg font-medium rounded-lg flex items-center justify-center gap-3 touch-manipulation active:scale-95 transition-transform relative z-10"
+                                    >
+                                        Salvar
+                                    </Button>
+                                    <Button
+                                        type="secondary"
+                                        onClick={handleBackdropClick}
+                                        className="w-full p-6 text-lg font-medium rounded-lg flex items-center justify-center bg-white gap-3 touch-manipulation active:scale-95 transition-transform relative z-10"
+                                    >
+                                        Cancelar
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     </div>

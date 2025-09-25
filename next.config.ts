@@ -2,6 +2,16 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
     /* config options here */
+    // Configuração para uploads grandes
+    serverExternalPackages: [],
+
+    // Configuração para aumentar limite de body size
+    experimental: {
+        // Aumentar limite de tamanho do body para uploads
+        serverActions: {
+            bodySizeLimit: '50mb',
+        },
+    },
     async headers() {
         return [
             {

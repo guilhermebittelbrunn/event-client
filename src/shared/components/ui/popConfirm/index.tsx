@@ -7,7 +7,7 @@ export interface PopConfirmProps extends AntdPopconfirmProps {
 
 export function PopConfirm({ children, className, ...props }: PopConfirmProps) {
     return (
-        <AntdPopconfirm {...props} className={cn('', className)}>
+        <AntdPopconfirm {...props} okText="Confirmar" className={cn('', className)}>
             {children}
         </AntdPopconfirm>
     );

@@ -27,6 +27,59 @@ const getBase64 = (file: FileType): Promise<string> =>
         reader.onerror = (error) => reject(error);
     });
 
+const compressImage = (file: File, maxSizeMB: number = 2, quality: number = 0.8): Promise<File> => {
+    return new Promise((resolve) => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+
+        img.onload = () => {
+            // Calcula as novas dimensões mantendo a proporção
+            let { width, height } = img;
+            const maxDimension = 1920; // Máximo de 1920px em qualquer dimensão
+
+            if (width > height && width > maxDimension) {
+                height = (height * maxDimension) / width;
+                width = maxDimension;
+            } else if (height > maxDimension) {
+                width = (width * maxDimension) / height;
+                height = maxDimension;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+
+            // Desenha a imagem redimensionada
+            ctx?.drawImage(img, 0, 0, width, height);
+
+            // Converte para blob com compressão
+            canvas.toBlob(
+                (blob) => {
+                    if (blob) {
+                        const compressedFile = new File([blob], file.name, {
+                            type: 'image/jpeg',
+                            lastModified: Date.now(),
+                        });
+
+                        // Se ainda estiver muito grande, reduz a qualidade
+                        if (compressedFile.size > maxSizeMB * 1024 * 1024 && quality > 0.3) {
+                            compressImage(file, maxSizeMB, quality - 0.1).then(resolve);
+                        } else {
+                            resolve(compressedFile);
+                        }
+                    } else {
+                        resolve(file); // Fallback para o arquivo original
+                    }
+                },
+                'image/jpeg',
+                quality,
+            );
+        };
+
+        img.src = URL.createObjectURL(file);
+    });
+};
+
 export function HookFormUnifiedPhotoInput({
     name,
     label,
@@ -134,13 +187,24 @@ export function HookFormUnifiedPhotoInput({
 
             // Converte o canvas para blob
             canvas.toBlob(
-                (blob) => {
+                async (blob) => {
                     if (blob) {
                         const file = new File([blob], `photo_${Date.now()}.jpg`, {
                             type: 'image/jpeg',
                         });
 
-                        onChange(file);
+                        // Comprimir imagem se for maior que 1MB
+                        if (file.size > 1024 * 1024) {
+                            try {
+                                const compressedFile = await compressImage(file, 2); // Máximo 2MB
+                                onChange(compressedFile);
+                            } catch (error) {
+                                console.error('Erro ao comprimir imagem da câmera:', error);
+                                onChange(file); // Fallback para arquivo original
+                            }
+                        } else {
+                            onChange(file);
+                        }
                     }
                 },
                 'image/jpeg',
@@ -167,20 +231,42 @@ export function HookFormUnifiedPhotoInput({
     };
 
     const handleFileSelect = useCallback(
-        (event: React.ChangeEvent<HTMLInputElement>) => {
+        async (event: React.ChangeEvent<HTMLInputElement>) => {
             const file = event.target.files?.[0];
             if (file) {
-                onChange(file);
+                // Comprimir imagem se for maior que 1MB
+                if (file.size > 1024 * 1024) {
+                    try {
+                        const compressedFile = await compressImage(file, 2); // Máximo 2MB
+                        onChange(compressedFile);
+                    } catch (error) {
+                        console.error('Erro ao comprimir imagem:', error);
+                        onChange(file); // Fallback para arquivo original
+                    }
+                } else {
+                    onChange(file);
+                }
             }
         },
         [onChange],
     );
 
     const handleGallerySelect = useCallback(
-        (event: React.ChangeEvent<HTMLInputElement>) => {
+        async (event: React.ChangeEvent<HTMLInputElement>) => {
             const file = event.target.files?.[0];
             if (file) {
-                onChange(file);
+                // Comprimir imagem se for maior que 1MB
+                if (file.size > 1024 * 1024) {
+                    try {
+                        const compressedFile = await compressImage(file, 2); // Máximo 2MB
+                        onChange(compressedFile);
+                    } catch (error) {
+                        console.error('Erro ao comprimir imagem:', error);
+                        onChange(file); // Fallback para arquivo original
+                    }
+                } else {
+                    onChange(file);
+                }
             }
         },
         [onChange],
@@ -204,7 +290,6 @@ export function HookFormUnifiedPhotoInput({
 
     return (
         <div className={cn('w-full', className)}>
-            {/* Label */}
             {label && (
                 <label className={cn('block text-sm font-medium mb-2', labelClassName)}>
                     {label}
@@ -212,7 +297,6 @@ export function HookFormUnifiedPhotoInput({
                 </label>
             )}
 
-            {/* Input file hidden para câmera (fallback) */}
             <input
                 ref={fileInputRef}
                 type="file"
@@ -223,7 +307,6 @@ export function HookFormUnifiedPhotoInput({
                 disabled={isDisabled}
             />
 
-            {/* Input file hidden para galeria - sem capture para ir direto à galeria */}
             <input
                 ref={galleryInputRef}
                 type="file"
@@ -234,9 +317,7 @@ export function HookFormUnifiedPhotoInput({
                 multiple={false}
             />
 
-            {/* Botões de ação */}
             <div className="space-y-4">
-                {/* Botão de câmera */}
                 <ErrorBadge hidden={!error} message={error?.message || 'Imagem inválida'}>
                     <Button
                         type="primary"
@@ -255,7 +336,6 @@ export function HookFormUnifiedPhotoInput({
                     </Button>
                 </ErrorBadge>
 
-                {/* Botão de upload */}
                 <ErrorBadge hidden={!error} message={error?.message || 'Imagem inválida'}>
                     <Button
                         type="primary"
@@ -278,7 +358,6 @@ export function HookFormUnifiedPhotoInput({
                 </ErrorBadge>
             </div>
 
-            {/* Preview unificado usando o componente do Ant Design */}
             {fileList.length > 0 && showPreview && (
                 <div className="mt-4">
                     <ConfigProvider theme={uploadTheme}>
@@ -294,7 +373,6 @@ export function HookFormUnifiedPhotoInput({
                 </div>
             )}
 
-            {/* Modal de preview */}
             {previewImage && showPreview && (
                 <AntdImage
                     wrapperStyle={{ display: 'none' }}
