@@ -19,7 +19,7 @@ export const PhotoItem = ({ photo, selectedPhotos, isSelectMode, handlePhotoClic
             className={cn(
                 'relative aspect-square rounded-lg overflow-hidden cursor-pointer group transition-opacity duration-300 hover:cursor-pointer',
                 isSelected && 'opacity-40',
-                !isSelectMode && 'hover:opacity-70',
+                !isSelectMode && 'hover:opacity-60',
             )}
             onClick={() => handlePhotoClick(photo)}
         >
@@ -35,7 +35,7 @@ export const PhotoItem = ({ photo, selectedPhotos, isSelectMode, handlePhotoClic
 
             {isSelectMode && (
                 <div
-                    className={`absolute top-2 left-2 w-7 h-7 rounded-full border-2 flex items-center justify-center ${
+                    className={`absolute top-2 left-2 w-[28px] h-[28px] rounded-full border-1 flex items-center justify-center scale-75 ${
                         isSelected
                             ? 'bg-soft-gold border-soft-gold shadow-lg transition-all duration-200 ease-in-out'
                             : 'bg-white border-gray-300 dark:bg-gray-300 shadow-lg dark:border-stone-700 transition-all duration-200 ease-in-out'

@@ -1,4 +1,5 @@
-import React from 'react';
+'use client';
+
 import { Box, Loading } from '@/shared/components/ui';
 import { MemoryDTO } from '@/shared/types/dtos';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -9,7 +10,7 @@ interface PhotoGridProps {
     selectedPhotos: string[];
     isSelectMode: boolean;
     onSelectPhoto: (photoId: string) => void;
-    onOpenModal?: (memory: MemoryDTO) => void;
+    onOpenModal?: (memory: MemoryDTO, allPhotos: MemoryDTO[]) => void;
     hasMore?: boolean;
     onLoadMore?: () => void;
     isLoading?: boolean;
@@ -30,7 +31,7 @@ export const PhotoGrid: React.FC<PhotoGridProps> = ({
             onSelectPhoto(photo.id);
             return;
         }
-        onOpenModal?.(photo);
+        onOpenModal?.(photo, photos);
     };
 
     return (

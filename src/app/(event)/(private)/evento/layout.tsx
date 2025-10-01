@@ -6,15 +6,20 @@ import { ThemeProvider } from '@/shared/context/ThemeContext';
 import ThemeToggleButton from '@/shared/components/ui/themeToggleButton';
 import React from 'react';
 import { EventProvider } from '@/shared/context/EventContext';
-
+import { useRouter } from 'next/navigation';
 export default function EventLayout({ children }: { children: React.ReactNode }) {
+    const router = useRouter();
+
     return (
         <ThemeProvider>
             <EventProvider>
                 <div className="min-h-screen bg-snow-white dark:bg-matte-black flex flex-col">
                     <header className="sticky top-0 z-40 bg-snow-white dark:bg-matte-black border-b border-gray-200 dark:border-gray-700">
                         <div className="flex items-center justify-between px-4 py-3">
-                            <Title className="text-2xl font-bold text-matte-black dark:text-snow-white font-nanum-brush">
+                            <Title
+                                className="text-2xl font-bold text-matte-black dark:text-snow-white font-nanum-brush"
+                                onClick={() => router.push('/')}
+                            >
                                 Qinstante
                             </Title>
                             <ThemeToggleButton type="secondary" />

@@ -18,7 +18,7 @@ interface EventFormProps {
 }
 
 export function EventForm({ action = 'create' }: EventFormProps) {
-    const { watch, setValue } = useFormContext();
+    const { watch, setValue, clearErrors } = useFormContext();
     const { currentDomain } = useClientRouter();
     const { user } = useAuth();
 
@@ -28,7 +28,10 @@ export function EventForm({ action = 'create' }: EventFormProps) {
 
     const handleChangeName = (e: ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
-        setValue('slug', value?.trim().toLowerCase().replace(/ /g, '-') || '');
+        if (value) {
+            setValue('slug', value?.trim().toLowerCase().replace(/ /g, '-') || '');
+            clearErrors('slug');
+        }
     };
 
     return (

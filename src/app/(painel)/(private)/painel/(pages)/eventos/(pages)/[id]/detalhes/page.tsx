@@ -33,6 +33,7 @@ export default function DetailsPage() {
     const [selectedPhotos, setSelectedPhotos] = useState<string[]>([]);
     const [isSelectMode, setIsSelectMode] = useState(false);
     const [openedMemory, setOpenedMemory] = useState<MemoryDTO | null>(null);
+    const [allPhotos, setAllPhotos] = useState<MemoryDTO[]>([]);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const { data: event, isPending } = useFindEventById(id);
@@ -108,10 +109,24 @@ export default function DetailsPage() {
         }
     };
 
+    const handleOpenModal = (memory: MemoryDTO, allPhotosArray: MemoryDTO[]) => {
+        setOpenedMemory(memory);
+        setAllPhotos(allPhotosArray);
+    };
+
+    const handleNavigateModal = (memory: MemoryDTO) => {
+        setOpenedMemory(memory);
+    };
+
+    const handleCloseModal = () => {
+        setOpenedMemory(null);
+        setAllPhotos([]);
+    };
+
     return (
         <>
             <PageBreadcrumb
-                pageTitle="Detalhes"
+                pageTitle="Fotos"
                 breadcrumbItems={[{ label: 'Eventos', href: '/painel/eventos' }]}
             />
             <Container>
@@ -133,7 +148,7 @@ export default function DetailsPage() {
                             selectedPhotos={selectedPhotos}
                             isSelectMode={isSelectMode}
                             onSelectPhoto={handleSelectPhoto}
-                            onOpenModal={setOpenedMemory}
+                            onOpenModal={handleOpenModal}
                             hasMore={hasNextPage || false}
                             onLoadMore={fetchNextPage}
                             isLoading={isFetchingNextPage || isLoadingMemory}
@@ -142,7 +157,14 @@ export default function DetailsPage() {
                 )}
             </Container>
 
-            {openedMemory && <MemoryModal memory={openedMemory} onClose={() => setOpenedMemory(null)} />}
+            {openedMemory && (
+                <MemoryModal
+                    currentMemory={openedMemory}
+                    allPhotos={allPhotos}
+                    onNavigate={handleNavigateModal}
+                    onClose={handleCloseModal}
+                />
+            )}
 
             {showDeleteModal && (
                 <Modal

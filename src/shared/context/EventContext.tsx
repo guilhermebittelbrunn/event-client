@@ -52,6 +52,28 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
         warningAlert('Não foi possível acessar o evento');
     }, []);
 
+    const revalidateAuthentication = useCallback(async () => {
+        if (!isClient) return;
+
+        const { eventToken: cookieEventToken } = getTokenFromCookies();
+        const tokenPayload = getTokenPayload<EventTokenPayload>(cookieEventToken);
+
+        if (!cookieEventToken || !tokenPayload) {
+            setEvent(undefined);
+            handleFailedAuthentication();
+            return;
+        }
+
+        try {
+            await findEventByIdMutation.mutateAsync(tokenPayload.sub, {
+                onSuccess: ({ data }) => setEvent(data),
+                onError: handleFailedAuthentication,
+            });
+        } catch (error) {
+            handleFailedAuthentication();
+        }
+    }, [isClient, findEventByIdMutation, handleFailedAuthentication]);
+
     useEffect(() => {
         if (!isClient) return;
 
@@ -88,6 +110,29 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         setIsClient(true);
     }, []);
+
+    // Listener para detectar quando o usuário volta para a aba
+    useEffect(() => {
+        if (!isClient) return;
+
+        const handleVisibilityChange = () => {
+            if (!document.hidden) {
+                revalidateAuthentication();
+            }
+        };
+
+        const handleFocus = () => {
+            revalidateAuthentication();
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        window.addEventListener('focus', handleFocus);
+
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            window.removeEventListener('focus', handleFocus);
+        };
+    }, [isClient, revalidateAuthentication]);
 
     const authenticating = findEventByIdMutation.isPending || signInByTokenMutation.isPending;
 

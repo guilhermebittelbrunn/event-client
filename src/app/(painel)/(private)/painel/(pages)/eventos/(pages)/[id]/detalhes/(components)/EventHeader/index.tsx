@@ -23,7 +23,7 @@ export const EventHeader: React.FC<EventHeaderProps> = ({ event, photoCount }) =
                             <Title primary className="text-lg inline">
                                 {photoCount}
                             </Title>
-                            <Title className="text-lg inline">fotos</Title>
+                            <Title className="text-md inline">Fotos</Title>
                         </Box>
                     </Box>
                 </Box>

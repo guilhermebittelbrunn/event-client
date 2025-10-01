@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSidebar } from '../context/SidebarContext';
@@ -170,8 +170,44 @@ const AppSidebar: React.FC = () => {
     const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>({});
     const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-    // / const isActive = (path: string) => path === pathname;
-    const isActive = useCallback((path: string) => path === pathname, [pathname]);
+    // Get all available paths from menu items
+    const getAllPaths = useCallback(() => {
+        const paths: string[] = [];
+        [...navItems, ...othersItems].forEach((item) => {
+            if (item.path) {
+                paths.push(item.path);
+            }
+            if (item.subItems) {
+                item.subItems.forEach((subItem) => {
+                    paths.push(subItem.path);
+                });
+            }
+        });
+        return paths;
+    }, []);
+
+    const isActive = useCallback(
+        (path: string) => {
+            // Exact match
+            if (pathname === path) return true;
+
+            // Check if current path is a child route
+            if (pathname.startsWith(path + '/')) {
+                // Check if there's a more specific path that also matches
+                const allPaths = getAllPaths();
+                const hasMoreSpecificMatch = allPaths.some(
+                    (otherPath) =>
+                        otherPath !== path &&
+                        otherPath.length > path.length &&
+                        (pathname === otherPath || pathname.startsWith(otherPath + '/')),
+                );
+                return !hasMoreSpecificMatch;
+            }
+
+            return false;
+        },
+        [pathname, getAllPaths],
+    );
 
     useEffect(() => {
         // Check if the current path matches any submenu item

@@ -15,6 +15,9 @@ export default function EventRedirect({ seconds = EVENT_REDIRECT_SECONDS, classN
 
     useEffect(() => {
         const interval = setInterval(() => setCountdown(countdown - 1), 1000);
+        if (countdown === 0) {
+            redirect('/');
+        }
         return () => clearInterval(interval);
     }, [countdown]);
 
