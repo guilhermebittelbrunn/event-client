@@ -19,7 +19,7 @@ export default function EventRedirect({ seconds = EVENT_REDIRECT_SECONDS, classN
             redirect('/');
         }
         return () => clearInterval(interval);
-    }, [countdown]);
+    }, [countdown, redirect]);
 
     return (
         <div

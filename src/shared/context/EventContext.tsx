@@ -37,7 +37,6 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
         mutationFn: (token: string) => client.authService.signInByToken(token),
         onSuccess: ({ data: eventData, meta }: SignInByTokenResponse) => {
             const { token } = meta;
-
             setCookie('eventToken', token.accessToken, token.expiresIn);
             setEvent(eventData);
         },
@@ -69,7 +68,7 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
                 onSuccess: ({ data }) => setEvent(data),
                 onError: handleFailedAuthentication,
             });
-        } catch (error) {
+        } catch {
             handleFailedAuthentication();
         }
     }, [isClient, findEventByIdMutation, handleFailedAuthentication]);

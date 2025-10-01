@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 'use client';
 
 import PageBreadcrumb from '@/shared/components/ui/pageBreadCrumb';
