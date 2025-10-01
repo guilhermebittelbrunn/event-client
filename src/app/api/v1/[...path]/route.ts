@@ -102,11 +102,13 @@ async function handleRequest(request: NextRequest, { path }: { path: string[] },
 
         // Copiar headers relevantes da resposta
         response.headers.forEach((value, key) => {
-            // Incluir headers CORS se necessário
+            // Incluir headers CORS, content-type, content-length e headers de download
             if (
                 key.toLowerCase().includes('access-control') ||
                 key.toLowerCase().includes('content-type') ||
-                key.toLowerCase().includes('content-length')
+                key.toLowerCase().includes('content-length') ||
+                key.toLowerCase().includes('content-disposition') ||
+                key.toLowerCase().includes('content-encoding')
             ) {
                 responseHeaders[key] = value;
             }
@@ -124,27 +126,44 @@ async function handleRequest(request: NextRequest, { path }: { path: string[] },
                 'Content-Type, Authorization, refresh-token, event-token';
         }
 
-        // Obter o conteúdo da resposta
-        let responseText = '';
-
-        // Para respostas 204 (No Content) ou outras respostas vazias, não tentar ler o body
-        if (response.status !== 204 && response.status !== 205) {
-            try {
-                responseText = await response.text();
-            } catch (error) {
-                console.warn('Could not read response text:', error);
-                responseText = '';
-            }
-        }
-
-        // Retornar a resposta com os headers corretos
-        // Para status 204, usar Response nativo do Next.js
+        // Para status 204, usar Response nativo
         if (response.status === 204) {
             return new Response(null, {
                 status: 204,
                 statusText: 'No Content',
                 headers: responseHeaders,
             });
+        }
+
+        // Verificar se a resposta é binária (arquivo)
+        const responseContentType = response.headers.get('content-type') || '';
+        const isBinary =
+            responseContentType.includes('application/octet-stream') ||
+            responseContentType.includes('application/zip') ||
+            responseContentType.includes('application/pdf') ||
+            responseContentType.includes('image/') ||
+            responseContentType.includes('video/') ||
+            responseContentType.includes('audio/');
+
+        // Se for binário, retornar como ArrayBuffer
+        if (isBinary) {
+            const arrayBuffer = await response.arrayBuffer();
+            return new NextResponse(arrayBuffer, {
+                status: response.status,
+                statusText: response.statusText,
+                headers: responseHeaders,
+            });
+        }
+
+        // Para respostas de texto (JSON, HTML, etc)
+        let responseText = '';
+        if (response.status !== 205) {
+            try {
+                responseText = await response.text();
+            } catch (error) {
+                console.warn('Could not read response text:', error);
+                responseText = '';
+            }
         }
 
         return new NextResponse(responseText, {

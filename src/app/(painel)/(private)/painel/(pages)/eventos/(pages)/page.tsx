@@ -1,6 +1,6 @@
 'use client';
 
-import { AppstoreOutlined, PlusOutlined, QrcodeOutlined } from '@ant-design/icons';
+import { PictureOutlined, PlusOutlined, QrcodeOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 
 import PageBreadcrumb from '@/shared/components/ui/pageBreadCrumb';
@@ -71,9 +71,9 @@ export default function EventsPage() {
                 <ActionsMenu
                     items={[
                         {
-                            icon: <AppstoreOutlined style={{ scale: 1.25 }} />,
+                            icon: <PictureOutlined style={{ scale: 1.25 }} />,
                             key: 'details',
-                            label: 'Detalhes',
+                            label: 'Fotos',
                             onClick: () => {
                                 router.push(`/painel/eventos/${record.id}/detalhes`);
                             },

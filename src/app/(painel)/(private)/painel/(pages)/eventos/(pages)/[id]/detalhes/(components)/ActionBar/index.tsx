@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button } from '@/shared/components/ui';
+import { Box, Button, Title } from '@/shared/components/ui';
 import { TrashBinIcon, DownloadIcon } from '@/shared/icons';
 import { cn } from '@/shared/utils';
 import { useMemoryCrud } from '@/shared/hooks/useMemoryCrud';
@@ -28,7 +28,7 @@ export const ActionBar: React.FC<ActionBarProps> = ({
                     <button
                         onClick={onDelete}
                         disabled={!isSelectMode || selectedCount === 0}
-                        className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                     >
                         <TrashBinIcon className="text-soft-gold dark:text-soft-gold-dark scale-150" />
                     </button>
@@ -36,26 +36,30 @@ export const ActionBar: React.FC<ActionBarProps> = ({
                     <button
                         onClick={onDownload}
                         disabled={!isSelectMode || downloadMemoryMutation.isPending || selectedCount === 0}
-                        className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                     >
                         <DownloadIcon className="text-soft-gold dark:text-soft-gold-dark scale-150" />
                     </button>
                 </div>
+
+                {isSelectMode && selectedCount > 0 && (
+                    <div className="flex-row flex gap-2">
+                        <Title className="text-md border border-soft-gold px-3 py-1 rounded-full md:border-none md:px-0 md:py-0">
+                            <span className="text-soft-gold">{selectedCount}</span>
+                        </Title>
+                        <Title className="text-md md:block hidden">Fotos Selecionadas</Title>
+                    </div>
+                )}
 
                 <Button
                     type={isSelectMode ? 'secondary' : 'primary'}
                     onClick={onToggleSelect}
                     className={cn(
                         'py-2 transition-colors duration-300 hover:opacity-90',
-                        isSelectMode && 'px-6',
+                        isSelectMode && 'px-[22px]',
                     )}
                 >
                     {isSelectMode ? 'Cancelar' : 'Selecionar'}
-                    {isSelectMode && selectedCount > 0 && (
-                        <span className="ml-2 bg-soft-gold text-white text-xs px-1.5 py-0.5 rounded-full">
-                            {selectedCount}
-                        </span>
-                    )}
                 </Button>
             </div>
         </Box>

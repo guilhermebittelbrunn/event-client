@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation';
 
-import { AppstoreOutlined, EditFilled, QrcodeOutlined, ShareAltOutlined } from '@ant-design/icons';
+import { EditFilled, PictureOutlined, QrcodeOutlined } from '@ant-design/icons';
 import ResponsiveImage from '@/shared/components/ui/responsiveImage';
 import { formatDate } from '@/shared/utils';
 import { EventDTO } from '@/shared/types/dtos';
@@ -36,8 +36,8 @@ export const EventCard = ({ event, detailed }: EventCardProps) => {
         },
         {
             key: 'details',
-            label: 'Detalhes',
-            icon: <AppstoreOutlined className="text-soft-gold dark:text-soft-gold-dark scale-150" />,
+            label: 'Fotos',
+            icon: <PictureOutlined className="text-soft-gold dark:text-soft-gold-dark scale-150" />,
             onClick: () => router.push(`/painel/eventos/${event.id}/detalhes`),
         },
         {
@@ -70,7 +70,7 @@ export const EventCard = ({ event, detailed }: EventCardProps) => {
                                 {event.name}
                             </h3>
                             <div className="flex flex-row gap-6">
-                                <ShareAltOutlined
+                                <QrcodeOutlined
                                     className="text-soft-gold dark:text-soft-gold-dark scale-150"
                                     onClick={handleShare}
                                 />
