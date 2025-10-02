@@ -103,12 +103,12 @@ async function handleRequest(request: NextRequest, { path }: { path: string[] },
         // Copiar headers relevantes da resposta
         response.headers.forEach((value, key) => {
             // Incluir headers CORS, content-type, content-length e headers de download
+            // Excluir headers de compressão pois o fetch já descomprime automaticamente
             if (
                 key.toLowerCase().includes('access-control') ||
                 key.toLowerCase().includes('content-type') ||
                 key.toLowerCase().includes('content-length') ||
-                key.toLowerCase().includes('content-disposition') ||
-                key.toLowerCase().includes('content-encoding')
+                key.toLowerCase().includes('content-disposition')
             ) {
                 responseHeaders[key] = value;
             }
@@ -148,6 +148,10 @@ async function handleRequest(request: NextRequest, { path }: { path: string[] },
         // Se for binário, retornar como ArrayBuffer
         if (isBinary) {
             const arrayBuffer = await response.arrayBuffer();
+
+            // Remover Content-Length para evitar problemas com compressão
+            delete responseHeaders['content-length'];
+
             return new NextResponse(arrayBuffer, {
                 status: response.status,
                 statusText: response.statusText,
@@ -165,6 +169,9 @@ async function handleRequest(request: NextRequest, { path }: { path: string[] },
                 responseText = '';
             }
         }
+
+        // Remover Content-Length para evitar problemas com compressão
+        delete responseHeaders['content-length'];
 
         return new NextResponse(responseText, {
             status: response.status,
