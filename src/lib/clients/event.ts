@@ -65,7 +65,7 @@ class EventClient {
     private setupResponse(client: AxiosInstance) {
         client.interceptors.response.use(
             (response) => response,
-            (error) => {
+            async (error) => {
                 if (error.response && error.response.status === 401) {
                     removeCookie('eventToken');
                     setTimeout(() => {
@@ -73,7 +73,9 @@ class EventClient {
                     }, EVENT_REDIRECT_SECONDS * 1000);
                 }
 
-                return Promise.reject(new FormattedError(error));
+                // Usar o método estático assíncrono para suporte a blob
+                const formattedError = await FormattedError.create(error);
+                return Promise.reject(formattedError);
             },
         );
     }

@@ -10,6 +10,34 @@ export default class FormattedError {
         this.status = this.formatStatus(error);
     }
 
+    static async create(error: unknown): Promise<FormattedError> {
+        const formattedError = new FormattedError(error);
+
+        if (formattedError.isBlobError(error)) {
+            try {
+                if (axios.isAxiosError(error) && error.response?.data instanceof Blob) {
+                    const text = await error.response.data.text();
+                    const errorData = JSON.parse(text);
+                    formattedError.message = errorData.message || 'Erro no download';
+                }
+            } catch (parseError) {
+                if (axios.isAxiosError(error)) {
+                    formattedError.message = `${error.response?.status} - ${error.response?.statusText || 'Erro na requisição'}`;
+                }
+            }
+        }
+
+        return formattedError;
+    }
+
+    private isBlobError(error: unknown): boolean {
+        return (
+            axios.isAxiosError(error) &&
+            error.config?.responseType === 'blob' &&
+            error.response?.data instanceof Blob
+        );
+    }
+
     formatMessage(error: unknown): string {
         const fallbackMessage = 'Um erro inesperado aconteceu';
 
@@ -22,15 +50,34 @@ export default class FormattedError {
                         return 'Tamanho do arquivo muito grande.';
                     }
 
-                    if (responseError.data && responseError.data.message) {
-                        if (Array.isArray(responseError.data.message)) {
-                            return responseError.data.message.join(', ');
+                    if (responseError.data) {
+                        if (responseError.data.message) {
+                            if (Array.isArray(responseError.data.message)) {
+                                return responseError.data.message.join(', ');
+                            }
+                            return responseError.data.message;
                         }
-                        return responseError.data.message;
+
+                        if (responseError.data.error) {
+                            return responseError.data.error;
+                        }
+
+                        if (typeof responseError.data === 'string') {
+                            return responseError.data;
+                        }
+
+                        if (typeof responseError.data === 'object') {
+                            const errorText = JSON.stringify(responseError.data);
+                            if (errorText !== '{}') {
+                                return errorText;
+                            }
+                        }
                     }
 
-                    return `${responseError.status} - ${responseError.statusText}`;
+                    return `${responseError.status} - ${responseError.statusText || 'Erro na requisição'}`;
                 }
+
+                return error.message || 'Erro na requisição';
             }
 
             if (error instanceof Error) {
