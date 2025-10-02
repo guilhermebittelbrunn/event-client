@@ -6,7 +6,7 @@ import React, { useState, useMemo } from 'react';
 
 import useFindEventById from '@/shared/hooks/useFindEventById';
 import { useParams } from 'next/navigation';
-import { useAlert, useInfiniteMemoryQuery, useResponsiveLimit } from '@/shared/hooks';
+import { useInfiniteMemoryQuery, useResponsiveLimit } from '@/shared/hooks';
 import PageBreadcrumb from '@/shared/components/ui/pageBreadCrumb';
 import { EventHeader } from './(components)/EventHeader';
 import { ActionBar } from './(components)/ActionBar';
@@ -28,7 +28,6 @@ const LoadingContainer = () => {
 export default function DetailsPage() {
     const { id } = useParams() as { id: string };
     const queryClient = useQueryClient();
-    const { errorAlert } = useAlert();
 
     const [selectedPhotos, setSelectedPhotos] = useState<string[]>([]);
     const [isSelectMode, setIsSelectMode] = useState(false);
@@ -99,14 +98,9 @@ export default function DetailsPage() {
     };
 
     const handleDownloadPhotos = async () => {
-        try {
-            await downloadMemoryMutation.mutateAsync({ memoryIds: selectedPhotos });
-            setSelectedPhotos([]);
-            setIsSelectMode(false);
-        } catch (error) {
-            console.error('Erro ao baixar fotos:', error);
-            errorAlert('Erro ao baixar fotos');
-        }
+        await downloadMemoryMutation.mutateAsync({ memoryIds: selectedPhotos });
+        setSelectedPhotos([]);
+        setIsSelectMode(false);
     };
 
     const handleOpenModal = (memory: MemoryDTO, allPhotosArray: MemoryDTO[]) => {
