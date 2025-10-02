@@ -20,7 +20,7 @@ export default class FormattedError {
                     const errorData = JSON.parse(text);
                     formattedError.message = errorData.message || 'Erro no download';
                 }
-            } catch (parseError) {
+            } catch {
                 if (axios.isAxiosError(error)) {
                     formattedError.message = `${error.response?.status} - ${error.response?.statusText || 'Erro na requisição'}`;
                 }
