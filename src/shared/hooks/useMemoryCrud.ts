@@ -1,19 +1,16 @@
-import { ListPaginatedMemoryRequest, DownloadMemoriesRequest } from '@/lib/services';
+import { LIST_MEMORY_PAGINATED_QUERY_KEY } from '@/app/(painel)/(private)/painel/(pages)/eventos/(pages)/[id]/detalhes/(hooks)/useListMemories';
+import { DownloadMemoriesRequest } from '@/lib/services';
 import { CreateEventRequest } from '@/lib/services/event';
 import useAlert from '@/shared/hooks/useAlert';
 import useApi from '@/shared/hooks/useApi';
-import usePagination from '@/shared/hooks/usePagination';
 
 import { handleClientError } from '@/shared/utils';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-
-const LIST_MEMORY_PAGINATED_QUERY_KEY = 'memory_paginated_query_key';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export const useMemoryCrud = () => {
     const queryClient = useQueryClient();
     const { client } = useApi();
     const { successAlert, errorAlert } = useAlert();
-    const { currentPage, currentTerm, currentLimit } = usePagination();
 
     const createMemoryMutation = useMutation({
         mutationFn: (data: CreateEventRequest) => client.memoryService.create(data),
@@ -22,20 +19,6 @@ export const useMemoryCrud = () => {
         },
         onError: (error) => errorAlert(handleClientError(error)),
     });
-
-    const useListPaginatedMemory = (dto: ListPaginatedMemoryRequest) =>
-        useQuery({
-            queryKey: [LIST_MEMORY_PAGINATED_QUERY_KEY, currentPage, currentLimit, currentTerm, dto],
-            queryFn: () =>
-                client.memoryService.listPaginated({
-                    page: currentPage,
-                    limit: currentLimit,
-                    term: currentTerm,
-                    ...dto,
-                }),
-            placeholderData: (previousData) => previousData,
-            refetchOnWindowFocus: true,
-        });
 
     const deleteMemoryMutation = useMutation({
         mutationFn: (id: string) => client.memoryService.delete(id),
@@ -75,7 +58,6 @@ export const useMemoryCrud = () => {
     return {
         createMemoryMutation,
         deleteMemoryMutation,
-        useListPaginatedMemory,
         deleteBulkMemoryMutation,
         downloadMemoryMutation,
     };

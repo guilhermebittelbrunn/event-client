@@ -6,7 +6,7 @@ import { ErrorBadge } from '../../ui';
 export type InputProps = AntdInputProps & {
     label?: string;
     required?: boolean;
-    error?: any;
+    error?: Error;
     showErrorBadge?: boolean;
 };
 

@@ -1,6 +1,6 @@
 import { EventStatusEnum } from '../types/dtos';
 
-export const EVENT_REDIRECT_SECONDS = 5;
+export const EVENT_REDIRECT_SECONDS = 20;
 
 /**
  * @note for now, we don't have use for draft/published statuses

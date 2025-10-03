@@ -6,9 +6,11 @@ import { ErrorBadge } from '../../ui/errorBadge';
 export type InputPasswordProps = AntdInputProps & {
     label?: string;
     required?: boolean;
-    error?: any;
+    error?: Error;
     showErrorBadge?: boolean;
 };
+
+const AntdInputPassword = AntdInput.Password;
 
 export function InputPassword({
     className,
@@ -28,12 +30,12 @@ export function InputPassword({
             </Label>
 
             <ErrorBadge hidden={!error || !showErrorBadge} message={error?.message || 'Campo inválido'}>
-                <AntdInput.Password
+                <AntdInputPassword
                     id={id}
                     size={size}
                     placeholder={placeholder || label || undefined}
                     className={cn(
-                        `h-11 w-full rounded-lg border appearance-none border-gray-200 px-4 py-2.5 text-md text-red-400 shadow-theme-xs bg-snow-white placeholder:text-gray-400 focus:outline-hidden focus:ring-3
+                        `h-11 w-full rounded-lg border appearance-none border-gray-200 px-4 py-2.5 text-md shadow-theme-xs bg-snow-white placeholder:text-gray-400 focus:outline-hidden focus:ring-3
                         dark:bg-matte-black dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800
                         dark:border-gray-700 `,
                         error && 'border-red-600 dark:border-red-900',

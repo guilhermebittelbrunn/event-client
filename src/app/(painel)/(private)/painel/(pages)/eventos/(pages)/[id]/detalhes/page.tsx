@@ -2,11 +2,11 @@
 
 import { Title, LoadingScreen, Container, Box, Modal, Paragraph, Loading } from '@/shared/components/ui';
 
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 
 import useFindEventById from '@/shared/hooks/useFindEventById';
 import { useParams } from 'next/navigation';
-import { useInfiniteMemoryQuery, useResponsiveLimit } from '@/shared/hooks';
+import { useResponsiveLimit } from '@/shared/hooks';
 import PageBreadcrumb from '@/shared/components/ui/pageBreadCrumb';
 import { EventHeader } from './(components)/EventHeader';
 import { ActionBar } from './(components)/ActionBar';
@@ -14,7 +14,9 @@ import { PhotoGrid } from './(components)/PhotoGrid';
 import { MemoryDTO } from '@/shared/types/dtos';
 import { useMemoryCrud } from '@/shared/hooks/useMemoryCrud';
 import { useQueryClient } from '@tanstack/react-query';
-import { INFINITE_MEMORY_QUERY_KEY } from '@/shared/hooks/useInfiniteMemoryQuery';
+import useInfiniteMemoryQuery, {
+    INFINITE_MEMORY_QUERY_KEY,
+} from '@/app/(painel)/(private)/painel/(pages)/eventos/(pages)/[id]/detalhes/(hooks)/useInfiniteMemoryQuery';
 import { MemoryModal } from './(components)/MemoryModal';
 
 const LoadingContainer = () => {
