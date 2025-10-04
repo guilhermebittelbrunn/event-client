@@ -10,6 +10,11 @@ interface PolaroidProps {
 export function Polaroid({ memory }: PolaroidProps) {
     const [isRevealed, setIsRevealed] = useState(false);
 
+    const shimmer = `
+        relative before:absolute before:inset-0 before:animate-pulse
+        before:bg-gradient-to-r before:from-gray-200 before:via-gray-300 before:to-gray-200
+    `;
+
     useEffect(() => {
         const timer = setTimeout(() => setIsRevealed(true), 300);
 
@@ -40,7 +45,7 @@ export function Polaroid({ memory }: PolaroidProps) {
                                         <Image
                                             src={memory.file.url}
                                             alt={memory.description || 'Memória especial'}
-                                            className="max-w-full max-h-full object-contain"
+                                            className={`max-w-full max-h-full object-contain ${shimmer}`}
                                             width={320}
                                             height={320}
                                         />
@@ -50,7 +55,7 @@ export function Polaroid({ memory }: PolaroidProps) {
                                             alt={memory.description || 'Memória especial'}
                                             width={320}
                                             height={320}
-                                            className="max-w-full max-h-full object-contain"
+                                            className={`max-w-full max-h-full object-contain ${shimmer}`}
                                             unoptimized
                                             priority
                                         />

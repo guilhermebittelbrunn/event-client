@@ -57,9 +57,9 @@ export const EventCard = ({ event, detailed }: EventCardProps) => {
                 <Fallback condition={Boolean(event.file && event.file?.url)}>
                     <ResponsiveImage
                         src={event.file?.url}
-                        alt="Event image"
-                        width={30}
-                        height={30}
+                        alt={`imagem do evento ${event.name}`}
+                        width={18}
+                        height={18}
                         className="rounded-md"
                     />
                 </Fallback>
