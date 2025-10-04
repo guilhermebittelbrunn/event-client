@@ -21,7 +21,7 @@ const colorMap = {
     success: 'border-success-500 dark:border-success-500/30',
 };
 
-function Icon({ type, className, ...props }: IconProps) {
+function Icon({ type, ...props }: IconProps) {
     switch (type) {
         case 'warning':
             return (

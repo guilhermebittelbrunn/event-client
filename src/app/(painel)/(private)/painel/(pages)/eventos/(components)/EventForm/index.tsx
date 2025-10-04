@@ -6,7 +6,7 @@ import {
     HookFormTextArea,
     HookFormUpload,
 } from '@/shared/components/hookForm';
-import { Box, Paragraph, Title } from '@/shared/components/ui';
+import { Paragraph } from '@/shared/components/ui';
 import { EVENT_STATUS_OPTIONS } from '@/shared/consts/event';
 import useAuth from '@/shared/context/AuthContext';
 import { useClientRouter } from '@/shared/hooks';
