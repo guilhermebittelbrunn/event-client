@@ -28,7 +28,7 @@ export default function EventRedirect({ seconds = EVENT_REDIRECT_SECONDS, classN
                 className,
             )}
         >
-            <Box className="flex flex-col items-center gap-4">
+            <Box className="flex flex-col items-center gap-4 max-w-3/4">
                 <Title className="text-sm text-matte-black dark:text-snow-white text-center">
                     Infelizmente o evento em que você está tentando acessar não está mais disponível no momento
                     ou você não tem permissão para acessá-lo.

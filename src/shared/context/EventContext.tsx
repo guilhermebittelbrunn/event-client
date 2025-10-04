@@ -51,27 +51,27 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
         warningAlert('Não foi possível acessar o evento');
     }, []);
 
-    const revalidateAuthentication = useCallback(async () => {
-        if (!isClient) return;
+    // const revalidateAuthentication = useCallback(async () => {
+    //     if (!isClient) return;
 
-        const { eventToken: cookieEventToken } = getTokenFromCookies();
-        const tokenPayload = getTokenPayload<EventTokenPayload>(cookieEventToken);
+    //     const { eventToken: cookieEventToken } = getTokenFromCookies();
+    //     const tokenPayload = getTokenPayload<EventTokenPayload>(cookieEventToken);
 
-        if (!cookieEventToken || !tokenPayload) {
-            setEvent(undefined);
-            handleFailedAuthentication();
-            return;
-        }
+    //     if (!cookieEventToken || !tokenPayload) {
+    //         setEvent(undefined);
+    //         handleFailedAuthentication();
+    //         return;
+    //     }
 
-        try {
-            await findEventByIdMutation.mutateAsync(tokenPayload.sub, {
-                onSuccess: ({ data }) => setEvent(data),
-                onError: handleFailedAuthentication,
-            });
-        } catch {
-            handleFailedAuthentication();
-        }
-    }, [isClient, findEventByIdMutation, handleFailedAuthentication]);
+    //     try {
+    //         await findEventByIdMutation.mutateAsync(tokenPayload.sub, {
+    //             onSuccess: ({ data }) => setEvent(data),
+    //             onError: handleFailedAuthentication,
+    //         });
+    //     } catch {
+    //         handleFailedAuthentication();
+    //     }
+    // }, [isClient, findEventByIdMutation, handleFailedAuthentication]);
 
     useEffect(() => {
         if (!isClient) return;
@@ -111,27 +111,27 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     // Listener para detectar quando o usuário volta para a aba
-    useEffect(() => {
-        if (!isClient) return;
+    // useEffect(() => {
+    //     if (!isClient) return;
 
-        const handleVisibilityChange = () => {
-            if (!document.hidden) {
-                revalidateAuthentication();
-            }
-        };
+    //     const handleVisibilityChange = () => {
+    //         if (!document.hidden) {
+    //             revalidateAuthentication();
+    //         }
+    //     };
 
-        const handleFocus = () => {
-            revalidateAuthentication();
-        };
+    //     const handleFocus = () => {
+    //         revalidateAuthentication();
+    //     };
 
-        document.addEventListener('visibilitychange', handleVisibilityChange);
-        window.addEventListener('focus', handleFocus);
+    //     document.addEventListener('visibilitychange', handleVisibilityChange);
+    //     window.addEventListener('focus', handleFocus);
 
-        return () => {
-            document.removeEventListener('visibilitychange', handleVisibilityChange);
-            window.removeEventListener('focus', handleFocus);
-        };
-    }, [isClient, revalidateAuthentication]);
+    //     return () => {
+    //         document.removeEventListener('visibilitychange', handleVisibilityChange);
+    //         window.removeEventListener('focus', handleFocus);
+    //     };
+    // }, [isClient, revalidateAuthentication]);
 
     const authenticating = findEventByIdMutation.isPending || signInByTokenMutation.isPending;
 

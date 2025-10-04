@@ -9,5 +9,4 @@ export * from './useAlert';
 export * from './usePagination';
 export * from './useQRCode';
 export * from './useApi';
-export * from './useInfiniteMemoryQuery';
 export * from './useResponsiveLimit';
