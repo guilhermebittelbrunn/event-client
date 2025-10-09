@@ -14,10 +14,8 @@ import { PhotoGrid } from './(components)/PhotoGrid';
 import { MemoryDTO } from '@/shared/types/dtos';
 import { useMemoryCrud } from '@/shared/hooks/useMemoryCrud';
 import { useQueryClient } from '@tanstack/react-query';
-import useInfiniteMemoryQuery, {
-    INFINITE_MEMORY_QUERY_KEY,
-} from '@/app/(painel)/(private)/painel/(pages)/eventos/(pages)/[id]/detalhes/(hooks)/useInfiniteMemoryQuery';
 import { MemoryModal } from './(components)/MemoryModal';
+import useInfiniteMemoryQuery, { INFINITE_MEMORY_QUERY_KEY } from './(hooks)/useInfiniteMemoryQuery';
 
 const LoadingContainer = () => {
     return (

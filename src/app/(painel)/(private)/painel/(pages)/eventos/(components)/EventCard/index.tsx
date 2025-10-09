@@ -54,7 +54,7 @@ export const EventCard = ({ event, detailed }: EventCardProps) => {
                 className="bg-gray-200 dark:bg-neutral-800 rounded-xl shadow-lg p-4 flex gap-4 hover:cursor-pointer hover:opacity-60 transition-opacity duration-300"
                 onClick={handleShowDetails}
             >
-                <Fallback condition={Boolean(event.file && event.file?.url)}>
+                <div className="w-18 h-18">
                     <ResponsiveImage
                         src={event.file?.url}
                         alt={`imagem do evento ${event.name}`}
@@ -62,7 +62,7 @@ export const EventCard = ({ event, detailed }: EventCardProps) => {
                         height={18}
                         className="rounded-md"
                     />
-                </Fallback>
+                </div>
                 <div className="flex-1 flex flex-col justify-between">
                     <div>
                         <div className="flex items-center justify-between flex-row">
@@ -83,14 +83,14 @@ export const EventCard = ({ event, detailed }: EventCardProps) => {
                         <p className="text-gray-600 dark:text-gray-400 text-sm">{formatDate(event.startAt)}</p>
                     </div>
                     <div className="flex justify-between items-end">
-                        <div>
+                        {/* <div>
                             <span className="text-soft-gold dark:text-soft-gold-dark text-sm">350</span>
                             <span className="dark:text-snow-white text-sm"> fotos</span>
-                        </div>
-                        <div>
+                        </div> */}
+                        {/* <div>
                             <span className="text-soft-gold dark:text-soft-gold-dark text-sm">10</span>
                             <span className="dark:text-snow-white text-sm"> dias de armazenamento</span>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

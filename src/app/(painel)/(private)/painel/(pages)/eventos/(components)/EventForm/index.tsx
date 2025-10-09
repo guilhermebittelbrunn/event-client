@@ -52,7 +52,7 @@ export function EventForm({ action = 'create' }: EventFormProps) {
                     <HookFormInput name="slug" label="Link de Acesso" required />
                     {slug && (
                         <Paragraph className="text-sm opacity-50 block text-start p-0">
-                            Link de acesso: {currentDomain}/eventos/{slug}
+                            Exemplo do link de acesso: {currentDomain}/eventos/{slug}
                         </Paragraph>
                     )}
 
@@ -63,13 +63,13 @@ export function EventForm({ action = 'create' }: EventFormProps) {
                     <HookFormUpload name="image" label="Foto do evento" />
                 </div>
             </FormContainer>
-            {action === 'update' && (
+            {/* {action === 'update' && (
                 <Alert
                     message="Ao alterar o link de acesso do evento o QR Code deverá ser reimpresso"
                     type="info"
                     className="mt-2"
                 />
-            )}
+            )} */}
         </>
     );
 }

@@ -44,12 +44,12 @@ export default function SignInForm() {
                             Entrar
                         </Button>
                     </Box>
-
-                    <Link href="/cadastro">
-                        <Title className="text-sm">Não tem conta? Cadastre-se</Title>
-                    </Link>
                 </form>
             </FormProvider>
+
+            <Link href="/cadastro">
+                <Title className="text-sm">Não tem conta? Cadastre-se</Title>
+            </Link>
         </Box>
     );
 }
