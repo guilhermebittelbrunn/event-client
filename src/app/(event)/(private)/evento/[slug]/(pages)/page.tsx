@@ -1,6 +1,6 @@
 'use client';
 
-import { Title, Box } from '@/shared/components/ui';
+import { Title } from '@/shared/components/ui';
 import React, { useCallback } from 'react';
 import useEvent from '@/shared/context/EventContext';
 import { useMutation } from '@tanstack/react-query';

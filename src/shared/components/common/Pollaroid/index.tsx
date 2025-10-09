@@ -10,7 +10,10 @@ interface PolaroidProps {
     priority?: boolean;
 }
 
-export function Polaroid({ memory, priority = true }: PolaroidProps) {
+/**
+ * @TODO: change this priority to true in the future, after the blur image is implemented
+ */
+export function Polaroid({ memory, priority = false }: PolaroidProps) {
     const [isRevealed, setIsRevealed] = useState(false);
     const [isImageLoading, setIsImageLoading] = useState(true);
     const [hasImageError, setHasImageError] = useState(false);

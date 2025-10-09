@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useMemo } from 'react';
-import { CameraOutlined, HomeOutlined, PictureOutlined, UserOutlined } from '@ant-design/icons';
+import { CameraOutlined, PictureOutlined } from '@ant-design/icons';
 import { cn } from '@/shared/utils';
 import useEvent from '@/shared/context/EventContext';
 
