@@ -1,7 +1,7 @@
 import { cn } from '@/shared/utils/helpers/cn';
 import { Flex } from 'antd';
 
-interface BoxProps {
+export interface BoxProps {
     children: React.ReactNode;
     type?: 'primary' | 'secondary';
     className?: string;

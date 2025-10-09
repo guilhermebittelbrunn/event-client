@@ -1,33 +1,64 @@
-import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { CameraOutlined, HomeOutlined, UserOutlined } from '@ant-design/icons';
+import { useCallback, useMemo } from 'react';
+import { CameraOutlined, PictureOutlined } from '@ant-design/icons';
 import { cn } from '@/shared/utils';
+import useEvent from '@/shared/context/EventContext';
 
 interface MobileNavbarProps {
     className?: string;
 }
 
 export default function MobileNavbar({ className = '' }: MobileNavbarProps) {
+    const { event } = useEvent();
     const pathname = usePathname();
 
-    const navItems = [
-        {
-            icon: <HomeOutlined className="scale-150" />,
-            path: '/',
-            active: pathname === '/',
+    const basePath = `/evento/${event?.slug}`;
+
+    const navItems = useMemo(
+        () => [
+            {
+                icon: <PictureOutlined className="scale-150" />,
+                path: `${basePath}/fotos`,
+            },
+            {
+                icon: <CameraOutlined className="scale-150" />,
+                path: basePath,
+            },
+            // {
+            //     icon: <UserOutlined className="scale-150" />,
+            //     path: '/entrar',
+            // },
+        ],
+        [basePath],
+    );
+
+    const getAllPaths = useCallback(() => {
+        return navItems.map((item) => item.path);
+    }, [navItems]);
+
+    const isActive = useCallback(
+        (path: string) => {
+            // Exact match
+            if (pathname === path) return true;
+
+            // Check if current path is a child route
+            if (pathname.startsWith(path + '/')) {
+                // Check if there's a more specific path that also matches
+                const allPaths = getAllPaths();
+                const hasMoreSpecificMatch = allPaths.some(
+                    (otherPath) =>
+                        otherPath !== path &&
+                        otherPath.length > path.length &&
+                        (pathname === otherPath || pathname.startsWith(otherPath + '/')),
+                );
+                return !hasMoreSpecificMatch;
+            }
+
+            return false;
         },
-        {
-            icon: <CameraOutlined className="scale-150" />,
-            path: '/evento',
-            active: pathname.startsWith('/evento'),
-        },
-        {
-            icon: <UserOutlined className="scale-150" />,
-            path: '/entrar',
-            active: pathname === '/entrar' || pathname === '/cadastrar',
-        },
-    ];
+        [pathname, getAllPaths],
+    );
 
     return (
         <nav
@@ -42,8 +73,8 @@ export default function MobileNavbar({ className = '' }: MobileNavbarProps) {
                         key={item.path}
                         href={item.path}
                         className={`flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-colors ${
-                            item.active
-                                ? 'text-soft-gold dark:text-soft-gold-dark bg-blue-50 dark:bg-soft-gold/20 px-4'
+                            isActive(item.path)
+                                ? 'text-soft-gold dark:text-soft-gold-dark bg-snow-white dark:bg-soft-gold/[0.36] px-4'
                                 : 'text-gray-600 dark:text-gray-400 hover:text-soft-gold dark:hover:text-soft-gold-dark'
                         }`}
                     >

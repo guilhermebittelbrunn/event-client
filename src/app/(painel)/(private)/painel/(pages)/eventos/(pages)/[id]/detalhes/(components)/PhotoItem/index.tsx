@@ -1,7 +1,7 @@
-import ResponsiveImage from '@/shared/components/ui/responsiveImage';
 import { cn } from '@/shared/utils';
 import { MemoryDTO } from '@/shared/types/dtos';
 import { CheckCircleIcon } from '@/shared/icons';
+import { ProgressiveImage } from '@/shared/components/common/ProgressiveImage';
 
 interface PhotoItemProps {
     photo: MemoryDTO;
@@ -23,15 +23,12 @@ export const PhotoItem = ({ photo, selectedPhotos, isSelectMode, handlePhotoClic
             )}
             onClick={() => handlePhotoClick(photo)}
         >
-            <div className="w-full h-full relative">
-                <ResponsiveImage
-                    src={photo.file?.url}
-                    alt={`Foto ${photo.id}`}
-                    width={200}
-                    height={200}
-                    className={cn('w-full h-full object-cover rounded-none', isSelected && 'opacity-40')}
-                />
-            </div>
+            <ProgressiveImage
+                src={photo.file?.url}
+                alt={`Foto ${photo.id}`}
+                className={cn('rounded-lg', isSelected && 'opacity-40')}
+                containerClassName="w-full h-full"
+            />
 
             {isSelectMode && (
                 <div

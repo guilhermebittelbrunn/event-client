@@ -107,14 +107,14 @@ export default function EventAccessesPage() {
                             <Box className="p-6 bg-white dark:bg-matte-black rounded-lg">
                                 <div className="flex flex-col md:flex-row gap-6 items-center ">
                                     <div className="flex-1 flex flex-col justify-center items-center gap-2 min-w-0">
-                                        <Fallback condition={Boolean(event.file && event.file?.url)}>
+                                        <div className="w-32 h-32">
                                             <ResponsiveImage
                                                 src={event.file?.url}
-                                                alt="Event image"
-                                                width={12}
-                                                height={12}
+                                                alt={`imagem do evento ${event.name}`}
+                                                width={32}
+                                                height={32}
                                             />
-                                        </Fallback>
+                                        </div>
                                         <Title className="text-2xl font-bold  mb-2">{event.name}</Title>
 
                                         {event.description && (

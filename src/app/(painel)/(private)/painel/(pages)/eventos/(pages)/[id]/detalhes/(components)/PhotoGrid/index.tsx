@@ -1,41 +1,49 @@
 'use client';
 
-import { Box, Loading } from '@/shared/components/ui';
+import { Box, BoxProps } from '@/shared/components/ui';
 import { MemoryDTO } from '@/shared/types/dtos';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { PhotoItem } from '../PhotoItem';
+import { useResponsiveLimit } from '@/shared/hooks';
+import { PhotoSkeleton } from '@/shared/components/common/PhotoSkeleton';
 
 interface PhotoGridProps {
     photos: MemoryDTO[];
-    selectedPhotos: string[];
-    isSelectMode: boolean;
-    onSelectPhoto: (photoId: string) => void;
+    selectedPhotos?: string[];
+    isSelectMode?: boolean;
+    onSelectPhoto?: (photoId: string) => void;
     onOpenModal?: (memory: MemoryDTO, allPhotos: MemoryDTO[]) => void;
     hasMore?: boolean;
     onLoadMore?: () => void;
     isLoading?: boolean;
+    boxProps?: Omit<BoxProps, 'children'>;
 }
 
-export const PhotoGrid: React.FC<PhotoGridProps> = ({
-    photos,
-    selectedPhotos,
-    isSelectMode,
-    onSelectPhoto,
-    onOpenModal,
-    hasMore = false,
-    onLoadMore,
-    isLoading = false,
-}) => {
+export const PhotoGrid: React.FC<PhotoGridProps> = (props) => {
+    const {
+        photos,
+        selectedPhotos = [],
+        isSelectMode = false,
+        onSelectPhoto,
+        onOpenModal,
+        hasMore = false,
+        onLoadMore,
+        isLoading,
+        boxProps,
+    } = props;
+
+    const limitByResolution = useResponsiveLimit({ mobile: 12, lg: 16, xl: 16 });
+
     const handlePhotoClick = (photo: MemoryDTO) => {
         if (isSelectMode) {
-            onSelectPhoto(photo.id);
+            onSelectPhoto?.(photo.id);
             return;
         }
         onOpenModal?.(photo, photos);
     };
 
     return (
-        <Box>
+        <Box {...boxProps}>
             <InfiniteScroll
                 dataLength={photos.length}
                 next={onLoadMore || (() => {})}
@@ -55,8 +63,10 @@ export const PhotoGrid: React.FC<PhotoGridProps> = ({
             </InfiniteScroll>
 
             {isLoading && (
-                <div className="flex w-full justify-center py-8">
-                    <Loading />
+                <div className="grid grid-cols-3 gap-2 lg:grid-cols-4 xl:grid-cols-5 mt-2">
+                    {Array.from({ length: limitByResolution }).map((_, index) => (
+                        <PhotoSkeleton key={index} />
+                    ))}
                 </div>
             )}
 

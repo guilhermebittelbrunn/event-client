@@ -1,6 +1,6 @@
 'use client';
 
-import { Title, Box } from '@/shared/components/ui';
+import { Title } from '@/shared/components/ui';
 import React, { useCallback } from 'react';
 import useEvent from '@/shared/context/EventContext';
 import { useMutation } from '@tanstack/react-query';
@@ -8,7 +8,6 @@ import { useAlert, useApi } from '@/shared/hooks';
 import { handleClientError } from '@/shared/utils';
 import { CreateMemoryRequest } from '@/lib/services';
 import ResponsiveImage from '@/shared/components/ui/responsiveImage';
-import { Fallback } from '@/shared/components/common/fallback';
 import { PhotoSelector } from '../(components)/PhotoSelector';
 import { MemoryPreview } from '../(components)/MemoryPreview';
 import { useMemoryStore } from '@/shared/store/useMemory';
@@ -59,36 +58,31 @@ export default function SendPhotosPage() {
     }, [resetMemory]);
 
     return (
-        <Box
-            type="secondary"
-            className="h-[calc(100vh-90px)] flex flex-col touch-manipulation overflow-hidden overscroll-none"
-        >
-            <div className="h-full flex flex-col overflow-hidden">
-                <div className="flex-1 flex flex-col items-center justify-center px-6 py-4 min-h-0">
-                    <Fallback condition={Boolean(event?.file && event?.file?.url)}>
-                        <ResponsiveImage src={event?.file?.url} alt="Event image" width={12} height={12} />
-                    </Fallback>
-                    <Title className="text-xl font-bold text-matte-black dark:text-snow-white mb-8 text-center">
-                        {event?.name}
-                    </Title>
-
-                    {error && (
-                        <div className="py-2">
-                            <Alert message={error} type="error" />
-                        </div>
-                    )}
-
-                    <div className="w-full max-w-md space-y-4 pb-4 flex-shrink-0 relative z-10">
-                        <PhotoSelector disabled={isUploading} />
-                    </div>
+        <div className="flex flex-col overflow-hidden">
+            <div className="flex-1 flex flex-col items-center justify-center px-6 py-4 min-h-0">
+                <div className="w-40 h-40">
+                    <ResponsiveImage src={event?.file?.url} alt="Event image" width={40} height={40} />
                 </div>
+                <Title className="text-xl font-bold text-matte-black dark:text-snow-white mb-8 text-center">
+                    {event?.name}
+                </Title>
 
-                <MemoryPreview
-                    isLoading={createMemoryMutation.isPending}
-                    onSubmit={handleSubmit}
-                    onCancel={handleCancel}
-                />
+                {error && (
+                    <div className="py-2">
+                        <Alert message={error} type="error" />
+                    </div>
+                )}
+
+                <div className="w-full max-w-md space-y-4 pb-4 flex-shrink-0 relative z-10">
+                    <PhotoSelector disabled={isUploading} />
+                </div>
             </div>
-        </Box>
+
+            <MemoryPreview
+                isLoading={createMemoryMutation.isPending}
+                onSubmit={handleSubmit}
+                onCancel={handleCancel}
+            />
+        </div>
     );
 }
