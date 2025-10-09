@@ -15,7 +15,7 @@ export function useRedirect() {
         if (isMounted) {
             router.push(href);
         } else {
-            redirect(href);
+            window.location.href = href;
         }
     };
 
@@ -23,7 +23,7 @@ export function useRedirect() {
         if (isMounted) {
             router.replace(href);
         } else {
-            redirect(href);
+            window.location.replace(href);
         }
     };
 
@@ -34,7 +34,7 @@ export function useRedirect() {
             }, delay);
         } else {
             setTimeout(() => {
-                redirect(href);
+                window.location.href = href;
             }, delay);
         }
     };
@@ -43,7 +43,7 @@ export function useRedirect() {
         if (isMounted && condition) {
             router.push(href);
         } else {
-            redirect(href);
+            window.location.href = href;
         }
     };
 
@@ -67,7 +67,7 @@ export function useRedirect() {
         if (isMounted) {
             router.refresh();
         } else {
-            redirect(window.location.href);
+            window.location.reload();
         }
     };
 
