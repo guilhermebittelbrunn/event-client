@@ -45,7 +45,7 @@ const initialState: MemoryState = {
     error: null,
     showPreview: false,
     currentStep: 'select',
-    maxFileSize: 5, // 5MB
+    maxFileSize: 10, // 10MB
     compressionQuality: 0.8,
 };
 
@@ -236,7 +236,7 @@ const useMemory = createWithEqualityFn<MemoryState & MemoryActions>()(
             name: 'memory-store',
             storage: createJSONStorage(() => localStorage),
             partialize: (state) => ({
-                // Persiste apenas configurações, não estado temporário
+                // Persiste apenas configurações, não estado temporário pois File e URL não são serializáveis
                 maxFileSize: state.maxFileSize,
                 compressionQuality: state.compressionQuality,
             }),

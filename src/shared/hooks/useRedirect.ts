@@ -14,12 +14,16 @@ export function useRedirect() {
     const redirect = (href: string) => {
         if (isMounted) {
             router.push(href);
+        } else {
+            redirect(href);
         }
     };
 
     const redirectReplace = (href: string) => {
         if (isMounted) {
             router.replace(href);
+        } else {
+            redirect(href);
         }
     };
 
@@ -28,18 +32,28 @@ export function useRedirect() {
             setTimeout(() => {
                 router.push(href);
             }, delay);
+        } else {
+            setTimeout(() => {
+                redirect(href);
+            }, delay);
         }
     };
 
     const conditionalRedirect = (condition: boolean, href: string) => {
         if (isMounted && condition) {
             router.push(href);
+        } else {
+            redirect(href);
         }
     };
 
     const goBack = () => {
         if (isMounted) {
-            router.back();
+            if (window.history.length > 1) {
+                router.back(); // Navigate to the previous route
+            } else {
+                router.push('/'); // Redirect to home if no history exists
+            }
         }
     };
 
@@ -52,6 +66,8 @@ export function useRedirect() {
     const refresh = () => {
         if (isMounted) {
             router.refresh();
+        } else {
+            redirect(window.location.href);
         }
     };
 
