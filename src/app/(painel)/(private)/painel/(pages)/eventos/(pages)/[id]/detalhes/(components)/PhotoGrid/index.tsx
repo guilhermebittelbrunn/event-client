@@ -9,9 +9,9 @@ import { PhotoSkeleton } from '@/shared/components/common/PhotoSkeleton';
 
 interface PhotoGridProps {
     photos: MemoryDTO[];
-    selectedPhotos: string[];
-    isSelectMode: boolean;
-    onSelectPhoto: (photoId: string) => void;
+    selectedPhotos?: string[];
+    isSelectMode?: boolean;
+    onSelectPhoto?: (photoId: string) => void;
     onOpenModal?: (memory: MemoryDTO, allPhotos: MemoryDTO[]) => void;
     hasMore?: boolean;
     onLoadMore?: () => void;
@@ -22,8 +22,8 @@ interface PhotoGridProps {
 export const PhotoGrid: React.FC<PhotoGridProps> = (props) => {
     const {
         photos,
-        selectedPhotos,
-        isSelectMode,
+        selectedPhotos = [],
+        isSelectMode = false,
         onSelectPhoto,
         onOpenModal,
         hasMore = false,
@@ -36,7 +36,7 @@ export const PhotoGrid: React.FC<PhotoGridProps> = (props) => {
 
     const handlePhotoClick = (photo: MemoryDTO) => {
         if (isSelectMode) {
-            onSelectPhoto(photo.id);
+            onSelectPhoto?.(photo.id);
             return;
         }
         onOpenModal?.(photo, photos);
