@@ -12,6 +12,7 @@ export interface ColumnType<T = any, K extends keyof T = keyof T>
     dataIndex: K;
     key: K;
     render?: (value: T[K], record: T, index: number) => React.ReactNode;
+    sort?: boolean;
 }
 
 export function createColumn<T, K extends keyof T>(
@@ -20,20 +21,28 @@ export function createColumn<T, K extends keyof T>(
         key: K;
         render?: (value: T[K], record: T, index: number) => React.ReactNode;
         condition?: boolean;
+        sort?: boolean;
     } & Omit<RcColumnType<T>, 'title' | 'dataIndex' | 'key' | 'render'>,
 ) {
-    const { condition = true, ...rest } = column;
+    const { condition = true, sort = false, ...rest } = column;
 
     if (!condition) {
         return { hidden: true };
     }
 
-    return {
+    const result: any = {
         ...rest,
         dataIndex: column.key,
     };
+
+    if (sort) {
+        result.sorter = true;
+        result.sortDirections = ['ascend', 'descend'];
+    }
+
+    return result;
 }
 
-export function Table<T>({ columns, className, ...props }: TableProps<T>) {
-    return <AntdTable className={cn('w-full', className)} columns={columns} {...props} />;
+export function Table<T>({ columns, className, onChange, ...props }: TableProps<T>) {
+    return <AntdTable className={cn('w-full', className)} columns={columns} {...props} onChange={onChange} />;
 }

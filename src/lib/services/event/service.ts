@@ -1,13 +1,22 @@
-import { CreateEventRequest, CreateEventResponse, FindEventByIdResponse, UpdateEventRequest } from './types';
+import {
+    CreateEventRequest,
+    CreateEventResponse,
+    FindEventByIdResponse,
+    ListPaginatedEventRequest,
+    UpdateEventRequest,
+} from './types';
 import { formDataFromObject } from '@/shared/utils/helpers/formDataHelper';
 import { PaginatedResponse, PaginationRequestWithOrderAndDate, UpdateResponse } from '@/shared/types/utils';
 import { EventDTO } from '@/shared/types/dtos';
 import { AxiosInstance } from 'axios';
+import { BaseService } from '@/lib/baseService';
 
-export default class EventService {
+export default class EventService extends BaseService {
     private readonly baseUrl = '/event';
 
-    constructor(private readonly client: AxiosInstance) {}
+    constructor(private readonly client: AxiosInstance) {
+        super();
+    }
 
     async create(dto: CreateEventRequest): Promise<CreateEventResponse> {
         const body = formDataFromObject(dto);
@@ -43,10 +52,10 @@ export default class EventService {
         return data;
     }
 
-    async listPaginated(
-        dto: PaginationRequestWithOrderAndDate<EventDTO>,
-    ): Promise<PaginatedResponse<EventDTO>> {
-        const { data } = await this.client.get<PaginatedResponse<EventDTO>>(`${this.baseUrl}`, { params: dto });
+    async listPaginated(dto: ListPaginatedEventRequest): Promise<PaginatedResponse<EventDTO>> {
+        const { data } = await this.client.get<PaginatedResponse<EventDTO>>(
+            `${this.baseUrl}?${this.buildQueryProperties(dto)}`,
+        );
 
         return { data: data.data, meta: data.meta };
     }
