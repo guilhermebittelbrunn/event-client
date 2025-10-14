@@ -1,6 +1,6 @@
 import { EventDTO, EventStatusEnum } from '@/shared/types/dtos';
 import { EventTokenDTO } from '@/shared/types/dtos/user/auth';
-import { UpdateRequest } from '@/shared/types/utils';
+import { PaginationRequestWithOrderAndDate, UpdateRequest } from '@/shared/types/utils';
 
 export interface CreateEventRequest {
     name: string;
@@ -21,6 +21,10 @@ export interface FindEventByIdResponse {
 }
 export interface FindEventBySlugResponse {
     data: EventDTO;
+}
+
+export interface ListPaginatedEventRequest extends PaginationRequestWithOrderAndDate<EventDTO> {
+    statuses?: EventStatusEnum[];
 }
 export interface UpdateEventRequest extends UpdateRequest<CreateEventRequest> {
     id: string;
