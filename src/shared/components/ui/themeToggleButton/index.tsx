@@ -1,13 +1,13 @@
 'use client';
 
-import { useTheme } from '@/shared/context/ThemeContext';
+import { useTheme } from '@/shared/store/useTheme';
 
 interface ThemeToggleButtonProps {
     type?: 'primary' | 'secondary';
 }
 
 export default function ThemeToggleButton({ type = 'primary' }: ThemeToggleButtonProps) {
-    const { toggleTheme } = useTheme();
+    const toggleTheme = useTheme((state) => state.toggleTheme);
 
     if (type === 'primary') {
         return (
