@@ -135,7 +135,6 @@ export function PaginationTable<T>(props: PaginationTableProps<T>) {
         // Only update URL if there are actual changes
         if (hasChanges) {
             router.push(`?${params.toString()}`);
-        } else {
         }
 
         // Call parent onChange if provided
