@@ -1,7 +1,9 @@
 'use client';
 
+import { useSidebar } from '@/shared/context/SidebarContext';
+import AppSidebar from '@/shared/layout/AppSidebar';
 import { MemoryDTO } from '@/shared/types/dtos';
-import { formatDate } from '@/shared/utils';
+import { cn, formatDate } from '@/shared/utils';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
@@ -17,6 +19,7 @@ export function Polaroid({ memory, priority = false }: PolaroidProps) {
     const [isRevealed, setIsRevealed] = useState(false);
     const [isImageLoading, setIsImageLoading] = useState(true);
     const [hasImageError, setHasImageError] = useState(false);
+    const { isMobile } = useSidebar();
 
     useEffect(() => {
         const timer = setTimeout(() => setIsRevealed(true), 300);
@@ -28,7 +31,12 @@ export function Polaroid({ memory, priority = false }: PolaroidProps) {
         <div className="relative">
             <div className="relative bg-white p-4 pb-8 shadow-2xl transform rotate-2 hover:rotate-0 transition-all duration-1500 ease-out animate-float">
                 <div className="relative bg-gray-100 p-2 shadow-inner">
-                    <div className="relative w-80 h-80 overflow-hidden bg-matte-black">
+                    <div
+                        className={cn(
+                            'relative w-[40vw] h-[50vh] overflow-hidden bg-matte-black',
+                            isMobile && 'w-80 h-80',
+                        )}
+                    >
                         {/* Polaroid reveal effect (black layer) */}
                         <div
                             className={`absolute inset-0 transition-opacity duration-500 ease-out ${
@@ -124,7 +132,7 @@ export function Polaroid({ memory, priority = false }: PolaroidProps) {
                     </div>
                 </div>
 
-                <div className="mt-4 px-2 w-80">
+                <div className={cn('mt-4 px-2 w-[40vw]', isMobile && 'w-80')}>
                     <div className="text-center mb-2">
                         <p className="text-sm text-gray-600 font-mono">
                             {formatDate(memory.createdAt || new Date())}
