@@ -6,7 +6,7 @@ import {
     UpdateEventRequest,
 } from './types';
 import { formDataFromObject } from '@/shared/utils/helpers/formDataHelper';
-import { PaginatedResponse, PaginationRequestWithOrderAndDate, UpdateResponse } from '@/shared/types/utils';
+import { PaginatedResponse, UpdateResponse } from '@/shared/types/utils';
 import { EventDTO } from '@/shared/types/dtos';
 import { AxiosInstance } from 'axios';
 import { BaseService } from '@/lib/baseService';

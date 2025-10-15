@@ -1,7 +1,6 @@
 'use client';
 
 import { useSidebar } from '@/shared/context/SidebarContext';
-import AppSidebar from '@/shared/layout/AppSidebar';
 import { MemoryDTO } from '@/shared/types/dtos';
 import { cn, formatDate } from '@/shared/utils';
 import Image from 'next/image';

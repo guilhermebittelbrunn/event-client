@@ -1,6 +1,6 @@
 'use client';
 
-import { PictureOutlined, PlusOutlined, QrcodeOutlined, SortAscendingOutlined } from '@ant-design/icons';
+import { PictureOutlined, PlusOutlined, QrcodeOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 
 import PageBreadcrumb from '@/shared/components/ui/pageBreadCrumb';
