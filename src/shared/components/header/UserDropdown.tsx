@@ -1,10 +1,10 @@
 'use client';
 import React, { useState } from 'react';
 import { Dropdown, Title } from '../ui';
-import useAuth from '@/shared/context/AuthContext';
+import { useAuth } from '@/shared/store/useAuth';
 
 export default function UserDropdown() {
-    const { user, signOut } = useAuth();
+    const [user, signOut] = useAuth((state) => [state.user, state.signOut]);
     const [isOpen, setIsOpen] = useState(false);
 
     function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {

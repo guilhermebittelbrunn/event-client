@@ -4,45 +4,57 @@ import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 import { Label } from '../label';
 
-export interface SelectProps extends AntdSelectProps {
-    name: string;
+export interface SelectProps extends Omit<AntdSelectProps, 'mode'> {
+    name?: string;
     changeUrl?: boolean;
+    paramKey?: string;
     label?: string;
     required?: boolean;
     id?: string;
     placeholder?: string;
+    multiple?: boolean;
 }
 
 export function Select({
     options,
     className,
+    paramKey,
     changeUrl = false,
     onChange,
     label,
     required,
     placeholder,
     size = 'large',
+    multiple = false,
     ...props
 }: SelectProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const currentStatus = searchParams.get('status') || undefined;
+    // For multiple mode, split comma-separated values, otherwise get single value
+    const currentValue = paramKey
+        ? multiple
+            ? (() => {
+                  const value = searchParams.get(paramKey);
+                  return value ? value.split(',') : undefined;
+              })()
+            : searchParams.get(paramKey)
+        : undefined;
 
     const handleFilterChange = (key: string, value: string | string[] | null) => {
         const params = new URLSearchParams(searchParams.toString());
 
+        // Always delete existing params with this key first to avoid duplicates
+        params.delete(key);
+
         if (value && (Array.isArray(value) ? value.length > 0 : value !== '')) {
             // If the value exists and is not empty, add/update the parameter
             if (Array.isArray(value)) {
-                // For arrays (multiple select), add each value
-                value.forEach((v) => params.append(key, v));
+                // For arrays (multiple select), join with comma into a single param
+                params.set(key, value.join(','));
             } else {
                 params.set(key, value);
             }
-        } else {
-            // If the value is null, undefined, empty, or an empty array, remove the parameter
-            params.delete(key);
         }
 
         router.push(`?${params.toString()}`);
@@ -58,13 +70,14 @@ export function Select({
             <AntdSelect
                 options={options}
                 className={cn('w-full', className)}
-                value={currentStatus}
+                value={currentValue}
                 size={size}
                 placeholder={placeholder || 'Selecione uma opção'}
+                mode={multiple ? 'tags' : undefined}
                 {...props}
                 onChange={(value) => {
-                    if (changeUrl) {
-                        handleFilterChange(props.name, value);
+                    if (changeUrl && (paramKey || props.name)) {
+                        handleFilterChange(paramKey || props.name || '', value);
                     }
                     onChange?.(value);
                 }}

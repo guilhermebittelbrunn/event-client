@@ -9,15 +9,26 @@ import { Box } from '@/shared/components/ui/box';
 import Link from 'next/link';
 import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import useAuth from '@/shared/context/AuthContext';
+import { useAuth } from '@/shared/store/useAuth';
+import useAlert from '@/shared/hooks/useAlert';
+import { useRouter } from 'next/navigation';
+import { handleClientError } from '@/shared/utils';
 
 export default function SignUpForm() {
     const form = useForm({ resolver: yupResolver(signUpRequestSchema) });
+    const signUp = useAuth((state) => state.signUp);
+    const isSigningUp = useAuth((state) => state.isSigningUp);
+    const { successAlert, errorAlert } = useAlert();
+    const router = useRouter();
 
-    const { signUpMutation } = useAuth();
-
-    const onSubmit: SubmitHandler<SignUpSchema> = (data) => {
-        signUpMutation.mutate(data);
+    const onSubmit: SubmitHandler<SignUpSchema> = async (data) => {
+        try {
+            await signUp(data);
+            successAlert('Cadastro realizado com sucesso');
+            setTimeout(() => router.push('/entrar'), 600);
+        } catch (error) {
+            errorAlert(handleClientError(error));
+        }
     };
 
     return (
@@ -38,7 +49,7 @@ export default function SignUpForm() {
 
                     <Box type="secondary" className="max-w-md gap-2 mt-4 items-center justify-center">
                         <Button
-                            loading={signUpMutation.isPending}
+                            loading={isSigningUp}
                             type="primary"
                             htmlType="submit"
                             className="py-6 text-lg w-full rounded-xl"

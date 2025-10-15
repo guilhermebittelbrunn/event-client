@@ -3,13 +3,13 @@
 import { Logo } from '@/shared/assets/icons';
 import { Box, Button } from '@/shared/components/ui';
 import { Title } from '@/shared/components/ui/title';
-import useAuth from '@/shared/context/AuthContext';
+import { useAuth } from '@/shared/store/useAuth';
 import { useRedirect } from '@/shared/hooks';
 import React from 'react';
 
 export default function NotFound() {
     const { redirect } = useRedirect();
-    const { isAuthenticated } = useAuth();
+    const isAuthenticated = useAuth((state) => state.isAuthenticated);
 
     const handleRedirect = () => {
         if (isAuthenticated) {

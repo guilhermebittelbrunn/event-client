@@ -4,23 +4,34 @@ import { PictureOutlined, PlusOutlined, QrcodeOutlined } from '@ant-design/icons
 import { useRouter } from 'next/navigation';
 
 import PageBreadcrumb from '@/shared/components/ui/pageBreadCrumb';
-import { InputSearch } from '@/shared/components/form';
+import { InputSearch, Select } from '@/shared/components/form';
 import { AddButton, Container, PaginationTable, Tooltip, createColumn } from '@/shared/components/ui';
 import { ActionsMenu } from '@/shared/components/ui/actionMenu';
 import { Box } from '@/shared/components/ui/box';
 import { formatDate } from '@/shared/utils/helpers';
 import { useEventCrud } from '../../../../../../../shared/hooks/useEventCrud';
-import { EventDTO, EventStatusOptions, UserTypeEnum } from '@/shared/types/dtos';
+import { EventDTO, EventStatusEnum, EventStatusOptions, UserTypeEnum } from '@/shared/types/dtos';
 import ResponsiveImage from '@/shared/components/ui/responsiveImage';
-import useAuth from '@/shared/context/AuthContext';
+import { useAuth } from '@/shared/store/useAuth';
 import { Fallback } from '@/shared/components/common/fallback';
+import { EVENT_STATUS_OPTIONS } from '@/shared/consts/event';
+import useQueryParams from '@/shared/hooks/useQueryParams';
 
 export default function EventsPage() {
     const router = useRouter();
-    const { useListPaginatedEvent, deleteEventMutation } = useEventCrud();
-    const { user } = useAuth();
 
-    const { data, isLoading } = useListPaginatedEvent({ order: 'asc', orderBy: 'name' });
+    const { apiParams } = useQueryParams({
+        params: [
+            { key: 'statuses', defaultValue: [], initialValue: [EventStatusEnum.IN_PROGRESS], multiple: true },
+            { key: 'order', defaultValue: '', initialValue: 'asc' },
+            { key: 'orderBy', defaultValue: '', initialValue: 'startAt' },
+        ],
+    });
+
+    const { useListPaginatedEvent, deleteEventMutation } = useEventCrud();
+    const user = useAuth((state) => state.user);
+
+    const { data, isLoading } = useListPaginatedEvent(apiParams);
 
     const isAdmin = user?.type === UserTypeEnum.ADMIN;
 
@@ -40,6 +51,7 @@ export default function EventsPage() {
         createColumn<EventDTO, 'name'>({
             title: 'Nome',
             key: 'name',
+            sort: true,
         }),
         createColumn<EventDTO, 'user'>({
             title: 'Criado por',
@@ -51,16 +63,19 @@ export default function EventsPage() {
             title: 'Status',
             key: 'status',
             render: (status) => EventStatusOptions.find((option) => option.value === status)?.label,
+            sort: true,
         }),
         createColumn<EventDTO, 'startAt'>({
             title: 'Data de início',
             key: 'startAt',
             render: (startAt) => formatDate(startAt),
+            sort: true,
         }),
         createColumn<EventDTO, 'endAt'>({
             title: 'Data de término',
             key: 'endAt',
             render: (endAt) => formatDate(endAt),
+            sort: true,
         }),
         {
             title: 'Ações',
@@ -87,12 +102,8 @@ export default function EventsPage() {
                             },
                         },
                     ]}
-                    onEdit={() => {
-                        router.push(`/painel/eventos/${record.id}/editar`);
-                    }}
-                    onDelete={() => {
-                        deleteEventMutation.mutate(record.id);
-                    }}
+                    onEdit={() => router.push(`/painel/eventos/${record.id}/editar`)}
+                    onDelete={() => deleteEventMutation.mutate(record.id)}
                 />
             ),
         },
@@ -116,7 +127,15 @@ export default function EventsPage() {
             />
             <Container>
                 <Box className="mb-4 space-y-4">
-                    <Box className="flex justify-end items-end">
+                    <Box className="flex flex-col gap-2 justify-end items-end md:flex-row">
+                        <Select
+                            options={EVENT_STATUS_OPTIONS}
+                            placeholder="Status"
+                            paramKey="statuses"
+                            changeUrl
+                            className="w-full md:w-2/5"
+                            multiple
+                        />
                         <InputSearch
                             changeUrl
                             placeholder="Nome do evento"

@@ -6,17 +6,29 @@ import { HookFormInput, HookFormInputPassword } from '@/shared/components/hookFo
 import { Button, Title } from '@/shared/components/ui';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Link from 'next/link';
-import useAuth from '@/shared/context/AuthContext';
+import { useAuth } from '@/shared/store/useAuth';
 import { signInRequestSchema, SignInSchema } from '@/lib/services/auth/schema';
 import { yupResolver } from '@hookform/resolvers/yup';
+import useAlert from '@/shared/hooks/useAlert';
+import { useRouter } from 'next/navigation';
+import { handleClientError } from '@/shared/utils';
 
 export default function SignInForm() {
     const form = useForm({ resolver: yupResolver(signInRequestSchema) });
     const { handleSubmit } = form;
-    const { signInMutation } = useAuth();
+    const signIn = useAuth((state) => state.signIn);
+    const isSigningIn = useAuth((state) => state.isSigningIn);
+    const { successAlert, errorAlert } = useAlert();
+    const router = useRouter();
 
-    const onSubmit: SubmitHandler<SignInSchema> = (data) => {
-        signInMutation.mutate(data);
+    const onSubmit: SubmitHandler<SignInSchema> = async (data) => {
+        try {
+            await signIn(data);
+            successAlert('Login realizado com sucesso');
+            router.push('/painel');
+        } catch (error) {
+            errorAlert(handleClientError(error));
+        }
     };
 
     return (
@@ -39,7 +51,7 @@ export default function SignInForm() {
                             type="primary"
                             htmlType="submit"
                             className="py-6 text-lg w-full rounded-xl"
-                            loading={signInMutation.isPending}
+                            loading={isSigningIn}
                         >
                             Entrar
                         </Button>

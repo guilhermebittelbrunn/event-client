@@ -3,7 +3,6 @@
 import { Outfit, Nanum_Brush_Script } from 'next/font/google';
 import './globals.css';
 
-import { ThemeProvider } from '@/shared/context/ThemeContext';
 import { SidebarProvider } from '@/shared/context/SidebarContext';
 import ClientLayout from './clientLayout';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -39,12 +38,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <html lang="pt-BR">
             <body className={`${outfit.className} ${nanumBrushScript.variable} dark:bg-gray-900`}>
                 <QueryClientProvider client={queryClient}>
-                    <ThemeProvider>
-                        <SidebarProvider>
-                            <ClientLayout>{children}</ClientLayout>
-                            <ToastContainer className="scale-90 md:scale-100" />
-                        </SidebarProvider>
-                    </ThemeProvider>
+                    <SidebarProvider>
+                        <ClientLayout>{children}</ClientLayout>
+                        <ToastContainer className="scale-90 md:scale-100" />
+                    </SidebarProvider>
                 </QueryClientProvider>
             </body>
         </html>

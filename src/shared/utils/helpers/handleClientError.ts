@@ -2,8 +2,6 @@ import { AxiosError } from 'axios';
 import FormattedError from './formattedError';
 
 export function handleClientError(error: any): string {
-    console.log('error :>> ', error);
-
     if (error instanceof FormattedError) {
         return error.message;
     }

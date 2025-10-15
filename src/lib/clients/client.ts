@@ -70,10 +70,13 @@ class Client {
         client.interceptors.response.use(
             (response) => response,
             async (error) => {
-                if (error.response && error.response.status === 401) {
+                // Em caso de 401, limpa os cookies e notifica a aplicação
+                if (error.response && error.response.status === 401 && typeof window !== 'undefined') {
                     removeCookie('accessToken');
                     removeCookie('refreshToken');
-                    window.location.href = '/entrar';
+
+                    // Dispara evento customizado para notificar a store
+                    window.dispatchEvent(new CustomEvent('auth:session-expired'));
                 }
 
                 // Usar o método estático assíncrono para suporte a blob

@@ -1,12 +1,12 @@
 'use client';
 
 import { toast } from 'react-toastify';
-import { useTheme } from '../context/ThemeContext';
+import { useThemeValue } from '../store/useTheme';
 
 type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
 export const useAlert = () => {
-    const { theme } = useTheme();
+    const theme = useThemeValue();
     const toastTheme = theme === 'dark' ? 'dark' : 'light';
 
     const openNotification = (type: NotificationType, message: string) => {
