@@ -1,7 +1,7 @@
 'use client';
 
-import { AuthProvider } from '@/shared/context/AuthContext';
+import { AuthInitializer } from '@/shared/components/auth/AuthInitializer';
 
 export default function PainelLayout({ children }) {
-    return <AuthProvider>{children}</AuthProvider>;
+    return <AuthInitializer>{children}</AuthInitializer>;
 }

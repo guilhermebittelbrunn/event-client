@@ -8,7 +8,7 @@ import {
 } from '@/shared/components/hookForm';
 import { Paragraph } from '@/shared/components/ui';
 import { EVENT_STATUS_OPTIONS } from '@/shared/consts/event';
-import useAuth from '@/shared/context/AuthContext';
+import { useAuth } from '@/shared/store/useAuth';
 import { useClientRouter } from '@/shared/hooks';
 import { UserTypeEnum } from '@/shared/types/dtos';
 import { ChangeEvent } from 'react';
@@ -20,7 +20,7 @@ interface EventFormProps {
 export function EventForm({ action = 'create' }: EventFormProps) {
     const { watch, setValue, clearErrors } = useFormContext();
     const { currentDomain } = useClientRouter();
-    const { user } = useAuth();
+    const user = useAuth((state) => state.user);
 
     const isAdmin = user?.type === UserTypeEnum.ADMIN;
 

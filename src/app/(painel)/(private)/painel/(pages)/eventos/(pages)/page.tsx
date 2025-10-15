@@ -12,7 +12,7 @@ import { formatDate } from '@/shared/utils/helpers';
 import { useEventCrud } from '../../../../../../../shared/hooks/useEventCrud';
 import { EventDTO, EventStatusEnum, EventStatusOptions, UserTypeEnum } from '@/shared/types/dtos';
 import ResponsiveImage from '@/shared/components/ui/responsiveImage';
-import useAuth from '@/shared/context/AuthContext';
+import { useAuth } from '@/shared/store/useAuth';
 import { Fallback } from '@/shared/components/common/fallback';
 import { EVENT_STATUS_OPTIONS } from '@/shared/consts/event';
 import useQueryParams from '@/shared/hooks/useQueryParams';
@@ -29,7 +29,7 @@ export default function EventsPage() {
     });
 
     const { useListPaginatedEvent, deleteEventMutation } = useEventCrud();
-    const { user } = useAuth();
+    const user = useAuth((state) => state.user);
 
     const { data, isLoading } = useListPaginatedEvent(apiParams);
 
