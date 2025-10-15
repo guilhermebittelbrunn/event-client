@@ -127,7 +127,7 @@ export default function EventsPage() {
             />
             <Container>
                 <Box className="mb-4 space-y-4">
-                    <Box className="flex flex-row gap-2 justify-end items-end">
+                    <Box className="flex flex-col gap-2 justify-end items-end md:flex-row">
                         <Select
                             options={EVENT_STATUS_OPTIONS}
                             placeholder="Status"

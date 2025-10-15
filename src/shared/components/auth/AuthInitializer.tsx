@@ -51,6 +51,19 @@ export function AuthInitializer({ children }: AuthInitializerProps) {
     }, [signOut, warningAlert, router]);
 
     useEffect(() => {
+        const handleLogout = () => {
+            // Usa replace para não poder voltar com botão "back"
+            router.replace('/entrar');
+        };
+
+        window.addEventListener('auth:logout', handleLogout);
+
+        return () => {
+            window.removeEventListener('auth:logout', handleLogout);
+        };
+    }, [router]);
+
+    useEffect(() => {
         if (error && !isPublicRoute && !isAuthenticated && isInitialized) {
             warningAlert(error);
 

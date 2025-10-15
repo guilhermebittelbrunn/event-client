@@ -130,6 +130,10 @@ export const useAuth = createWithEqualityFn<AuthState & AuthActions>()(
                         state.isAuthenticated = false;
                         state.error = null;
                     });
+
+                    if (typeof window !== 'undefined') {
+                        window.dispatchEvent(new CustomEvent('auth:logout'));
+                    }
                 },
 
                 async initializeAuth() {
