@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useAuth } from '@/shared/store/useAuth';
 import { LoadingScreen } from '../ui';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { publicRoutes } from '@/middleware';
 import { useAlert } from '@/shared/hooks';
 
@@ -13,7 +13,6 @@ interface AuthInitializerProps {
 
 export function AuthInitializer({ children }: AuthInitializerProps) {
     const pathname = usePathname();
-    const router = useRouter();
     const { warningAlert } = useAlert();
 
     const [initializeAuth, signOut, error, isInitialized, isLoading, isAuthenticated] = useAuth((state) => [
@@ -39,7 +38,7 @@ export function AuthInitializer({ children }: AuthInitializerProps) {
             signOut();
 
             setTimeout(() => {
-                router.push('/entrar');
+                window.location.href = '/entrar';
             }, 500);
         };
 
@@ -48,12 +47,15 @@ export function AuthInitializer({ children }: AuthInitializerProps) {
         return () => {
             window.removeEventListener('auth:session-expired', handleSessionExpired);
         };
-    }, [signOut, warningAlert, router]);
+    }, [signOut, warningAlert]);
 
     useEffect(() => {
         const handleLogout = () => {
-            // Usa replace para não poder voltar com botão "back"
-            router.replace('/entrar');
+            if (typeof window !== 'undefined') {
+                // limpa histórico indo para home
+                window.history.replaceState(null, '', '/');
+                window.location.replace('/entrar');
+            }
         };
 
         window.addEventListener('auth:logout', handleLogout);
@@ -61,19 +63,19 @@ export function AuthInitializer({ children }: AuthInitializerProps) {
         return () => {
             window.removeEventListener('auth:logout', handleLogout);
         };
-    }, [router]);
+    }, []);
 
     useEffect(() => {
         if (error && !isPublicRoute && !isAuthenticated && isInitialized) {
             warningAlert(error);
 
             const timer = setTimeout(() => {
-                router.push('/entrar');
+                window.location.href = '/entrar';
             }, 500);
 
             return () => clearTimeout(timer);
         }
-    }, [error, isPublicRoute, isAuthenticated, isInitialized, warningAlert, router]);
+    }, [error, isPublicRoute, isAuthenticated, isInitialized, warningAlert]);
 
     const shouldShowLoading = !isPublicRoute && (!isInitialized || isLoading);
 

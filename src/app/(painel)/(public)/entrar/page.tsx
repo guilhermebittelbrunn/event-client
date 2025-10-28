@@ -10,7 +10,6 @@ import { useAuth } from '@/shared/store/useAuth';
 import { signInRequestSchema, SignInSchema } from '@/lib/services/auth/schema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import useAlert from '@/shared/hooks/useAlert';
-import { useRouter } from 'next/navigation';
 import { handleClientError } from '@/shared/utils';
 
 export default function SignInForm() {
@@ -19,13 +18,12 @@ export default function SignInForm() {
     const signIn = useAuth((state) => state.signIn);
     const isSigningIn = useAuth((state) => state.isSigningIn);
     const { successAlert, errorAlert } = useAlert();
-    const router = useRouter();
 
     const onSubmit: SubmitHandler<SignInSchema> = async (data) => {
         try {
             await signIn(data);
             successAlert('Login realizado com sucesso');
-            router.push('/painel');
+            window.location.href = '/painel';
         } catch (error) {
             errorAlert(handleClientError(error));
         }

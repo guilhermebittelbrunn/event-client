@@ -147,6 +147,7 @@ export function PaginationTable<T>(props: PaginationTableProps<T>) {
             dataSource={data}
             columns={sortedColumns}
             loading={isLoading}
+            rowKey={(record: any) => record.id || record.key || JSON.stringify(record)}
             scroll={{ x: 'max-content' }}
             pagination={{
                 position: ['bottomRight'],

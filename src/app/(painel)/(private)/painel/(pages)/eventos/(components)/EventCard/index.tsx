@@ -82,10 +82,15 @@ export const EventCard = ({ event, detailed }: EventCardProps) => {
                         <p className="text-gray-600 dark:text-gray-400 text-sm">{formatDate(event.startAt)}</p>
                     </div>
                     <div className="flex justify-between items-end">
-                        {/* <div>
-                            <span className="text-soft-gold dark:text-soft-gold-dark text-sm">350</span>
-                            <span className="dark:text-snow-white text-sm"> fotos</span>
-                        </div> */}
+                        {Boolean(event.totalMemories) && (
+                            <div>
+                                <span className="text-soft-gold dark:text-soft-gold-dark text-sm">
+                                    {event.totalMemories}
+                                </span>
+                                <span className="dark:text-snow-white text-sm"> fotos</span>
+                            </div>
+                        )}
+
                         {/* <div>
                             <span className="text-soft-gold dark:text-soft-gold-dark text-sm">10</span>
                             <span className="dark:text-snow-white text-sm"> dias de armazenamento</span>
@@ -106,7 +111,18 @@ export const EventCard = ({ event, detailed }: EventCardProps) => {
                 <p className="text-gray-600 dark:text-gray-400 text-sm">{formatDate(event.startAt)}</p>
             </div>
             <div className="w-full flex items-end justify-end ">
-                <div onClick={(e) => e.stopPropagation()}>
+                <div
+                    className="flex flex-row gap-2 justify-center items-center"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    {Boolean(event.totalMemories) && (
+                        <div className="flex flex-row gap-2">
+                            <span className="text-soft-gold dark:text-soft-gold-dark text-sm">
+                                {event.totalMemories}
+                            </span>
+                            <span className="dark:text-snow-white text-sm"> fotos</span>
+                        </div>
+                    )}
                     <ActionsMenu items={actions} className="text-matte-black dark:text-snow-white" />
                 </div>
             </div>

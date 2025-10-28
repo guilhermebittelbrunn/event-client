@@ -1,4 +1,5 @@
 import { BaseDTO } from '../../utils';
+import { MemoryDTO } from '../memory';
 import { FileDTO } from '../shared';
 import { UserDTO } from '../user';
 import { EventAccessDTO } from './eventAccessDTO';
@@ -66,6 +67,8 @@ export interface EventDTO extends BaseDTO {
 
     endAt: Date;
 
+    totalMemories: number;
+
     config?: EventConfigDTO;
 
     guestAccess?: EventAccessDTO;
@@ -73,4 +76,6 @@ export interface EventDTO extends BaseDTO {
     file?: FileDTO;
 
     user?: UserDTO;
+
+    memories?: MemoryDTO[];
 }

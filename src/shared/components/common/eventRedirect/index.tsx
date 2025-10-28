@@ -1,6 +1,5 @@
 import { cn } from '@/shared/utils';
 import { Box, Button, Paragraph, Title } from '../../ui';
-import { useRedirect } from '@/shared/hooks';
 import { EVENT_REDIRECT_SECONDS } from '@/shared/consts/event';
 import { useEffect, useState } from 'react';
 
@@ -10,16 +9,15 @@ interface EventRedirectProps {
 }
 
 export default function EventRedirect({ seconds = EVENT_REDIRECT_SECONDS, className }: EventRedirectProps) {
-    const { redirect } = useRedirect();
     const [countdown, setCountdown] = useState(seconds);
 
     useEffect(() => {
         const interval = setInterval(() => setCountdown(countdown - 1), 1000);
         if (countdown === 0) {
-            redirect('/');
+            window.location.href = '/';
         }
         return () => clearInterval(interval);
-    }, [countdown, redirect]);
+    }, [countdown]);
 
     return (
         <div
@@ -38,7 +36,7 @@ export default function EventRedirect({ seconds = EVENT_REDIRECT_SECONDS, classN
                     Você será redirecionado em {countdown}...
                 </Paragraph>
 
-                <Button type="primary" onClick={() => redirect('/')}>
+                <Button type="primary" onClick={() => (window.location.href = '/')}>
                     Voltar para a página inicial
                 </Button>
             </Box>
