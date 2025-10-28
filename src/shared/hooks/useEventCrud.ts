@@ -1,5 +1,4 @@
 import { CreateEventRequest, UpdateEventRequest } from '@/lib/services/event';
-import { useRedirect } from '@/shared/hooks';
 import useAlert from '@/shared/hooks/useAlert';
 import useApi from '@/shared/hooks/useApi';
 import usePagination from '@/shared/hooks/usePagination';
@@ -11,7 +10,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 const LIST_EVENTS_PAGINATED_QUERY_KEY = 'events_paginated_query_key';
 
 export const useEventCrud = () => {
-    const { redirectWithDelay } = useRedirect();
     const queryClient = useQueryClient();
     const { client } = useApi();
     const { successAlert, errorAlert } = useAlert();
@@ -21,7 +19,9 @@ export const useEventCrud = () => {
         mutationFn: (data: CreateEventRequest) => client.eventService.create(data),
         onSuccess: () => {
             successAlert('Evento criado com sucesso');
-            redirectWithDelay('/painel/eventos', 300);
+            setTimeout(() => {
+                window.location.href = '/painel/eventos';
+            }, 300);
         },
         onError: (error) => errorAlert(handleClientError(error)),
     });
@@ -30,7 +30,9 @@ export const useEventCrud = () => {
         mutationFn: (data: UpdateEventRequest) => client.eventService.update(data),
         onSuccess: () => {
             successAlert('Evento atualizado com sucesso');
-            redirectWithDelay('/painel/eventos', 300);
+            setTimeout(() => {
+                window.location.href = '/painel/eventos';
+            }, 300);
         },
         onError: (error) => errorAlert(handleClientError(error)),
     });

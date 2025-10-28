@@ -35,7 +35,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     );
 
     return (
-        <html lang="pt-BR">
+        <html lang="pt-BR" suppressHydrationWarning>
             <body className={`${outfit.className} ${nanumBrushScript.variable} dark:bg-gray-900`}>
                 <QueryClientProvider client={queryClient}>
                     <SidebarProvider>

@@ -11,7 +11,6 @@ import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useAuth } from '@/shared/store/useAuth';
 import useAlert from '@/shared/hooks/useAlert';
-import { useRouter } from 'next/navigation';
 import { handleClientError } from '@/shared/utils';
 
 export default function SignUpForm() {
@@ -19,13 +18,14 @@ export default function SignUpForm() {
     const signUp = useAuth((state) => state.signUp);
     const isSigningUp = useAuth((state) => state.isSigningUp);
     const { successAlert, errorAlert } = useAlert();
-    const router = useRouter();
 
     const onSubmit: SubmitHandler<SignUpSchema> = async (data) => {
         try {
             await signUp(data);
             successAlert('Cadastro realizado com sucesso');
-            setTimeout(() => router.push('/entrar'), 600);
+            setTimeout(() => {
+                window.location.href = '/entrar';
+            }, 600);
         } catch (error) {
             errorAlert(handleClientError(error));
         }

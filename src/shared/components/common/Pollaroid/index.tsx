@@ -1,6 +1,5 @@
 'use client';
 
-import { useSidebar } from '@/shared/context/SidebarContext';
 import { MemoryDTO } from '@/shared/types/dtos';
 import { cn, formatDate } from '@/shared/utils';
 import Image from 'next/image';
@@ -11,6 +10,12 @@ interface PolaroidProps {
     priority?: boolean;
 }
 
+interface ImageDimensions {
+    width: number;
+    height: number;
+    aspectRatio: number;
+}
+
 /**
  * @TODO: change this priority to true in the future, after the blur image is implemented
  */
@@ -18,7 +23,7 @@ export function Polaroid({ memory, priority = false }: PolaroidProps) {
     const [isRevealed, setIsRevealed] = useState(false);
     const [isImageLoading, setIsImageLoading] = useState(true);
     const [hasImageError, setHasImageError] = useState(false);
-    const { isMobile } = useSidebar();
+    const [imageDimensions, setImageDimensions] = useState<ImageDimensions | null>(null);
 
     useEffect(() => {
         const timer = setTimeout(() => setIsRevealed(true), 300);
@@ -26,16 +31,52 @@ export function Polaroid({ memory, priority = false }: PolaroidProps) {
         return () => clearTimeout(timer);
     }, [memory]);
 
+    // Função para detectar dimensões da imagem
+    const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
+        const img = event.currentTarget;
+        const aspectRatio = img.naturalWidth / img.naturalHeight;
+        setImageDimensions({
+            width: img.naturalWidth,
+            height: img.naturalHeight,
+            aspectRatio,
+        });
+        setIsImageLoading(false);
+    };
+
+    // Função para determinar o melhor layout baseado no aspect ratio
+    const getImageLayout = () => {
+        if (!imageDimensions) return { containerClass: '', imageClass: '' };
+
+        const { aspectRatio } = imageDimensions;
+
+        // Foto horizontal (aspect ratio > 1.3)
+        if (aspectRatio > 1.3) {
+            return {
+                containerClass: 'w-full h-80', // Container mais baixo para fotos horizontais
+                imageClass: 'object-cover w-full h-full',
+            };
+        }
+
+        // Foto vertical (aspect ratio < 0.8)
+        if (aspectRatio < 0.8) {
+            return {
+                containerClass: 'w-80 h-full mx-auto', // Container mais estreito para fotos verticais
+                imageClass: 'object-cover w-full h-full',
+            };
+        }
+
+        // Foto quadrada (aspect ratio entre 0.8 e 1.3)
+        return {
+            containerClass: 'w-80 h-80 mx-auto', // Container quadrado
+            imageClass: 'object-cover w-full h-full',
+        };
+    };
+
     return (
         <div className="relative">
             <div className="relative bg-white p-4 pb-8 shadow-2xl transform rotate-2 hover:rotate-0 transition-all duration-1500 ease-out animate-float">
                 <div className="relative bg-gray-100 p-2 shadow-inner">
-                    <div
-                        className={cn(
-                            'relative w-[40vw] h-[50vh] overflow-hidden bg-matte-black',
-                            isMobile && 'w-80 h-80',
-                        )}
-                    >
+                    <div className={cn('relative w-80 h-88  overflow-hidden bg-matte-black')}>
                         {/* Polaroid reveal effect (black layer) */}
                         <div
                             className={`absolute inset-0 transition-opacity duration-500 ease-out ${
@@ -85,26 +126,39 @@ export function Polaroid({ memory, priority = false }: PolaroidProps) {
                                         </div>
                                     )}
 
-                                    {/* Actual image */}
+                                    {/* Actual image with adaptive layout */}
                                     {!hasImageError && (
-                                        <Image
-                                            src={memory.file.url}
-                                            alt={memory.description || 'Memória especial'}
-                                            width={320}
-                                            height={320}
-                                            className={`max-w-full max-h-full object-contain transition-opacity duration-500 ${
-                                                isImageLoading ? 'opacity-0' : 'opacity-100'
-                                            }`}
-                                            priority={priority}
-                                            loading={priority ? 'eager' : 'lazy'}
-                                            quality={100}
-                                            onLoad={() => setIsImageLoading(false)}
-                                            onError={() => {
-                                                setIsImageLoading(false);
-                                                setHasImageError(true);
-                                            }}
-                                            sizes="(max-width: 768px) 100vw, 320px"
-                                        />
+                                        <div
+                                            className={cn(
+                                                'relative overflow-hidden transition-all duration-300',
+                                                imageDimensions
+                                                    ? getImageLayout().containerClass
+                                                    : 'w-72 h-72 mx-auto',
+                                            )}
+                                        >
+                                            <Image
+                                                src={memory.file.url}
+                                                alt={memory.description || 'Memória especial'}
+                                                width={imageDimensions?.width || 320}
+                                                height={imageDimensions?.height || 320}
+                                                className={cn(
+                                                    'transition-opacity duration-500',
+                                                    imageDimensions
+                                                        ? getImageLayout().imageClass
+                                                        : 'object-cover w-full h-full',
+                                                    isImageLoading ? 'opacity-0' : 'opacity-100',
+                                                )}
+                                                priority={priority}
+                                                loading={priority ? 'eager' : 'lazy'}
+                                                quality={100}
+                                                onLoad={handleImageLoad}
+                                                onError={() => {
+                                                    setIsImageLoading(false);
+                                                    setHasImageError(true);
+                                                }}
+                                                sizes="(max-width: 768px) 100vw, 320px"
+                                            />
+                                        </div>
                                     )}
                                 </div>
                             ) : (
@@ -131,7 +185,7 @@ export function Polaroid({ memory, priority = false }: PolaroidProps) {
                     </div>
                 </div>
 
-                <div className={cn('mt-4 px-2 w-[40vw]', isMobile && 'w-80')}>
+                <div className={cn('mt-4 px-2 w-full')}>
                     <div className="text-center mb-2">
                         <p className="text-sm text-gray-600 font-mono">
                             {formatDate(memory.createdAt || new Date())}
