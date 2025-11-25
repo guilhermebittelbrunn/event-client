@@ -28,6 +28,19 @@ const nextConfig: NextConfig = {
         ];
     },
 
+    // Configuração do Turbopack (Next.js 16 usa Turbopack por padrão)
+    // Resolver aviso sobre workspace root
+    turbopack: {
+        root: process.cwd(),
+        rules: {
+            '*.svg': {
+                loaders: ['@svgr/webpack'],
+                as: '*.js',
+            },
+        },
+    },
+
+    // Mantém webpack config para builds de produção (fallback)
     webpack(config) {
         config.module.rules.push({
             test: /\.svg$/,
