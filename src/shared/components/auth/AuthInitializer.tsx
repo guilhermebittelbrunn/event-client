@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useAuth } from '@/shared/store/useAuth';
 import { LoadingScreen } from '../ui';
 import { usePathname } from 'next/navigation';
-import { publicRoutes } from '@/middleware';
+import { publicRoutes } from '@/proxy';
 import { useAlert } from '@/shared/hooks';
 
 interface AuthInitializerProps {

@@ -83,7 +83,7 @@ export const EventCard = ({ event, detailed }: EventCardProps) => {
                     </div>
                     <div className="flex justify-between items-end">
                         {Boolean(event.totalMemories) && (
-                            <div>
+                            <div className="flex flex-row gap-2 justify-center items-center">
                                 <span className="text-soft-gold dark:text-soft-gold-dark text-sm">
                                     {event.totalMemories}
                                 </span>
@@ -116,7 +116,7 @@ export const EventCard = ({ event, detailed }: EventCardProps) => {
                     onClick={(e) => e.stopPropagation()}
                 >
                     {Boolean(event.totalMemories) && (
-                        <div className="flex flex-row gap-2">
+                        <div className="flex flex-row gap-2 justify-center items-center">
                             <span className="text-soft-gold dark:text-soft-gold-dark text-sm">
                                 {event.totalMemories}
                             </span>
