@@ -1,4 +1,4 @@
-import { PaginatedResponse } from '@/shared/types/utils';
+import { PaginatedResponse, UpdateResponse } from '@/shared/types/utils';
 import {
     CreateMemoryRequest,
     CreateMemoryResponse,
@@ -6,6 +6,8 @@ import {
     ListPaginatedMemoryRequest,
     DownloadMemoriesRequest,
     DownloadMemoriesResponse,
+    UpdateMemoryRequest,
+    UpdateMemoryBulkRequest,
 } from './types';
 import { formDataFromObject } from '@/shared/utils/helpers/formDataHelper';
 import { AxiosInstance } from 'axios';
@@ -25,6 +27,18 @@ export default class MemoryService {
             },
         });
 
+        return data;
+    }
+
+    async update(dto: UpdateMemoryRequest): Promise<UpdateResponse> {
+        const { data } = await this.client.put<UpdateResponse>(`${this.baseUrl}/${dto.id}`, dto);
+        return data;
+    }
+
+    async updateBulk(dto: UpdateMemoryBulkRequest): Promise<{ ids: string[] }> {
+        const { data } = await this.client.put<{ ids: string[] }>(`${this.baseUrl}/bulk`, {
+            memories: dto.memories,
+        });
         return data;
     }
 

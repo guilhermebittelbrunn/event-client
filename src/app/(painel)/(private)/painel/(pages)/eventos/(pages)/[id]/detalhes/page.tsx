@@ -36,7 +36,8 @@ export default function DetailsPage() {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const { data: event, isPending } = useFindEventById(id);
-    const { deleteBulkMemoryMutation, downloadMemoryMutation } = useMemoryCrud();
+    const { deleteBulkMemoryMutation, downloadMemoryMutation, changeBulkMemoryVisibilityMutation } =
+        useMemoryCrud();
 
     const limitByResolution = useResponsiveLimit({ mobile: 9, lg: 12, xl: 15 });
 
@@ -60,21 +61,12 @@ export default function DetailsPage() {
         return { memories, total };
     }, [infiniteData]);
 
-    if (isPending) {
-        return <LoadingScreen />;
-    }
-
-    if (!event) {
-        return (
-            <Container>
-                <Box className="flex flex-col items-center justify-center py-12">
-                    <Title className="text-xl font-bold text-neutral-800 dark:text-white">
-                        Evento não encontrado
-                    </Title>
-                </Box>
-            </Container>
-        );
-    }
+    const selectedPhotosToAction = useMemo(() => {
+        if (openedMemory) {
+            return [openedMemory.id];
+        }
+        return selectedPhotos;
+    }, [selectedPhotos, openedMemory]);
 
     const handleSelectPhoto = (photoId: string) => {
         if (isSelectMode) {
@@ -90,17 +82,28 @@ export default function DetailsPage() {
     };
 
     const handleDeletePhotos = async () => {
-        await deleteBulkMemoryMutation.mutateAsync(selectedPhotos);
+        await deleteBulkMemoryMutation.mutateAsync(selectedPhotosToAction);
         queryClient.invalidateQueries({ queryKey: [INFINITE_MEMORY_QUERY_KEY] });
         setSelectedPhotos([]);
         setShowDeleteModal(false);
+        setOpenedMemory(null);
         setIsSelectMode(false);
     };
 
     const handleDownloadPhotos = async () => {
-        await downloadMemoryMutation.mutateAsync({ memoryIds: selectedPhotos });
+        await downloadMemoryMutation.mutateAsync({ memoryIds: selectedPhotosToAction });
         setSelectedPhotos([]);
         setIsSelectMode(false);
+    };
+
+    const handleChangeVisibility = async (status: boolean) => {
+        const payload = selectedPhotosToAction.map((id) => ({ id, hidden: !status }));
+        await changeBulkMemoryVisibilityMutation.mutateAsync({ memories: payload });
+
+        queryClient.invalidateQueries({ queryKey: [INFINITE_MEMORY_QUERY_KEY] });
+        setSelectedPhotos([]);
+        setIsSelectMode(false);
+        setOpenedMemory(null);
     };
 
     const handleOpenModal = (memory: MemoryDTO, allPhotosArray: MemoryDTO[]) => {
@@ -116,6 +119,22 @@ export default function DetailsPage() {
         setOpenedMemory(null);
         setAllPhotos([]);
     };
+
+    if (isPending) {
+        return <LoadingScreen />;
+    }
+
+    if (!event) {
+        return (
+            <Container>
+                <Box className="flex flex-col items-center justify-center py-12">
+                    <Title className="text-xl font-bold text-neutral-800 dark:text-white">
+                        Evento não encontrado
+                    </Title>
+                </Box>
+            </Container>
+        );
+    }
 
     return (
         <>
@@ -136,6 +155,7 @@ export default function DetailsPage() {
                             onToggleSelect={handleToggleSelectMode}
                             onDelete={() => setShowDeleteModal(true)}
                             onDownload={handleDownloadPhotos}
+                            onChangeVisibility={handleChangeVisibility}
                         />
                         <PhotoGrid
                             photos={memories}
@@ -157,6 +177,18 @@ export default function DetailsPage() {
                     allPhotos={allPhotos}
                     onNavigate={handleNavigateModal}
                     onClose={handleCloseModal}
+                    toolBar={
+                        <ActionBar
+                            single
+                            hidden={openedMemory.hidden}
+                            isSelectMode={isSelectMode}
+                            selectedCount={selectedPhotos.length}
+                            onToggleSelect={handleToggleSelectMode}
+                            onDelete={() => setShowDeleteModal(true)}
+                            onDownload={handleDownloadPhotos}
+                            onChangeVisibility={handleChangeVisibility}
+                        />
+                    }
                 />
             )}
 
@@ -169,12 +201,13 @@ export default function DetailsPage() {
                     title="Deletar fotos"
                     type="primary"
                     size="small"
+                    className="-z-999999"
                 >
                     {deleteBulkMemoryMutation.isPending ? (
                         <LoadingContainer />
                     ) : (
                         <Paragraph className="text-md text-center p-0">
-                            Tem certeza que deseja deletar {selectedPhotos.length} fotos selecionadas?
+                            Tem certeza que deseja deletar {selectedPhotosToAction.length} fotos selecionadas?
                         </Paragraph>
                     )}
                 </Modal>

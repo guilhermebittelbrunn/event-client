@@ -12,5 +12,7 @@ export interface MemoryDTO extends BaseDTO {
 
     message?: string;
 
+    hidden?: boolean;
+
     file?: FileDTO;
 }

@@ -37,7 +37,7 @@ export interface PaginatedResponse<T> {
 }
 export type RawId = string;
 
-export type UpdateRequest<T> = Partial<Omit<T, 'id'>>;
+export type UpdateRequest<T> = Partial<Omit<T, 'id'>> & { id: RawId };
 
 export interface UpdateResponse {
     data: {

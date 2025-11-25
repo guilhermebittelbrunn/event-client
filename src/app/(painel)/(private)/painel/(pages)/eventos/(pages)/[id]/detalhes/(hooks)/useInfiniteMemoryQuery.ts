@@ -10,11 +10,11 @@ interface UseInfiniteMemoryQueryProps extends Omit<ListPaginatedMemoryRequest, '
 }
 
 export const useInfiniteMemoryQuery = (props: UseInfiniteMemoryQueryProps) => {
-    const { eventId, limit = 20, order, orderBy, ...rest } = props;
+    const { eventId, limit = 20, order, orderBy, hidden, ...rest } = props;
     const { client } = useApi();
 
     return useInfiniteQuery({
-        queryKey: [INFINITE_MEMORY_QUERY_KEY, eventId, limit, order, orderBy, rest],
+        queryKey: [INFINITE_MEMORY_QUERY_KEY, eventId, limit, order, orderBy, hidden, rest],
         queryFn: ({ pageParam = 1 }) => {
             if (!eventId) {
                 return { data: [], meta: { total: 0, page: 0, limit: 0, pages: 0, hasNextPage: false } };
@@ -25,10 +25,10 @@ export const useInfiniteMemoryQuery = (props: UseInfiniteMemoryQueryProps) => {
                 eventId,
                 order,
                 orderBy,
+                hidden,
                 ...rest,
             });
         },
-
         getNextPageParam: (lastPage, allPages) => {
             if (!lastPage?.data || lastPage.data.length < limit) {
                 return undefined;

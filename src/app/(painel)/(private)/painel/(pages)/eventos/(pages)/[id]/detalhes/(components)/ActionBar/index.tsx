@@ -1,8 +1,8 @@
-import React from 'react';
-import { Box, Button, Title } from '@/shared/components/ui';
-import { TrashBinIcon, DownloadIcon } from '@/shared/icons';
+import { Button, Title } from '@/shared/components/ui';
+import { TrashBinIcon, DownloadIcon, EyeCloseIcon, EyeIcon } from '@/shared/icons';
 import { cn } from '@/shared/utils';
 import { useMemoryCrud } from '@/shared/hooks/useMemoryCrud';
+import { isEmpty } from '@/shared/utils/helpers/undefinedHelpers';
 
 interface ActionBarProps {
     isSelectMode: boolean;
@@ -10,36 +10,82 @@ interface ActionBarProps {
     onToggleSelect: () => void;
     onDelete: () => void;
     onDownload: () => void;
+    onChangeVisibility: (status: boolean) => void;
+    single?: boolean;
+    hidden?: boolean;
 }
 
-export const ActionBar: React.FC<ActionBarProps> = ({
-    isSelectMode,
-    selectedCount,
-    onToggleSelect,
-    onDelete,
-    onDownload,
-}) => {
-    const { downloadMemoryMutation } = useMemoryCrud();
+function ButtonAction({
+    onClick,
+    disabled,
+    children,
+    className,
+}: {
+    onClick: () => void;
+    disabled: boolean;
+    children: React.ReactNode;
+    className?: string;
+}) {
+    return (
+        <button
+            onClick={onClick}
+            disabled={disabled}
+            className={cn(
+                'p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-30 disabled:cursor-not-allowed transition-colors',
+                className,
+            )}
+        >
+            {children}
+        </button>
+    );
+}
+
+export const ActionBar = (props: ActionBarProps) => {
+    const {
+        isSelectMode,
+        selectedCount,
+        onToggleSelect,
+        onDelete,
+        onDownload,
+        onChangeVisibility,
+        single,
+        hidden,
+    } = props;
+
+    console.log('props :>> ', props);
+
+    const { downloadMemoryMutation, changeBulkMemoryVisibilityMutation } = useMemoryCrud();
+
+    const isLoading = downloadMemoryMutation.isPending || changeBulkMemoryVisibilityMutation.isPending;
+    const disabled = single ? isLoading : !isSelectMode || isLoading || selectedCount === 0;
 
     return (
-        <Box>
+        <div>
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-6">
-                    <button
-                        onClick={onDelete}
-                        disabled={!isSelectMode || selectedCount === 0}
-                        className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                    >
+                    <ButtonAction onClick={onDelete} disabled={disabled}>
                         <TrashBinIcon className="text-soft-gold dark:text-soft-gold-dark scale-150" />
-                    </button>
+                    </ButtonAction>
 
-                    <button
-                        onClick={onDownload}
-                        disabled={!isSelectMode || downloadMemoryMutation.isPending || selectedCount === 0}
-                        className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                    >
+                    <ButtonAction onClick={onDownload} disabled={disabled}>
                         <DownloadIcon className="text-soft-gold dark:text-soft-gold-dark scale-150" />
-                    </button>
+                    </ButtonAction>
+
+                    <ButtonAction
+                        onClick={() => onChangeVisibility(false)}
+                        disabled={disabled}
+                        className={cn(!isEmpty(hidden) && hidden && 'hidden')}
+                    >
+                        <EyeCloseIcon className="text-soft-gold dark:text-soft-gold-dark scale-150" />
+                    </ButtonAction>
+
+                    <ButtonAction
+                        onClick={() => onChangeVisibility(true)}
+                        disabled={disabled}
+                        className={cn(!isEmpty(hidden) && !hidden && 'hidden')}
+                    >
+                        <EyeIcon className="text-soft-gold dark:text-soft-gold-dark scale-150" />
+                    </ButtonAction>
                 </div>
 
                 {isSelectMode && selectedCount > 0 && (
@@ -51,17 +97,19 @@ export const ActionBar: React.FC<ActionBarProps> = ({
                     </div>
                 )}
 
-                <Button
-                    type={isSelectMode ? 'secondary' : 'primary'}
-                    onClick={onToggleSelect}
-                    className={cn(
-                        'py-2 transition-colors duration-300 hover:opacity-90',
-                        isSelectMode && 'px-[22px]',
-                    )}
-                >
-                    {isSelectMode ? 'Cancelar' : 'Selecionar'}
-                </Button>
+                {!single && (
+                    <Button
+                        type={isSelectMode ? 'secondary' : 'primary'}
+                        onClick={onToggleSelect}
+                        className={cn(
+                            'py-2 transition-colors duration-300 hover:opacity-90',
+                            isSelectMode && 'px-[22px]',
+                        )}
+                    >
+                        {isSelectMode ? 'Cancelar' : 'Selecionar'}
+                    </Button>
+                )}
             </div>
-        </Box>
+        </div>
     );
 };

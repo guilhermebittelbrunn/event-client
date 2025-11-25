@@ -32,10 +32,12 @@ export default function PhotosPage() {
         limit: limitByResolution,
         order: 'desc',
         orderBy: 'createdAt',
+        hidden: false,
     });
 
     const { memories, total } = useMemo(() => {
-        const memories = infiniteData?.pages.flatMap((page) => page?.data || []) || [];
+        const memories =
+            infiniteData?.pages.flatMap((page) => page?.data.filter((memory) => !memory.hidden) || []) || [];
         const total = infiniteData?.pages[0]?.meta?.total || 0;
 
         return { memories, total };

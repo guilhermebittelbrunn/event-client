@@ -9,9 +9,16 @@ interface MemoryModalProps {
     allPhotos: MemoryDTO[];
     onClose: () => void;
     onNavigate: (memory: MemoryDTO) => void;
+    toolBar?: React.ReactNode;
 }
 
-export const MemoryModal: React.FC<MemoryModalProps> = ({ currentMemory, allPhotos, onClose, onNavigate }) => {
+export const MemoryModal: React.FC<MemoryModalProps> = ({
+    currentMemory,
+    allPhotos,
+    onClose,
+    onNavigate,
+    toolBar,
+}) => {
     const [mounted, setMounted] = useState(false);
 
     const { previousMemory, nextMemory, currentIndex } = useMemo(() => {
@@ -69,7 +76,7 @@ export const MemoryModal: React.FC<MemoryModalProps> = ({ currentMemory, allPhot
 
     const modalContent = (
         <div
-            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm"
+            className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/80 backdrop-blur-sm"
             onClick={handleBackdropClick}
         >
             <button
@@ -90,8 +97,14 @@ export const MemoryModal: React.FC<MemoryModalProps> = ({ currentMemory, allPhot
                 </button>
             )}
 
-            <div className="relative max-w-[90vw] max-h-[90vh] flex items-center justify-center">
+            <div className="relative max-w-[90vw] max-h-[90vh] flex flex-col items-center justify-center gap-4">
                 <Polaroid memory={currentMemory} />
+
+                {toolBar && (
+                    <div className="flex items-center justify-center gap-4 border-2 border-soft-gold 2 px-2 py-1 rounded-full">
+                        {toolBar}
+                    </div>
+                )}
             </div>
 
             {nextMemory && (

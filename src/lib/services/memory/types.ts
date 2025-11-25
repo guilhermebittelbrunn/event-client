@@ -1,5 +1,5 @@
 import { MemoryDTO } from '@/shared/types/dtos/memory/memory';
-import { PaginationRequestWithOrder } from '@/shared/types/utils';
+import { PaginationRequestWithOrder, UpdateRequest } from '@/shared/types/utils';
 
 export interface CreateMemoryRequest {
     identifier?: string;
@@ -8,12 +8,19 @@ export interface CreateMemoryRequest {
     image?: File;
 }
 
+export type UpdateMemoryRequest = UpdateRequest<CreateMemoryRequest>;
+
+export interface UpdateMemoryBulkRequest {
+    memories: UpdateMemoryRequest[];
+}
+
 export interface CreateMemoryResponse {
     data: MemoryDTO;
 }
 
 export interface ListPaginatedMemoryRequest extends PaginationRequestWithOrder<MemoryDTO> {
     eventId: string;
+    hidden?: boolean;
 }
 
 export interface FindMemoryByIdResponse {
