@@ -1,5 +1,5 @@
 import { LIST_MEMORY_PAGINATED_QUERY_KEY } from '@/app/(painel)/(private)/painel/(pages)/eventos/(pages)/[id]/detalhes/(hooks)/useListMemories';
-import { DownloadMemoriesRequest } from '@/lib/services';
+import { DownloadMemoriesRequest, UpdateMemoryBulkRequest, UpdateMemoryRequest } from '@/lib/services';
 import { CreateEventRequest } from '@/lib/services/event';
 import useAlert from '@/shared/hooks/useAlert';
 import useApi from '@/shared/hooks/useApi';
@@ -55,10 +55,24 @@ export const useMemoryCrud = () => {
         onError: (error) => errorAlert(handleClientError(error)),
     });
 
+    const changeMemoryVisibilityMutation = useMutation({
+        mutationFn: (dto: UpdateMemoryRequest) => client.memoryService.update(dto),
+        onSuccess: () => successAlert('Visibilidade da memória alterada com sucesso'),
+        onError: (error) => errorAlert(handleClientError(error)),
+    });
+
+    const changeBulkMemoryVisibilityMutation = useMutation({
+        mutationFn: (dto: UpdateMemoryBulkRequest) => client.memoryService.updateBulk(dto),
+        onSuccess: () => successAlert('Visibilidade das memórias alterada com sucesso'),
+        onError: (error) => errorAlert(handleClientError(error)),
+    });
+
     return {
         createMemoryMutation,
         deleteMemoryMutation,
         deleteBulkMemoryMutation,
         downloadMemoryMutation,
+        changeMemoryVisibilityMutation,
+        changeBulkMemoryVisibilityMutation,
     };
 };

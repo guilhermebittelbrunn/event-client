@@ -1,6 +1,4 @@
 
-import { fontFamily } from 'tailwindcss/defaultTheme';
-
 const config = {
     darkMode: ['class'],
     content: [
@@ -198,7 +196,7 @@ const config = {
                 'slide-in-from-bottom': 'slide-in-from-bottom 0.3s ease-out',
             },
             fontFamily: {
-                sans: ['var(--font-sans)', ...fontFamily.sans],
+                sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif'],
                 cursive: ['var(--font-cursive)', 'cursive'],
                 'nanum-brush': ['var(--font-nanum-brush-script)', 'cursive'],
             },

@@ -18,10 +18,10 @@ export const publicRoutes: PublicRoute[] = [
 const PUBLIC_REDIRECT_URL_WHEN_AUTHENTICATED = '/painel';
 const REDIRECT_URL_WHEN_UNAUTHENTICATED = '/entrar';
 
-export default function middleware(request: NextRequest) {
+export default function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    // Skip middleware for API routes
+    // Skip proxy for API routes
     if (pathname.startsWith('/api/')) {
         return NextResponse.next();
     }
@@ -82,3 +82,4 @@ export const config = {
         '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
     ],
 };
+

@@ -1,6 +1,6 @@
 import { cn } from '@/shared/utils';
 import { MemoryDTO } from '@/shared/types/dtos';
-import { CheckCircleIcon } from '@/shared/icons';
+import { CheckCircleIcon, EyeCloseIcon } from '@/shared/icons';
 import { ProgressiveImage } from '@/shared/components/common/ProgressiveImage';
 
 interface PhotoItemProps {
@@ -23,6 +23,12 @@ export const PhotoItem = ({ photo, selectedPhotos, isSelectMode, handlePhotoClic
             )}
             onClick={() => handlePhotoClick(photo)}
         >
+            {photo.hidden && (
+                <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10">
+                    <EyeCloseIcon className="text-white text-sm scale-150" />
+                </div>
+            )}
+
             <ProgressiveImage
                 src={photo.file?.url}
                 alt={`Foto ${photo.id}`}
