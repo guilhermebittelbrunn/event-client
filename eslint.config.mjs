@@ -10,7 +10,18 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  // Ignorar arquivos gerados e dependências
+  {
+    ignores: [
+      "**/.next/**",
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/build/**",
+    ],
+  },
+  // Config base do Next + TypeScript
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+  // Regras customizadas do projeto
   {
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
