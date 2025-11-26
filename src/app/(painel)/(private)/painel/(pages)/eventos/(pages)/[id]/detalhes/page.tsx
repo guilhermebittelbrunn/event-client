@@ -120,6 +120,12 @@ export default function DetailsPage() {
         setAllPhotos([]);
     };
 
+    const handleStartSlideshow = () => {
+        const initialMemoryId = selectedPhotosToAction[0];
+        const url = `/painel/eventos/${id}/apresentar${initialMemoryId ? `?initialMemoryId=${initialMemoryId}` : ''}`;
+        window.open(url, '_blank', 'fullscreen=yes');
+    };
+
     if (isPending) {
         return <LoadingScreen />;
     }
@@ -156,6 +162,7 @@ export default function DetailsPage() {
                             onDelete={() => setShowDeleteModal(true)}
                             onDownload={handleDownloadPhotos}
                             onChangeVisibility={handleChangeVisibility}
+                            onStartSlideshow={handleStartSlideshow}
                         />
                         <PhotoGrid
                             photos={memories}
@@ -187,6 +194,7 @@ export default function DetailsPage() {
                             onDelete={() => setShowDeleteModal(true)}
                             onDownload={handleDownloadPhotos}
                             onChangeVisibility={handleChangeVisibility}
+                            onStartSlideshow={handleStartSlideshow}
                         />
                     }
                 />

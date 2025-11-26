@@ -1,5 +1,6 @@
 import { Button, Title } from '@/shared/components/ui';
 import { TrashBinIcon, DownloadIcon, EyeCloseIcon, EyeIcon } from '@/shared/icons';
+import { BiCameraMovie } from 'react-icons/bi';
 import { cn } from '@/shared/utils';
 import { useMemoryCrud } from '@/shared/hooks/useMemoryCrud';
 import { isEmpty } from '@/shared/utils/helpers/undefinedHelpers';
@@ -11,6 +12,7 @@ interface ActionBarProps {
     onDelete: () => void;
     onDownload: () => void;
     onChangeVisibility: (status: boolean) => void;
+    onStartSlideshow?: () => void;
     single?: boolean;
     hidden?: boolean;
 }
@@ -48,20 +50,20 @@ export const ActionBar = (props: ActionBarProps) => {
         onDelete,
         onDownload,
         onChangeVisibility,
+        onStartSlideshow,
         single,
         hidden,
     } = props;
-
-    console.log('props :>> ', props);
 
     const { downloadMemoryMutation, changeBulkMemoryVisibilityMutation } = useMemoryCrud();
 
     const isLoading = downloadMemoryMutation.isPending || changeBulkMemoryVisibilityMutation.isPending;
     const disabled = single ? isLoading : !isSelectMode || isLoading || selectedCount === 0;
+    const slideshowDisabled = isLoading || isSelectMode;
 
     return (
         <div>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-2 items-center justify-between md:flex-row">
                 <div className="flex items-center gap-6">
                     <ButtonAction onClick={onDelete} disabled={disabled}>
                         <TrashBinIcon className="text-soft-gold dark:text-soft-gold-dark scale-150" />
@@ -86,6 +88,12 @@ export const ActionBar = (props: ActionBarProps) => {
                     >
                         <EyeIcon className="text-soft-gold dark:text-soft-gold-dark scale-150" />
                     </ButtonAction>
+
+                    {onStartSlideshow && (
+                        <ButtonAction onClick={onStartSlideshow} disabled={slideshowDisabled} className="ml-2">
+                            <BiCameraMovie className="text-soft-gold dark:text-soft-gold-dark scale-[1.75]" />
+                        </ButtonAction>
+                    )}
                 </div>
 
                 {isSelectMode && selectedCount > 0 && (
@@ -102,7 +110,7 @@ export const ActionBar = (props: ActionBarProps) => {
                         type={isSelectMode ? 'secondary' : 'primary'}
                         onClick={onToggleSelect}
                         className={cn(
-                            'py-2 transition-colors duration-300 hover:opacity-90',
+                            'py-2 w-full md:w-auto transition-colors duration-300 hover:opacity-90',
                             isSelectMode && 'px-[22px]',
                         )}
                     >
