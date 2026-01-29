@@ -1,7 +1,8 @@
 'use client';
+
 import { Box } from '@/shared/components/ui/box';
 import { FormProvider } from '@/shared/components/form';
-import React, { useMemo, useEffect, useState } from 'react';
+import { useMemo, useEffect, useState, Suspense } from 'react';
 import { HookFormInput, HookFormInputPassword } from '@/shared/components/hookForm';
 import { Button, Title } from '@/shared/components/ui';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -18,7 +19,7 @@ import { setCookie } from '@/shared/utils/helpers/cookies';
 import { getTokenPayload } from '@/shared/utils/helpers/token';
 import { UserTokenPayload } from '@/shared/types/dtos/user/auth';
 
-export default function SignInForm() {
+function SignInForm() {
     const form = useForm({ resolver: yupResolver(signInRequestSchema) });
     const { handleSubmit } = form;
     const signIn = useAuth(state => state.signIn);
@@ -31,7 +32,6 @@ export default function SignInForm() {
     // Obter URL de redirecionamento dos query params
     const redirectUrl = useMemo(() => {
         const redirect = searchParams.get('redirect');
-        const sessionId = searchParams.get('session_id');
 
         if (redirect) {
             // searchParams.get() já decodifica automaticamente
@@ -153,5 +153,32 @@ export default function SignInForm() {
                 <Title className="text-sm">Não tem conta? Cadastre-se</Title>
             </Link>
         </Box>
+    );
+}
+
+export default function SignInPage() {
+    return (
+        <Suspense
+            fallback={
+                <Box type="secondary" className="flex flex-col items-center justify-center">
+                    <div className="w-full max-w-md">
+                        <div className="flex items-center gap-4">
+                            <Title className="text-2xl font-bold text-matte-black dark:text-snow-white font-nanum-brush">
+                                Qinstante
+                            </Title>
+                        </div>
+                        <Box type="secondary" className="max-w-md gap-1 mt-4">
+                            <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                            <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                        </Box>
+                        <Box type="secondary" className="max-w-md gap-2 mt-4 items-center justify-center">
+                            <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded-xl animate-pulse w-full" />
+                        </Box>
+                    </div>
+                </Box>
+            }
+        >
+            <SignInForm />
+        </Suspense>
     );
 }
