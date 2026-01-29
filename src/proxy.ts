@@ -42,7 +42,7 @@ export default function proxy(request: NextRequest) {
     const tokenPayload = getTokenPayload<UserTokenPayload>(authToken);
     const isAuthenticated = !!authToken && !!tokenPayload?.sub;
 
-    const publicRoute = publicRoutes.find((route) => {
+    const publicRoute = publicRoutes.find(route => {
         if (route.isPrefix) {
             return pathname.startsWith(route.path);
         }
@@ -56,6 +56,11 @@ export default function proxy(request: NextRequest) {
     if (!isAuthenticated && !publicRoute) {
         const redirectUrl = request.nextUrl.clone();
         redirectUrl.pathname = REDIRECT_URL_WHEN_UNAUTHENTICATED;
+
+        // Adicionar redirect param com a URL original (pathname + search) para redirecionar após login
+        // searchParams.set() já faz a codificação automaticamente, não precisa encodeURIComponent
+        const originalUrl = request.nextUrl.pathname + request.nextUrl.search;
+        redirectUrl.searchParams.set('redirect', originalUrl);
 
         return NextResponse.redirect(redirectUrl);
     }
@@ -82,4 +87,3 @@ export const config = {
         '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
     ],
 };
-

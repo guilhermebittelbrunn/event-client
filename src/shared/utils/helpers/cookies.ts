@@ -4,7 +4,9 @@ export const setCookie = (name: string, value: string, expiresIn: number) => {
     const expires = new Date();
     expires.setTime(expires.getTime() + expiresIn * 1000);
 
-    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Strict`;
+    // Usar SameSite=Lax para permitir cookies em redirecionamentos externos (ex: Stripe)
+    // Lax permite cookies em navegação top-level (como retorno do Stripe)
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
 };
 
 export const getCookie = (name: string): string | null => {

@@ -3,8 +3,11 @@
 import { LinkButton, Title, Step, Paragraph } from '@/shared/components/ui';
 import { Box } from '@/shared/components/ui/box';
 import ThemeToggleButton from '@/shared/components/ui/themeToggleButton';
+import { useAuth } from '@/shared/store/useAuth';
 
 export default function Home() {
+    const { isAuthenticated } = useAuth();
+
     return (
         <Box>
             <header className="sticky w-full top-0 z-50 mx-auto flex justify-center px-6 bg-white dark:bg-matte-black">
@@ -15,14 +18,22 @@ export default function Home() {
                         </Title>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                        <LinkButton type="secondary" href="/entrar" className="bg-white">
-                            Fazer login
-                        </LinkButton>
-                        <LinkButton type="primary" href="/cadastro">
-                            Cadastre-se
-                        </LinkButton>
-                    </div>
+                    {isAuthenticated ? (
+                        <div className="flex items-center gap-2">
+                            <LinkButton type="secondary" href="/painel">
+                                Painel
+                            </LinkButton>
+                        </div>
+                    ) : (
+                        <div className="flex items-center gap-2">
+                            <LinkButton type="secondary" href="/entrar" className="bg-white">
+                                Fazer login
+                            </LinkButton>
+                            <LinkButton type="primary" href="/cadastro">
+                                Cadastre-se
+                            </LinkButton>
+                        </div>
+                    )}
                 </Box>
             </header>
             <div className="fixed bottom-6 right-6 z-50 hidden sm:block">

@@ -7,7 +7,7 @@ import { useMemo, useRef, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 interface PaginationTableProps<T> extends TableProps<T> {
-    data: T[];
+    data?: T[];
     meta?: PaginationMeta;
     columns: any[];
     label?: string;
@@ -144,7 +144,7 @@ export function PaginationTable<T>(props: PaginationTableProps<T>) {
     return (
         <Table
             className={className}
-            dataSource={data}
+            dataSource={data || []}
             columns={sortedColumns}
             loading={isLoading}
             rowKey={(record: any) => record.id || record.key || JSON.stringify(record)}

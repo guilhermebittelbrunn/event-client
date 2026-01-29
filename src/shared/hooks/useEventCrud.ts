@@ -1,13 +1,16 @@
-import { CreateEventRequest, UpdateEventRequest } from '@/lib/services/event';
+import { CreateEventRequest, ListPaginatedEventRequest, UpdateEventRequest } from '@/lib/services/event';
 import useAlert from '@/shared/hooks/useAlert';
 import useApi from '@/shared/hooks/useApi';
 import usePagination from '@/shared/hooks/usePagination';
-import { EventDTO } from '@/shared/types/dtos';
+import { EventDTO, EventStatusEnum } from '@/shared/types/dtos';
 import { PaginationRequestWithOrderAndDate } from '@/shared/types/utils';
 import { handleClientError } from '@/shared/utils';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const LIST_EVENTS_PAGINATED_QUERY_KEY = 'events_paginated_query_key';
+
+type ListPaginatedEventRequestWithOrderAndDate = PaginationRequestWithOrderAndDate<EventDTO> &
+    ListPaginatedEventRequest;
 
 export const useEventCrud = () => {
     const queryClient = useQueryClient();
@@ -17,13 +20,21 @@ export const useEventCrud = () => {
 
     const createEventMutation = useMutation({
         mutationFn: (data: CreateEventRequest) => client.eventService.create(data),
-        onSuccess: () => {
+        onSuccess: ({ data }) => {
             successAlert('Evento criado com sucesso');
+
+            if (data.status === EventStatusEnum.PENDING_PAYMENT) {
+                setTimeout(() => {
+                    window.location.href = `/painel/eventos/${data.id}/confirmar-pagamento`;
+                }, 300);
+                return;
+            }
+
             setTimeout(() => {
                 window.location.href = '/painel/eventos';
             }, 300);
         },
-        onError: (error) => errorAlert(handleClientError(error)),
+        onError: error => errorAlert(handleClientError(error)),
     });
 
     const updateEventMutation = useMutation({
@@ -34,10 +45,10 @@ export const useEventCrud = () => {
                 window.location.href = '/painel/eventos';
             }, 300);
         },
-        onError: (error) => errorAlert(handleClientError(error)),
+        onError: error => errorAlert(handleClientError(error)),
     });
 
-    const useListPaginatedEvent = (dto: PaginationRequestWithOrderAndDate<EventDTO> = {}) =>
+    const useListPaginatedEvent = (dto: ListPaginatedEventRequestWithOrderAndDate = {}) =>
         useQuery({
             queryKey: [LIST_EVENTS_PAGINATED_QUERY_KEY, currentPage, currentLimit, currentTerm, dto],
             queryFn: () =>
@@ -47,7 +58,7 @@ export const useEventCrud = () => {
                     term: currentTerm,
                     ...dto,
                 }),
-            placeholderData: (previousData) => previousData,
+            placeholderData: previousData => previousData,
             refetchOnWindowFocus: true,
         });
 
@@ -57,7 +68,7 @@ export const useEventCrud = () => {
             successAlert('Evento deletado com sucesso');
             queryClient.invalidateQueries({ queryKey: [LIST_EVENTS_PAGINATED_QUERY_KEY] });
         },
-        onError: (error) => errorAlert(handleClientError(error)),
+        onError: error => errorAlert(handleClientError(error)),
     });
 
     return {

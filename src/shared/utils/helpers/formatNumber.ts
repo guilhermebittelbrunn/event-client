@@ -5,7 +5,7 @@ export function formatPrice(
     options?: Intl.NumberFormatOptions,
 ): string {
     return Intl.NumberFormat(locale, {
-        style: 'decimal',
+        style: 'currency',
         currency: 'BRL',
         minimumFractionDigits: decimalScale,
         maximumFractionDigits: decimalScale,

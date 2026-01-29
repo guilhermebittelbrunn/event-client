@@ -18,9 +18,9 @@ export const useListPaginatedMemory = (dto: ListPaginatedMemoryRequest) => {
                 term: currentTerm,
                 ...dto,
             }),
-        placeholderData: (previousData) => previousData,
+        placeholderData: previousData => previousData,
         refetchOnWindowFocus: true,
-        refetchInterval: 0.5 * 60 * 1000, // 30 seconds
+        refetchInterval: 30 * 1000, // 30 seconds
         refetchOnMount: true,
     });
 

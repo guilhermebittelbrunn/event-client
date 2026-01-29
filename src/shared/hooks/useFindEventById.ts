@@ -14,6 +14,7 @@ export default function useFindEventById(id?: string) {
         },
         queryKey: [FIND_EVENT_BY_ID, id],
         enabled: !!id,
+        staleTime: 1000 * 60 * 5, // 1 minute
     });
 
     return { data, error, isPending };

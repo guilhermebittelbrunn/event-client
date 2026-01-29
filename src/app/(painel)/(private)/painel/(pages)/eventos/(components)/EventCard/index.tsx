@@ -1,9 +1,9 @@
 import { useRouter } from 'next/navigation';
 
-import { EditFilled, PictureOutlined, QrcodeOutlined } from '@ant-design/icons';
+import { CreditCardOutlined, EditFilled, PictureOutlined, QrcodeOutlined } from '@ant-design/icons';
 import ResponsiveImage from '@/shared/components/ui/responsiveImage';
 import { formatDate } from '@/shared/utils';
-import { EventDTO } from '@/shared/types/dtos';
+import { EventDTO, EventStatusEnum } from '@/shared/types/dtos';
 import { ActionsMenu } from '@/shared/components/ui';
 
 interface EventCardProps {
@@ -14,7 +14,12 @@ interface EventCardProps {
 export const EventCard = ({ event, detailed }: EventCardProps) => {
     const router = useRouter();
 
-    const handleShowDetails = () => router.push(`/painel/eventos/${event.id}/detalhes`);
+    const isPendingPayment = event.status === EventStatusEnum.PENDING_PAYMENT;
+    const urlToShowInfo = isPendingPayment
+        ? `/painel/eventos/${event.id}/confirmar-pagamento`
+        : `/painel/eventos/${event.id}/detalhes`;
+
+    const handleShowDetails = () => router.push(urlToShowInfo);
 
     const handleShare = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
@@ -26,13 +31,27 @@ export const EventCard = ({ event, detailed }: EventCardProps) => {
         router.push(`/painel/eventos/${event.id}/editar`);
     };
 
-    const actions = [
+    const defaultActions = [
         {
             key: 'edit',
             label: 'Editar',
             icon: <EditFilled className="text-soft-gold dark:text-soft-gold-dark scale-150" />,
             onClick: () => router.push(`/painel/eventos/${event.id}/editar`),
         },
+    ];
+
+    const actionsForPendingPayment = [
+        ...defaultActions,
+        {
+            key: 'confirm-payment',
+            label: 'Pagamento',
+            icon: <CreditCardOutlined className="text-soft-gold dark:text-soft-gold-dark scale-150" />,
+            onClick: () => router.push(`/painel/eventos/${event.id}/confirmar-pagamento`),
+        },
+    ];
+
+    const actionsForConfirmedStatus = [
+        ...defaultActions,
         {
             key: 'details',
             label: 'Fotos',
@@ -47,21 +66,25 @@ export const EventCard = ({ event, detailed }: EventCardProps) => {
         },
     ];
 
+    const actions = isPendingPayment ? actionsForPendingPayment : actionsForConfirmedStatus;
+
     if (detailed) {
         return (
             <div
                 className="bg-gray-200 dark:bg-neutral-800 rounded-xl shadow-lg p-4 flex gap-4 hover:cursor-pointer hover:opacity-60 transition-opacity duration-300"
                 onClick={handleShowDetails}
             >
-                <div className="w-18 h-18">
-                    <ResponsiveImage
-                        src={event.file?.url}
-                        alt={`imagem do evento ${event.name}`}
-                        width={18}
-                        height={18}
-                        className="rounded-md"
-                    />
-                </div>
+                {event.file?.url && (
+                    <div className="w-18 h-18">
+                        <ResponsiveImage
+                            src={event.file?.url}
+                            alt={`imagem do evento ${event.name}`}
+                            width={18}
+                            height={18}
+                            className="rounded-md"
+                        />
+                    </div>
+                )}
                 <div className="flex-1 flex flex-col justify-between">
                     <div>
                         <div className="flex items-center justify-between flex-row">
@@ -113,7 +136,7 @@ export const EventCard = ({ event, detailed }: EventCardProps) => {
             <div className="w-full flex items-end justify-end ">
                 <div
                     className="flex flex-row gap-2 justify-center items-center"
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={e => e.stopPropagation()}
                 >
                     {Boolean(event.totalMemories) && (
                         <div className="flex flex-row gap-2 justify-center items-center">

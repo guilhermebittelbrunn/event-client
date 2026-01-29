@@ -1,7 +1,7 @@
 'use client';
 import { Box } from '@/shared/components/ui/box';
 import { FormProvider } from '@/shared/components/form';
-import React from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { HookFormInput, HookFormInputPassword } from '@/shared/components/hookForm';
 import { Button, Title } from '@/shared/components/ui';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -11,20 +11,112 @@ import { signInRequestSchema, SignInSchema } from '@/lib/services/auth/schema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import useAlert from '@/shared/hooks/useAlert';
 import { handleClientError } from '@/shared/utils';
+import { useSearchParams, useRouter } from 'next/navigation';
+import client from '@/lib/clients/client';
+import { RefreshTokenResponse } from '@/lib/services/auth/types';
+import { setCookie } from '@/shared/utils/helpers/cookies';
+import { getTokenPayload } from '@/shared/utils/helpers/token';
+import { UserTokenPayload } from '@/shared/types/dtos/user/auth';
 
 export default function SignInForm() {
     const form = useForm({ resolver: yupResolver(signInRequestSchema) });
     const { handleSubmit } = form;
-    const signIn = useAuth((state) => state.signIn);
-    const isSigningIn = useAuth((state) => state.isSigningIn);
+    const signIn = useAuth(state => state.signIn);
+    const isSigningIn = useAuth(state => state.isSigningIn);
     const { successAlert, errorAlert } = useAlert();
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const [isAttemptingReauth, setIsAttemptingReauth] = useState(false);
 
-    const onSubmit: SubmitHandler<SignInSchema> = async (data) => {
+    // Obter URL de redirecionamento dos query params
+    const redirectUrl = useMemo(() => {
+        const redirect = searchParams.get('redirect');
+        const sessionId = searchParams.get('session_id');
+
+        if (redirect) {
+            // searchParams.get() já decodifica automaticamente
+            return redirect;
+        }
+
+        return '/painel';
+    }, [searchParams]);
+
+    // Tentar reautenticar automaticamente se houver refreshToken no localStorage
+    useEffect(() => {
+        // Só executar no cliente
+        if (typeof window === 'undefined') return;
+
+        const attemptReauth = async () => {
+            // Só tentar se não estiver autenticado e houver redirect param
+            const redirect = searchParams.get('redirect');
+            if (!redirect || isAttemptingReauth) {
+                return;
+            }
+
+            // Verificar se já está autenticado
+            const isAuthenticated = useAuth.getState().isAuthenticated;
+            if (isAuthenticated) {
+                return;
+            }
+
+            const storedRefreshToken = localStorage.getItem('stripe_refresh_token');
+            if (!storedRefreshToken) {
+                return;
+            }
+
+            setIsAttemptingReauth(true);
+
+            try {
+                const response = await fetch('/api/v1/auth/refresh', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'refresh-token': storedRefreshToken,
+                    },
+                    body: JSON.stringify({}),
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Failed to refresh token: ${response.status} - ${errorText}`);
+                }
+
+                const refreshResponse: RefreshTokenResponse = await response.json();
+                const { tokens } = refreshResponse.meta;
+
+                setCookie('accessToken', tokens.accessToken, tokens.expiresIn);
+                if (tokens.refreshToken) {
+                    setCookie('refreshToken', tokens.refreshToken, tokens.expiresIn);
+                    localStorage.setItem('stripe_refresh_token', tokens.refreshToken);
+                }
+
+                const payload = getTokenPayload<UserTokenPayload>(tokens.accessToken);
+                if (payload?.sub) {
+                    const { data: user } = await client.userService.findById(payload.sub);
+                    useAuth.getState().setUser(user);
+                    useAuth.getState().setError(null);
+                    successAlert('Sessão restaurada automaticamente');
+                    router.push(redirect);
+                }
+            } catch (error) {
+                console.error('[LOGIN] Failed to reauthenticate:', error);
+                localStorage.removeItem('stripe_refresh_token');
+            } finally {
+                setIsAttemptingReauth(false);
+            }
+        };
+
+        attemptReauth();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const onSubmit: SubmitHandler<SignInSchema> = async data => {
         try {
             await signIn(data);
             successAlert('Login realizado com sucesso');
-            window.location.href = '/painel';
+            window.location.href = redirectUrl;
         } catch (error) {
+            console.error('[LOGIN] Sign in error:', error);
             errorAlert(handleClientError(error));
         }
     };

@@ -2,9 +2,9 @@ import { Switch, SwitchProps } from '@/shared/components/form/switch';
 import { Control, Controller, ControllerProps, FieldValues, Path } from 'react-hook-form';
 
 interface HookFormSwitchProps<T extends FieldValues> extends SwitchProps {
-    control: Control<T>;
     name: Path<T>;
-    label?: string;
+    label: string;
+    control?: Control<T>;
     controllerProps?: Omit<ControllerProps<T>, 'name' | 'control' | 'render'>;
 }
 

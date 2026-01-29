@@ -7,6 +7,7 @@ import React from 'react';
 import { useEventCrud } from '../../../../../shared/hooks/useEventCrud';
 import { EventCard } from './eventos/(components)/EventCard';
 import { startOfDay } from 'date-fns';
+import { EventStatusEnum } from '@/shared/types/dtos';
 
 const today = startOfDay(new Date());
 
@@ -19,6 +20,7 @@ export default function Home() {
         limit: 5,
         dateType: 'startAt',
         startDate: today,
+        statuses: [EventStatusEnum.IN_PROGRESS, EventStatusEnum.PENDING_PAYMENT],
     });
 
     const { data: events } = data || {};
@@ -45,7 +47,7 @@ export default function Home() {
                             <Title className="text-xl font-bold text-neutral-800 dark:texft-white">
                                 Outros eventos
                             </Title>
-                            {events?.slice(1).map((event) => (
+                            {events?.slice(1).map(event => (
                                 <EventCard key={event.id} event={event} />
                             ))}
                         </>

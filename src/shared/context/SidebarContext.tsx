@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import useLocalStorage from '../hooks/useLocalStorage';
 
 type SidebarContextType = {
@@ -52,15 +52,15 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }, []);
 
     const toggleSidebar = () => {
-        setIsExpanded((prev) => !prev);
+        setIsExpanded(prev => !prev);
     };
 
     const toggleMobileSidebar = () => {
-        setIsMobileOpen((prev) => !prev);
+        setIsMobileOpen(prev => !prev);
     };
 
     const toggleSubmenu = (item: string) => {
-        setOpenSubmenu((prev) => (prev === item ? null : item));
+        setOpenSubmenu(prev => (prev === item ? null : item));
     };
 
     return (

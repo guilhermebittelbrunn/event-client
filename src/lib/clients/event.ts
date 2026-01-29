@@ -48,7 +48,7 @@ class EventClient {
     }
 
     private setupRequest(client: AxiosInstance) {
-        client.interceptors.request.use((config) => {
+        client.interceptors.request.use(config => {
             if (typeof window !== 'undefined') {
                 //only on client
                 const eventToken = getCookie('eventToken');
@@ -64,8 +64,8 @@ class EventClient {
 
     private setupResponse(client: AxiosInstance) {
         client.interceptors.response.use(
-            (response) => response,
-            async (error) => {
+            response => response,
+            async error => {
                 if (error.response && error.response.status === 401) {
                     removeCookie('eventToken');
                     setTimeout(() => {
