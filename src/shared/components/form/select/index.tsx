@@ -75,7 +75,7 @@ export function Select({
                 placeholder={placeholder || 'Selecione uma opção'}
                 mode={multiple ? 'tags' : undefined}
                 {...props}
-                onChange={(value) => {
+                onChange={value => {
                     if (changeUrl && (paramKey || props.name)) {
                         handleFilterChange(paramKey || props.name || '', value);
                     }

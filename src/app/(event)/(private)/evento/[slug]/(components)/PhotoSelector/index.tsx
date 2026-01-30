@@ -9,7 +9,7 @@ interface PhotoSelectorProps {
 }
 
 export function PhotoSelector({ disabled = false }: PhotoSelectorProps) {
-    const { image, isCapturing } = useMemoryStore((state) => ({
+    const { image, isCapturing } = useMemoryStore(state => ({
         image: state.image,
         isCapturing: state.isCapturing,
     }));

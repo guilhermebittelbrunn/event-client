@@ -19,7 +19,7 @@ interface PhotoGridProps {
     boxProps?: Omit<BoxProps, 'children'>;
 }
 
-export const PhotoGrid: React.FC<PhotoGridProps> = (props) => {
+export const PhotoGrid: React.FC<PhotoGridProps> = props => {
     const {
         photos,
         selectedPhotos = [],
@@ -51,7 +51,7 @@ export const PhotoGrid: React.FC<PhotoGridProps> = (props) => {
                 loader={<></>}
                 className="grid grid-cols-3 gap-2 lg:grid-cols-4 xl:grid-cols-5"
             >
-                {photos.map((photo) => (
+                {photos.map(photo => (
                     <PhotoItem
                         key={photo.id}
                         photo={photo}

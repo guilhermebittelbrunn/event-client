@@ -45,7 +45,7 @@ const PageBreadcrumb: React.FC<BreadcrumbProps> = ({ pageTitle, sideElement, bre
                                 </svg>
                             </Link>
                         </li>
-                        {breadcrumbItems?.map((item) => (
+                        {breadcrumbItems?.map(item => (
                             <li key={item.href}>
                                 <Link
                                     className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400"

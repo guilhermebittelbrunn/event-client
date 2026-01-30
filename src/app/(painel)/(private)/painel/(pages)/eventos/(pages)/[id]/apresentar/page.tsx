@@ -11,26 +11,25 @@ export default function SlideshowPage() {
     const searchParams = useSearchParams();
     const initialMemoryId = searchParams.get('initialMemoryId');
 
-    // Carregar muitas memórias de uma vez para o slideshow
     const {
         data: infiniteData,
         isLoading,
         isError,
     } = useInfiniteMemoryQuery({
         eventId: id,
-        limit: 1000, // Muitos registros por página
+        limit: 1000,
         order: 'desc',
         orderBy: 'createdAt',
         hidden: false,
     });
 
-    const photos = useMemo(() => infiniteData?.pages.flatMap((page) => page?.data || []) || [], [infiniteData]);
+    const photos = useMemo(() => infiniteData?.pages.flatMap(page => page?.data || []) || [], [infiniteData]);
 
     const initialIndex = useMemo(() => {
         if (!initialMemoryId || photos.length === 0) {
             return 0;
         }
-        const index = photos.findIndex((photo) => photo.id === initialMemoryId);
+        const index = photos.findIndex(photo => photo.id === initialMemoryId);
         return index >= 0 ? index : 0;
     }, [initialMemoryId, photos]);
 

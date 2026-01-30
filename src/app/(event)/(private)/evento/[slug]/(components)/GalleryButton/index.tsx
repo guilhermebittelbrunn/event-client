@@ -18,7 +18,7 @@ export function GalleryButton({
     ...buttonProps
 }: GalleryButtonProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const { setImage, compressImage, validateImage, setError } = useMemoryStore((state) => ({
+    const { setImage, compressImage, validateImage, setError } = useMemoryStore(state => ({
         setImage: state.setImage,
         compressImage: state.compressImage,
         validateImage: state.validateImage,

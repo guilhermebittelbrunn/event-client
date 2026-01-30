@@ -10,6 +10,7 @@ export interface CreateEventRequest {
     startAt: Date;
     endAt: Date;
     image?: File;
+    isForTesting?: boolean;
 }
 
 export interface CreateEventResponse {

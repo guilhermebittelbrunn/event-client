@@ -1,4 +1,3 @@
-import { EVENT_STATUS_OPTIONS } from '@/shared/consts/event';
 import * as yup from 'yup';
 
 export const createEventRequestSchema = yup.object({
@@ -9,12 +8,19 @@ export const createEventRequestSchema = yup.object({
         .tuple([yup.date().required(), yup.date().required()])
         .required('Datas de início e término são obrigatórias'),
     image: yup.array().optional(),
-    status: yup
-        .string()
-        .optional()
-        .test('is-valid-status', 'Status inválido', (value) => {
-            return value ? EVENT_STATUS_OPTIONS.some((option) => option.value === value) : true;
-        }),
+    isForTesting: yup.boolean().optional(),
+    startAt: yup.date().required('Data de início é obrigatória'),
+});
+
+export const updateEventRequestSchema = yup.object({
+    name: yup.string().optional(),
+    slug: yup.string().optional(),
+    description: yup.string().optional(),
+    dates: yup.tuple([yup.date().required(), yup.date().required()]).required(),
+    image: yup.array().optional(),
+    isForTesting: yup.boolean().optional(),
+    status: yup.string().optional(),
 });
 
 export type CreateEventSchema = yup.InferType<typeof createEventRequestSchema>;
+export type UpdateEventSchema = yup.InferType<typeof updateEventRequestSchema>;

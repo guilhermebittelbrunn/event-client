@@ -19,11 +19,11 @@ const initialState: ThemeState = {
 export const useTheme = createWithEqualityFn<ThemeState>()(
     persist(
         immer(
-            subscribeWithSelector((set) => ({
+            subscribeWithSelector(set => ({
                 ...initialState,
 
                 toggleTheme: () => {
-                    set((state) => {
+                    set(state => {
                         const newTheme = state.theme === 'light' ? 'dark' : 'light';
                         state.theme = newTheme;
 
@@ -43,7 +43,7 @@ export const useTheme = createWithEqualityFn<ThemeState>()(
             name: 'theme-store',
             storage: createJSONStorage(() => localStorage),
             // Aplica tema ao hidratar do localStorage
-            onRehydrateStorage: () => (state) => {
+            onRehydrateStorage: () => state => {
                 if (typeof window !== 'undefined' && state?.theme) {
                     if (state.theme === 'dark') {
                         document.documentElement.classList.add('dark');
@@ -56,4 +56,4 @@ export const useTheme = createWithEqualityFn<ThemeState>()(
     ),
 );
 
-export const useThemeValue = () => useTheme((state) => state.theme);
+export const useThemeValue = () => useTheme(state => state.theme);

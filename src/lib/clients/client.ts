@@ -47,7 +47,7 @@ class Client {
     }
 
     private setupRequest(client: AxiosInstance) {
-        client.interceptors.request.use((config) => {
+        client.interceptors.request.use(config => {
             if (typeof window !== 'undefined') {
                 //only on client
                 const accessToken = getCookie('accessToken');
@@ -68,8 +68,8 @@ class Client {
 
     private setupResponse(client: AxiosInstance) {
         client.interceptors.response.use(
-            (response) => response,
-            async (error) => {
+            response => response,
+            async error => {
                 // Em caso de 401, limpa os cookies e notifica a aplicação
                 if (error.response && error.response.status === 401 && typeof window !== 'undefined') {
                     removeCookie('accessToken');

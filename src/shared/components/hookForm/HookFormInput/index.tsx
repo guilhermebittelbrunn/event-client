@@ -35,7 +35,7 @@ export function HookFormInput<T extends FieldValues>({
                         placeholder={label}
                         type={type}
                         error={error}
-                        onChange={(e) => {
+                        onChange={e => {
                             field.onChange(e);
                             onChange?.(e);
                         }}

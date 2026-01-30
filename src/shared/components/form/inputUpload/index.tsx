@@ -13,7 +13,7 @@ const getBase64 = (file: FileType): Promise<string> =>
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => resolve(reader.result as string);
-        reader.onerror = (error) => reject(error);
+        reader.onerror = error => reject(error);
     });
 
 export interface InputUploadProps extends Omit<UploadProps, 'onChange'> {
@@ -94,8 +94,8 @@ export function InputUpload({
                     wrapperStyle={{ display: 'none' }}
                     preview={{
                         visible: previewOpen,
-                        onVisibleChange: (visible) => setPreviewOpen(visible),
-                        afterOpenChange: (visible) => !visible && setPreviewImage(''),
+                        onVisibleChange: visible => setPreviewOpen(visible),
+                        afterOpenChange: visible => !visible && setPreviewImage(''),
                     }}
                     src={previewImage}
                     className={cn('w-full p-2 bg-red-500', className)}

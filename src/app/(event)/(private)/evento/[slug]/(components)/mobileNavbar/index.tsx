@@ -34,7 +34,7 @@ export default function MobileNavbar({ className = '' }: MobileNavbarProps) {
     );
 
     const getAllPaths = useCallback(() => {
-        return navItems.map((item) => item.path);
+        return navItems.map(item => item.path);
     }, [navItems]);
 
     const isActive = useCallback(
@@ -47,7 +47,7 @@ export default function MobileNavbar({ className = '' }: MobileNavbarProps) {
                 // Check if there's a more specific path that also matches
                 const allPaths = getAllPaths();
                 const hasMoreSpecificMatch = allPaths.some(
-                    (otherPath) =>
+                    otherPath =>
                         otherPath !== path &&
                         otherPath.length > path.length &&
                         (pathname === otherPath || pathname.startsWith(otherPath + '/')),
@@ -68,7 +68,7 @@ export default function MobileNavbar({ className = '' }: MobileNavbarProps) {
             )}
         >
             <div className="flex justify-around items-center py-2">
-                {navItems.map((item) => (
+                {navItems.map(item => (
                     <Link
                         key={item.path}
                         href={item.path}

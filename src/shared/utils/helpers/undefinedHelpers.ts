@@ -66,7 +66,7 @@ export function filledArray<T>(arr: T[] | null | undefined): arr is T[] {
         arr &&
             Array.isArray(arr) &&
             arr.length > 0 &&
-            arr.some((item) => item !== undefined && item !== null && item !== ''),
+            arr.some(item => item !== undefined && item !== null && item !== ''),
     );
 }
 

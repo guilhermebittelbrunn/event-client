@@ -3,7 +3,7 @@ import { cn } from '@/shared/utils';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Dropdown } from 'antd';
 
-type MenuItem = {
+export type ActionMenuItem = {
     icon: React.ReactNode;
     key: string;
     label: string;
@@ -14,7 +14,7 @@ type MenuItem = {
 interface ActionsMenuProps {
     onEdit?: () => void;
     onDelete?: () => void;
-    items?: MenuItem[];
+    items?: ActionMenuItem[];
     className?: string;
 }
 
@@ -36,7 +36,7 @@ export function ActionsMenu({ onEdit, onDelete, items, className }: ActionsMenuP
                               },
                           ]
                         : []),
-                    ...(items || []).map((item) => ({
+                    ...(items || []).map(item => ({
                         ...item,
                         style: { margin: 4, fontSize: 14, ...item.style },
                     })),

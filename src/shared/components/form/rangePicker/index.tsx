@@ -17,6 +17,7 @@ export interface RangePickerProps {
     id?: string;
     value?: [Date, Date] | null;
     onChange?: (dates: any, dateStrings: [string, string]) => void;
+    disablePast?: boolean;
 }
 
 export function RangePicker({
@@ -28,6 +29,7 @@ export function RangePicker({
     id,
     value,
     onChange,
+    disablePast = false,
     ...props
 }: RangePickerProps) {
     const dayjsValue = value ? ([dayjs(value[0]), dayjs(value[1])] as [dayjs.Dayjs, dayjs.Dayjs]) : null;
@@ -43,6 +45,7 @@ export function RangePicker({
             </Label>
             <AntdRangePicker
                 format={['DD/MM/YYYY', 'DD/MM/YYYY']}
+                disabledDate={disablePast ? current => current && current.isBefore(dayjs()) : undefined}
                 className={cn(
                     `h-11 w-full rounded-lg border appearance-none border-gray-200 bg-snow-white placeholder:text-gray-400 focus:outline-hidden focus:ring-3
                     dark:bg-matte-black dark:text-white/90 dark:placeholder:text-white/30 px-4 py-2.5 shadow-theme-xs

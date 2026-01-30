@@ -17,10 +17,9 @@ export default function CreateEventPage() {
         resolver: yupResolver(createEventRequestSchema),
     });
 
-    const onSubmit: SubmitHandler<CreateEventSchema> = (data) => {
+    const onSubmit: SubmitHandler<CreateEventSchema> = data => {
         createEventMutation.mutate({
-            name: data.name,
-            slug: data.slug,
+            ...data,
             startAt: data.dates[0]!,
             endAt: data.dates[1]!,
             image: data?.image?.[0]?.originFileObj,

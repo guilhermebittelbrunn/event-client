@@ -22,7 +22,7 @@ export const MemoryModal: React.FC<MemoryModalProps> = ({
     const [mounted, setMounted] = useState(false);
 
     const { previousMemory, nextMemory, currentIndex } = useMemo(() => {
-        const index = allPhotos.findIndex((photo) => photo.id === currentMemory.id);
+        const index = allPhotos.findIndex(photo => photo.id === currentMemory.id);
         return {
             currentIndex: index,
             previousMemory: index > 0 ? allPhotos[index - 1] : undefined,

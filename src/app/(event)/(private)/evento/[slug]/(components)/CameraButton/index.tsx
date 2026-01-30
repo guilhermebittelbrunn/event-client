@@ -19,7 +19,7 @@ export function CameraButton({
     ...buttonProps
 }: CameraButtonProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const { setImage, compressImage, validateImage, setError } = useMemoryStore((state) => ({
+    const { setImage, compressImage, validateImage, setError } = useMemoryStore(state => ({
         setImage: state.setImage,
         compressImage: state.compressImage,
         validateImage: state.validateImage,
@@ -66,7 +66,7 @@ export function CameraButton({
             video.playsInline = true;
 
             // Aguarda o vídeo carregar
-            await new Promise((resolve) => {
+            await new Promise(resolve => {
                 video.onloadedmetadata = resolve;
             });
 
@@ -86,11 +86,11 @@ export function CameraButton({
             context.drawImage(video, 0, 0);
 
             // Para o stream da câmera
-            stream.getTracks().forEach((track) => track.stop());
+            stream.getTracks().forEach(track => track.stop());
 
             // Converte o canvas para blob
             canvas.toBlob(
-                async (blob) => {
+                async blob => {
                     if (blob) {
                         const file = new File([blob], `photo_${Date.now()}.jpg`, {
                             type: 'image/jpeg',

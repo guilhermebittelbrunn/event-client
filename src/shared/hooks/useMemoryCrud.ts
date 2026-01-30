@@ -17,7 +17,7 @@ export const useMemoryCrud = () => {
         onSuccess: () => {
             successAlert('Memória criada com sucesso');
         },
-        onError: (error) => errorAlert(handleClientError(error)),
+        onError: error => errorAlert(handleClientError(error)),
     });
 
     const deleteMemoryMutation = useMutation({
@@ -26,7 +26,7 @@ export const useMemoryCrud = () => {
             successAlert('Memória deletada com sucesso');
             queryClient.invalidateQueries({ queryKey: [LIST_MEMORY_PAGINATED_QUERY_KEY] });
         },
-        onError: (error) => errorAlert(handleClientError(error)),
+        onError: error => errorAlert(handleClientError(error)),
     });
 
     const deleteBulkMemoryMutation = useMutation({
@@ -35,7 +35,7 @@ export const useMemoryCrud = () => {
             successAlert('Memórias deletadas com sucesso');
             queryClient.invalidateQueries({ queryKey: [LIST_MEMORY_PAGINATED_QUERY_KEY] });
         },
-        onError: (error) => errorAlert(handleClientError(error)),
+        onError: error => errorAlert(handleClientError(error)),
     });
 
     const downloadMemoryMutation = useMutation({
@@ -52,19 +52,19 @@ export const useMemoryCrud = () => {
 
             successAlert('Memórias baixadas com sucesso');
         },
-        onError: (error) => errorAlert(handleClientError(error)),
+        onError: error => errorAlert(handleClientError(error)),
     });
 
     const changeMemoryVisibilityMutation = useMutation({
         mutationFn: (dto: UpdateMemoryRequest) => client.memoryService.update(dto),
         onSuccess: () => successAlert('Visibilidade da memória alterada com sucesso'),
-        onError: (error) => errorAlert(handleClientError(error)),
+        onError: error => errorAlert(handleClientError(error)),
     });
 
     const changeBulkMemoryVisibilityMutation = useMutation({
         mutationFn: (dto: UpdateMemoryBulkRequest) => client.memoryService.updateBulk(dto),
         onSuccess: () => successAlert('Visibilidade das memórias alterada com sucesso'),
-        onError: (error) => errorAlert(handleClientError(error)),
+        onError: error => errorAlert(handleClientError(error)),
     });
 
     return {

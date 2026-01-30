@@ -1,4 +1,5 @@
 import { BaseDTO } from '../../utils';
+import { PaymentDTO } from '../billing/payment';
 import { MemoryDTO } from '../memory';
 import { FileDTO } from '../shared';
 import { UserDTO } from '../user';
@@ -52,30 +53,19 @@ export const EventStatusOptions = [
 
 export interface EventDTO extends BaseDTO {
     userId: string;
-
     fileId?: string | null;
-
     slug: string;
-
     status: EventStatusEnum;
-
     name: string;
-
     description?: string;
-
     startAt: Date;
-
     endAt: Date;
-
     totalMemories: number;
 
     config?: EventConfigDTO;
-
     guestAccess?: EventAccessDTO;
-
     file?: FileDTO;
-
     user?: UserDTO;
-
     memories?: MemoryDTO[];
+    payment?: PaymentDTO;
 }

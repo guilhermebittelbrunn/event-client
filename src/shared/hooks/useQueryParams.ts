@@ -26,7 +26,7 @@ const useQueryParams = (props?: UseQueryParamsProps) => {
     // Create a map for quick lookup of param configs
     const paramConfigMap = useMemo(() => {
         const map = new Map<string, QueryParamConfig>();
-        params.forEach((param) => {
+        params.forEach(param => {
             map.set(param.key, param);
         });
         return map;
@@ -36,7 +36,7 @@ const useQueryParams = (props?: UseQueryParamsProps) => {
     useEffect(() => {
         if (initialized) return;
 
-        const hasInitialValues = params.some((p) => p.initialValue !== undefined);
+        const hasInitialValues = params.some(p => p.initialValue !== undefined);
         if (!hasInitialValues) {
             setInitialized(true);
             return;
@@ -45,7 +45,7 @@ const useQueryParams = (props?: UseQueryParamsProps) => {
         const updates: Record<string, any> = {};
         let needsUpdate = false;
 
-        params.forEach((param) => {
+        params.forEach(param => {
             if (param.initialValue === undefined) return;
 
             const currentValue = param.multiple ? searchParams.getAll(param.key) : searchParams.get(param.key);
@@ -103,7 +103,7 @@ const useQueryParams = (props?: UseQueryParamsProps) => {
                     return defaultValue !== undefined ? defaultValue : [];
                 }
                 // Split by comma and parse each value
-                return value.split(',').map((v) => parseValue(v.trim(), type));
+                return value.split(',').map(v => parseValue(v.trim(), type));
             } else {
                 const value = searchParams.get(key);
                 if (value === null) {
@@ -205,7 +205,7 @@ const useQueryParams = (props?: UseQueryParamsProps) => {
      */
     const getAllParams = useCallback(() => {
         const result: Record<string, any> = {};
-        params.forEach((config) => {
+        params.forEach(config => {
             result[config.key] = getParam(config.key);
         });
         return result;
@@ -234,7 +234,7 @@ const useQueryParams = (props?: UseQueryParamsProps) => {
      */
     const resetParams = useCallback(() => {
         const defaults: Record<string, any> = {};
-        params.forEach((config) => {
+        params.forEach(config => {
             if (config.defaultValue !== undefined) {
                 defaults[config.key] = config.defaultValue;
             }
@@ -244,19 +244,19 @@ const useQueryParams = (props?: UseQueryParamsProps) => {
 
     // Create a stable dependency key based on actual URL values
     const urlKey = useMemo(() => {
-        return params.map((p) => `${p.key}=${searchParams.get(p.key) || ''}`).join('&');
+        return params.map(p => `${p.key}=${searchParams.get(p.key) || ''}`).join('&');
     }, [params, searchParams]);
 
     // Memoize apiParams based on actual URL values to prevent unnecessary re-renders
     const apiParams = useMemo(() => {
         const result: Record<string, any> = {};
 
-        params.forEach((config) => {
+        params.forEach(config => {
             const value = config.multiple
                 ? (() => {
                       const val = searchParams.get(config.key);
                       if (!val) return config.defaultValue !== undefined ? config.defaultValue : [];
-                      return val.split(',').map((v) => parseValue(v.trim(), config.type));
+                      return val.split(',').map(v => parseValue(v.trim(), config.type));
                   })()
                 : (() => {
                       const val = searchParams.get(config.key);

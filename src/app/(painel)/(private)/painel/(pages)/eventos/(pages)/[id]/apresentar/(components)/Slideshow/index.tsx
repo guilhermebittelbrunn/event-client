@@ -103,7 +103,7 @@ export function Slideshow({ photos, initialIndex = 0, onClose }: SlideshowProps)
         <div
             className="fixed inset-0 z-[9999] bg-black flex items-center justify-center overflow-hidden"
             onMouseMove={handleMouseMove}
-            onClick={(e) => {
+            onClick={e => {
                 // Navegação por clique nas bordas
                 if (e.target === e.currentTarget) {
                     const rect = e.currentTarget.getBoundingClientRect();

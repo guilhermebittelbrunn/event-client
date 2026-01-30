@@ -1,8 +1,8 @@
-import { DatePickerProps } from 'antd';
 import { Control, Controller, ControllerProps, FieldValues, Path } from 'react-hook-form';
 import { RangePicker } from '../../form';
+import { RangePickerProps } from '../../form/rangePicker';
 
-interface HookFormRangePickerProps<T extends FieldValues> extends DatePickerProps {
+interface HookFormRangePickerProps<T extends FieldValues> extends RangePickerProps {
     control?: Control<T>;
     name: Path<T>;
     label?: string;
@@ -12,7 +12,6 @@ interface HookFormRangePickerProps<T extends FieldValues> extends DatePickerProp
 export function HookFormRangePicker<T extends FieldValues>({
     control,
     name,
-    label,
     controllerProps,
     ...props
 }: HookFormRangePickerProps<T>): React.ReactElement {
@@ -32,7 +31,6 @@ export function HookFormRangePicker<T extends FieldValues>({
                 return (
                     <RangePicker
                         {...field}
-                        placeholder={label}
                         onChange={field.onChange}
                         value={rangeValue as any}
                         error={error}

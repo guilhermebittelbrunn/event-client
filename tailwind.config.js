@@ -1,4 +1,3 @@
-
 const config = {
     darkMode: ['class'],
     content: [
@@ -84,7 +83,7 @@ const config = {
                     900: 'hsl(var(--snow-white-900))',
                     950: 'hsl(var(--snow-white-950))',
                 },
-                'champagne': {
+                champagne: {
                     DEFAULT: 'hsl(var(--champagne))',
                     25: 'hsl(var(--champagne-25))',
                     50: 'hsl(var(--champagne-50))',
@@ -114,7 +113,7 @@ const config = {
                     900: 'hsl(var(--matte-black-900))',
                     950: 'hsl(var(--matte-black-950))',
                 },
-                'gray': {
+                gray: {
                     DEFAULT: 'hsl(var(--gray))',
                     25: 'hsl(var(--gray-25))',
                     50: 'hsl(var(--gray-50))',
@@ -146,7 +145,7 @@ const config = {
                 },
 
                 // Cores de texto semânticas
-                'text': {
+                text: {
                     primary: 'hsl(var(--text-primary))',
                     secondary: 'hsl(var(--text-secondary))',
                     tertiary: 'hsl(var(--text-tertiary))',
@@ -154,7 +153,7 @@ const config = {
                 },
 
                 // Cores da marca
-                'brand': {
+                brand: {
                     primary: 'hsl(var(--brand-primary))',
                     secondary: 'hsl(var(--brand-secondary))',
                     accent: 'hsl(var(--brand-accent))',
@@ -196,7 +195,19 @@ const config = {
                 'slide-in-from-bottom': 'slide-in-from-bottom 0.3s ease-out',
             },
             fontFamily: {
-                sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif'],
+                sans: [
+                    'var(--font-sans)',
+                    'ui-sans-serif',
+                    'system-ui',
+                    '-apple-system',
+                    'BlinkMacSystemFont',
+                    'Segoe UI',
+                    'Roboto',
+                    'Helvetica Neue',
+                    'Arial',
+                    'Noto Sans',
+                    'sans-serif',
+                ],
                 cursive: ['var(--font-cursive)', 'cursive'],
                 'nanum-brush': ['var(--font-nanum-brush-script)', 'cursive'],
             },
@@ -204,16 +215,16 @@ const config = {
                 xxs: ['0.55rem', '0.8rem'],
             },
             spacing: {
-                '18': '4.5rem',
-                '88': '22rem',
-                '128': '32rem',
+                18: '4.5rem',
+                88: '22rem',
+                128: '32rem',
             },
             zIndex: {
-                '60': '60',
-                '70': '70',
-                '80': '80',
-                '90': '90',
-                '100': '100',
+                60: '60',
+                70: '70',
+                80: '80',
+                90: '90',
+                100: '100',
             },
         },
     },

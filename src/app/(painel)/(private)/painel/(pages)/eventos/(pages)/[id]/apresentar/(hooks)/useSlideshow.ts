@@ -62,7 +62,7 @@ const useSlideshowStore = createWithEqualityFn<SlideshowState & SlideshowActions
             initialize({ photos, initialIndex, defaultSpeed, onClose }) {
                 const safeIndex = photos.length > 0 ? Math.min(initialIndex, photos.length - 1) : 0;
 
-                set((state) => {
+                set(state => {
                     state.photos = photos;
                     state.currentIndex = safeIndex;
                     state.speed = defaultSpeed;
@@ -75,13 +75,13 @@ const useSlideshowStore = createWithEqualityFn<SlideshowState & SlideshowActions
             },
 
             setCurrentReady(ready: boolean) {
-                set((state) => {
+                set(state => {
                     state.isCurrentReady = ready;
                 });
             },
 
             setShowControls(show: boolean) {
-                set((state) => {
+                set(state => {
                     state.showControls = show;
                 });
             },
@@ -90,7 +90,7 @@ const useSlideshowStore = createWithEqualityFn<SlideshowState & SlideshowActions
                 const { photos } = get();
                 if (photos.length === 0) return;
 
-                set((state) => {
+                set(state => {
                     state.currentIndex = (state.currentIndex + 1) % state.photos.length;
                     state.isCurrentReady = false;
                 });
@@ -100,7 +100,7 @@ const useSlideshowStore = createWithEqualityFn<SlideshowState & SlideshowActions
                 const { photos } = get();
                 if (photos.length === 0) return;
 
-                set((state) => {
+                set(state => {
                     state.currentIndex = (state.currentIndex - 1 + state.photos.length) % state.photos.length;
                     state.isCurrentReady = false;
                 });
@@ -110,21 +110,21 @@ const useSlideshowStore = createWithEqualityFn<SlideshowState & SlideshowActions
                 const { photos } = get();
                 if (index < 0 || index >= photos.length) return;
 
-                set((state) => {
+                set(state => {
                     state.currentIndex = index;
                     state.isCurrentReady = false;
                 });
             },
 
             togglePause() {
-                set((state) => {
+                set(state => {
                     state.isPaused = !state.isPaused;
                 });
             },
 
             increaseSpeed() {
-                set((state) => {
-                    const currentIndex = SPEED_OPTIONS.findIndex((s) => s === state.speed);
+                set(state => {
+                    const currentIndex = SPEED_OPTIONS.findIndex(s => s === state.speed);
                     if (currentIndex < SPEED_OPTIONS.length - 1) {
                         state.speed = SPEED_OPTIONS[currentIndex + 1];
                     }
@@ -132,8 +132,8 @@ const useSlideshowStore = createWithEqualityFn<SlideshowState & SlideshowActions
             },
 
             decreaseSpeed() {
-                set((state) => {
-                    const currentIndex = SPEED_OPTIONS.findIndex((s) => s === state.speed);
+                set(state => {
+                    const currentIndex = SPEED_OPTIONS.findIndex(s => s === state.speed);
                     if (currentIndex > 0) {
                         state.speed = SPEED_OPTIONS[currentIndex - 1];
                     }
@@ -141,7 +141,7 @@ const useSlideshowStore = createWithEqualityFn<SlideshowState & SlideshowActions
             },
 
             toggleCaption() {
-                set((state) => {
+                set(state => {
                     state.showCaption = !state.showCaption;
                 });
             },
@@ -172,7 +172,7 @@ export const useSlideshow = ({ photos, initialIndex = 0, defaultSpeed = 3, onClo
         increaseSpeed,
         decreaseSpeed,
         toggleCaption,
-    } = useSlideshowStore((state) => ({
+    } = useSlideshowStore(state => ({
         photos: state.photos,
         currentIndex: state.currentIndex,
         isPaused: state.isPaused,
@@ -216,7 +216,7 @@ export const useSlideshow = ({ photos, initialIndex = 0, defaultSpeed = 3, onClo
         if (!photos || photos.length === 0) return;
 
         const key = JSON.stringify({
-            ids: photos.map((p) => p.id),
+            ids: photos.map(p => p.id),
             initialIndex,
             defaultSpeed,
         });

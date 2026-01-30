@@ -1,11 +1,9 @@
 'use client';
 
-import { Title, LoadingScreen, Container, Box, Modal, Paragraph, Loading } from '@/shared/components/ui';
+import { Container, Modal, Paragraph, Loading } from '@/shared/components/ui';
 
 import { useState, useMemo } from 'react';
 
-import useFindEventById from '@/shared/hooks/useFindEventById';
-import { useParams } from 'next/navigation';
 import { useResponsiveLimit } from '@/shared/hooks';
 import PageBreadcrumb from '@/shared/components/ui/pageBreadCrumb';
 import { EventHeader } from './(components)/EventHeader';
@@ -13,9 +11,10 @@ import { ActionBar } from './(components)/ActionBar';
 import { PhotoGrid } from './(components)/PhotoGrid';
 import { MemoryDTO } from '@/shared/types/dtos';
 import { useMemoryCrud } from '@/shared/hooks/useMemoryCrud';
-import { useQueryClient } from '@tanstack/react-query';
 import { MemoryModal } from './(components)/MemoryModal';
 import useInfiniteMemoryQuery, { INFINITE_MEMORY_QUERY_KEY } from './(hooks)/useInfiniteMemoryQuery';
+import { useEventPage } from '../../../(store)/useEventPage';
+import { useQueryClient } from '@tanstack/react-query';
 
 const LoadingContainer = () => {
     return (
@@ -26,16 +25,15 @@ const LoadingContainer = () => {
 };
 
 export default function DetailsPage() {
-    const { id } = useParams() as { id: string };
-    const queryClient = useQueryClient();
-
     const [selectedPhotos, setSelectedPhotos] = useState<string[]>([]);
     const [isSelectMode, setIsSelectMode] = useState(false);
     const [openedMemory, setOpenedMemory] = useState<MemoryDTO | null>(null);
     const [allPhotos, setAllPhotos] = useState<MemoryDTO[]>([]);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const queryClient = useQueryClient();
 
-    const { data: event, isPending } = useFindEventById(id);
+    const { event } = useEventPage();
+
     const { deleteBulkMemoryMutation, downloadMemoryMutation, changeBulkMemoryVisibilityMutation } =
         useMemoryCrud();
 
@@ -48,14 +46,14 @@ export default function DetailsPage() {
         hasNextPage,
         isFetchingNextPage,
     } = useInfiniteMemoryQuery({
-        eventId: id,
+        eventId: event?.id,
         limit: limitByResolution,
         order: 'desc',
         orderBy: 'createdAt',
     });
 
     const { memories, total } = useMemo(() => {
-        const memories = infiniteData?.pages.flatMap((page) => page?.data || []) || [];
+        const memories = infiniteData?.pages.flatMap(page => page?.data || []) || [];
         const total = infiniteData?.pages[0]?.meta?.total || 0;
 
         return { memories, total };
@@ -70,8 +68,8 @@ export default function DetailsPage() {
 
     const handleSelectPhoto = (photoId: string) => {
         if (isSelectMode) {
-            setSelectedPhotos((prev) =>
-                prev.includes(photoId) ? prev.filter((id) => id !== photoId) : [...prev, photoId],
+            setSelectedPhotos(prev =>
+                prev.includes(photoId) ? prev.filter(id => id !== photoId) : [...prev, photoId],
             );
         }
     };
@@ -97,7 +95,7 @@ export default function DetailsPage() {
     };
 
     const handleChangeVisibility = async (status: boolean) => {
-        const payload = selectedPhotosToAction.map((id) => ({ id, hidden: !status }));
+        const payload = selectedPhotosToAction.map(id => ({ id, hidden: !status }));
         await changeBulkMemoryVisibilityMutation.mutateAsync({ memories: payload });
 
         queryClient.invalidateQueries({ queryKey: [INFINITE_MEMORY_QUERY_KEY] });
@@ -122,25 +120,9 @@ export default function DetailsPage() {
 
     const handleStartSlideshow = () => {
         const initialMemoryId = selectedPhotosToAction[0];
-        const url = `/painel/eventos/${id}/apresentar${initialMemoryId ? `?initialMemoryId=${initialMemoryId}` : ''}`;
+        const url = `/painel/eventos/${event?.id}/apresentar${initialMemoryId ? `?initialMemoryId=${initialMemoryId}` : ''}`;
         window.open(url, '_blank', 'fullscreen=yes');
     };
-
-    if (isPending) {
-        return <LoadingScreen />;
-    }
-
-    if (!event) {
-        return (
-            <Container>
-                <Box className="flex flex-col items-center justify-center py-12">
-                    <Title className="text-xl font-bold text-neutral-800 dark:text-white">
-                        Evento não encontrado
-                    </Title>
-                </Box>
-            </Container>
-        );
-    }
 
     return (
         <>
@@ -149,7 +131,7 @@ export default function DetailsPage() {
                 breadcrumbItems={[{ label: 'Eventos', href: '/painel/eventos' }]}
             />
             <Container>
-                <EventHeader event={event} photoCount={total} />
+                <EventHeader event={event!} photoCount={total} />
 
                 {downloadMemoryMutation.isPending ? (
                     <LoadingContainer />

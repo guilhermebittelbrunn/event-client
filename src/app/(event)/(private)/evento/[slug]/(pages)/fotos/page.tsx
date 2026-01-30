@@ -37,7 +37,7 @@ export default function PhotosPage() {
 
     const { memories, total } = useMemo(() => {
         const memories =
-            infiniteData?.pages.flatMap((page) => page?.data.filter((memory) => !memory.hidden) || []) || [];
+            infiniteData?.pages.flatMap(page => page?.data.filter(memory => !memory.hidden) || []) || [];
         const total = infiniteData?.pages[0]?.meta?.total || 0;
 
         return { memories, total };

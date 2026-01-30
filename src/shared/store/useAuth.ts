@@ -4,7 +4,7 @@ import { createWithEqualityFn } from 'zustand/traditional';
 import { subscribeWithSelector } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { UserDTO } from '../types/dtos';
-import { SignInRequest, SignInResponse, SignUpRequest } from '@/lib/services/auth/types';
+import { SignInRequest, SignInResponse, SignUpRequest, RefreshTokenResponse } from '@/lib/services/auth/types';
 import { UserTokenPayload } from '../types/dtos/user/auth';
 import { getTokenPayload, handleClientError } from '../utils';
 import { setCookie, getCookie, removeCookie } from '../utils/helpers/cookies';
@@ -61,7 +61,7 @@ export const useAuth = createWithEqualityFn<AuthState & AuthActions>()(
             ...initialState,
 
             async signIn(data: SignInRequest) {
-                set((state) => {
+                set(state => {
                     state.isSigningIn = true;
                     state.error = null;
                 });
@@ -76,7 +76,7 @@ export const useAuth = createWithEqualityFn<AuthState & AuthActions>()(
                         setCookie('refreshToken', tokens.refreshToken, tokens.expiresIn);
                     }
 
-                    set((state) => {
+                    set(state => {
                         state.user = userData;
                         state.isAuthenticated = true;
                         state.isSigningIn = false;
@@ -87,7 +87,7 @@ export const useAuth = createWithEqualityFn<AuthState & AuthActions>()(
                 } catch (error) {
                     const errorMessage = handleClientError(error);
 
-                    set((state) => {
+                    set(state => {
                         state.isSigningIn = false;
                         state.error = errorMessage;
                     });
@@ -97,7 +97,7 @@ export const useAuth = createWithEqualityFn<AuthState & AuthActions>()(
             },
 
             async signUp(data: SignUpRequest) {
-                set((state) => {
+                set(state => {
                     state.isSigningUp = true;
                     state.error = null;
                 });
@@ -105,14 +105,14 @@ export const useAuth = createWithEqualityFn<AuthState & AuthActions>()(
                 try {
                     await client.authService.signUp(data);
 
-                    set((state) => {
+                    set(state => {
                         state.isSigningUp = false;
                         state.error = null;
                     });
                 } catch (error) {
                     const errorMessage = handleClientError(error);
 
-                    set((state) => {
+                    set(state => {
                         state.isSigningUp = false;
                         state.error = errorMessage;
                     });
@@ -124,7 +124,7 @@ export const useAuth = createWithEqualityFn<AuthState & AuthActions>()(
             signOut() {
                 clearTokensFromCookies();
 
-                set((state) => {
+                set(state => {
                     state.user = null;
                     state.isAuthenticated = false;
                     state.error = null;
@@ -138,15 +138,70 @@ export const useAuth = createWithEqualityFn<AuthState & AuthActions>()(
             async initializeAuth() {
                 if (get().isInitialized) return;
 
-                set((state) => {
+                set(state => {
                     state.isLoading = true;
                 });
 
                 try {
                     const { accessToken } = getTokensFromCookies();
 
+                    // Se não tiver accessToken, verificar se há refreshToken no localStorage
+                    // (pode ter sido salvo antes de ir para o Stripe)
+                    if (!accessToken && typeof window !== 'undefined') {
+                        const storedRefreshToken = localStorage.getItem('stripe_refresh_token');
+
+                        if (storedRefreshToken) {
+                            try {
+                                // Criar uma requisição manual com o refreshToken do localStorage
+                                // O interceptor do client só adiciona o refreshToken se estiver no cookie,
+                                // então precisamos fazer a requisição manualmente
+                                const response = await fetch('/api/v1/auth/refresh', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'refresh-token': storedRefreshToken,
+                                    },
+                                });
+
+                                if (!response.ok) {
+                                    throw new Error('Failed to refresh token');
+                                }
+
+                                const refreshResponse: RefreshTokenResponse = await response.json();
+                                const { tokens } = refreshResponse.meta;
+
+                                // Salvar novos tokens nos cookies com SameSite=Lax
+                                setCookie('accessToken', tokens.accessToken, tokens.expiresIn);
+                                if (tokens.refreshToken) {
+                                    setCookie('refreshToken', tokens.refreshToken, tokens.expiresIn);
+                                    // Atualizar o refreshToken no localStorage também
+                                    localStorage.setItem('stripe_refresh_token', tokens.refreshToken);
+                                }
+
+                                // Obter dados do usuário
+                                const payload = getTokenPayload<UserTokenPayload>(tokens.accessToken);
+                                if (payload?.sub) {
+                                    const { data: user } = await client.userService.findById(payload.sub);
+
+                                    set(state => {
+                                        state.user = user;
+                                        state.isAuthenticated = true;
+                                        state.isLoading = false;
+                                        state.isInitialized = true;
+                                    });
+
+                                    return;
+                                }
+                            } catch (refreshError) {
+                                console.error('[AUTH] Failed to refresh token:', refreshError);
+                                // Limpar localStorage se refresh falhar
+                                localStorage.removeItem('stripe_refresh_token');
+                            }
+                        }
+                    }
+
                     if (!accessToken) {
-                        set((state) => {
+                        set(state => {
                             state.isLoading = false;
                             state.isInitialized = true;
                         });
@@ -157,7 +212,7 @@ export const useAuth = createWithEqualityFn<AuthState & AuthActions>()(
 
                     if (!payload?.sub) {
                         clearTokensFromCookies();
-                        set((state) => {
+                        set(state => {
                             state.isLoading = false;
                             state.isInitialized = true;
                         });
@@ -166,7 +221,7 @@ export const useAuth = createWithEqualityFn<AuthState & AuthActions>()(
 
                     const { data: user } = await client.userService.findById(payload.sub);
 
-                    set((state) => {
+                    set(state => {
                         state.user = user;
                         state.isAuthenticated = true;
                         state.isLoading = false;
@@ -176,7 +231,7 @@ export const useAuth = createWithEqualityFn<AuthState & AuthActions>()(
                     console.error('Failed to initialize auth:', error);
                     clearTokensFromCookies();
 
-                    set((state) => {
+                    set(state => {
                         state.user = null;
                         state.isAuthenticated = false;
                         state.isLoading = false;
@@ -192,7 +247,7 @@ export const useAuth = createWithEqualityFn<AuthState & AuthActions>()(
 
                 try {
                     const { data: userData } = await client.userService.findById(user.id);
-                    set((state) => {
+                    set(state => {
                         state.user = userData;
                     });
                 } catch (error) {
@@ -201,20 +256,20 @@ export const useAuth = createWithEqualityFn<AuthState & AuthActions>()(
             },
 
             setUser(user: UserDTO | null) {
-                set((state) => {
+                set(state => {
                     state.user = user;
                     state.isAuthenticated = !!user;
                 });
             },
 
             setError(error: string | null) {
-                set((state) => {
+                set(state => {
                     state.error = error;
                 });
             },
 
             clearError() {
-                set((state) => {
+                set(state => {
                     state.error = null;
                 });
             },
