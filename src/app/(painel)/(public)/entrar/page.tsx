@@ -107,8 +107,7 @@ function SignInForm() {
         };
 
         attemptReauth();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [isAttemptingReauth, router, searchParams, successAlert]);
 
     const onSubmit: SubmitHandler<SignInSchema> = async data => {
         try {
