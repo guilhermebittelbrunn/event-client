@@ -5,6 +5,7 @@ import UserService from '../services/user/service';
 import { getCookie, removeCookie } from '@/shared/utils/helpers/cookies';
 import FormattedError from '@/shared/utils/helpers/formattedError';
 import MemoryService from '../services/memory/service';
+import PlanService from '../services/plan/service';
 
 class Client {
     readonly client: AxiosInstance;
@@ -13,6 +14,7 @@ class Client {
     readonly userService: UserService;
     readonly eventService: EventService;
     readonly memoryService: MemoryService;
+    readonly planService: PlanService;
 
     constructor() {
         this.client = this.buildClient();
@@ -21,6 +23,7 @@ class Client {
         this.userService = new UserService(this.client);
         this.eventService = new EventService(this.client);
         this.memoryService = new MemoryService(this.client);
+        this.planService = new PlanService(this.client);
     }
 
     private buildClient() {

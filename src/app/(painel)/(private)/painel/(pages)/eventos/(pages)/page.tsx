@@ -96,7 +96,10 @@ export default function EventsPage() {
                     event.payment?.status === PaymentStatusEnum.EXPIRED &&
                     event.status !== EventStatusEnum.PENDING_PAYMENT;
 
-                const isConfirmedStatus = event.status === EventStatusEnum.PUBLISHED;
+                const isConfirmedStatus =
+                    event.status === EventStatusEnum.PUBLISHED ||
+                    event.status === EventStatusEnum.COMPLETED ||
+                    event.status === EventStatusEnum.IN_PROGRESS;
 
                 const actionsForPendingPayment = [
                     {

@@ -11,6 +11,11 @@ export interface PaginationRequest {
     term?: string;
 }
 
+export interface ToggleStatusParams {
+    id: string;
+    status: boolean;
+}
+
 export interface PaginationRequestWithOrder<T extends object = object> extends PaginationRequest {
     order?: 'asc' | 'desc';
     orderBy?: keyof T;

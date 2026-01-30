@@ -1,4 +1,6 @@
-export interface PaymentDTO {
+import { BaseDTO } from '../../utils';
+
+export interface PaymentDTO extends BaseDTO {
     status: PaymentStatusEnum;
     amount: number;
     currency: string;

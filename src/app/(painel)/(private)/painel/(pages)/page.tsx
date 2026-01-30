@@ -20,7 +20,7 @@ export default function Home() {
         limit: 5,
         dateType: 'startAt',
         startDate: today,
-        statuses: [EventStatusEnum.IN_PROGRESS, EventStatusEnum.PENDING_PAYMENT],
+        statuses: [EventStatusEnum.IN_PROGRESS, EventStatusEnum.PENDING_PAYMENT, EventStatusEnum.PUBLISHED],
     });
 
     const { data: events } = data || {};
