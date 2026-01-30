@@ -139,6 +139,7 @@ export default function EventsPage() {
                 }
 
                 if (isExpiredPayment) {
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     actions.filter(_ => false);
                 }
 
