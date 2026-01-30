@@ -9,7 +9,7 @@ export interface ComboboxProps extends SelectProps {
 
 export function Combobox({ options, onChange, className, label, ...props }: ComboboxProps) {
     const handleChange = (value: string[]) => {
-        const selectedOption = !!options?.find((option) => value.includes(option.value as string));
+        const selectedOption = !!options?.find(option => value.includes(option.value as string));
         if (selectedOption) {
             onChange?.(value);
         }

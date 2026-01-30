@@ -6,7 +6,7 @@ import { Title } from '@/shared/components/ui/title';
 import { useAuth } from '@/shared/store/useAuth';
 
 export default function NotFound() {
-    const isAuthenticated = useAuth((state) => state.isAuthenticated);
+    const isAuthenticated = useAuth(state => state.isAuthenticated);
 
     const handleRedirect = () => {
         if (isAuthenticated) {

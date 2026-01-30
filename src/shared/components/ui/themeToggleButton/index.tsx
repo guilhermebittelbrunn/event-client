@@ -7,7 +7,7 @@ interface ThemeToggleButtonProps {
 }
 
 export default function ThemeToggleButton({ type = 'primary' }: ThemeToggleButtonProps) {
-    const toggleTheme = useTheme((state) => state.toggleTheme);
+    const toggleTheme = useTheme(state => state.toggleTheme);
 
     if (type === 'primary') {
         return (

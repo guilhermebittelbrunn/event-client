@@ -19,7 +19,7 @@ export default function SendPhotosPage() {
     const { successAlert, errorAlert } = useAlert();
 
     const { isUploading, startUpload, completeUpload, resetMemory, setError, error } = useMemoryStore(
-        (state) => ({
+        state => ({
             isUploading: state.isUploading,
             startUpload: state.startUpload,
             completeUpload: state.completeUpload,
@@ -35,7 +35,7 @@ export default function SendPhotosPage() {
             successAlert('Memória salva com sucesso');
             completeUpload();
         },
-        onError: (error) => {
+        onError: error => {
             const errorMessage = handleClientError(error);
             errorAlert(errorMessage);
             setError(errorMessage);

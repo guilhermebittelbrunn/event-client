@@ -151,10 +151,6 @@ export const useAuth = createWithEqualityFn<AuthState & AuthActions>()(
                         const storedRefreshToken = localStorage.getItem('stripe_refresh_token');
 
                         if (storedRefreshToken) {
-                            console.log(
-                                '[AUTH] No accessToken found, attempting to refresh using stored refreshToken',
-                            );
-
                             try {
                                 // Criar uma requisição manual com o refreshToken do localStorage
                                 // O interceptor do client só adiciona o refreshToken se estiver no cookie,
@@ -194,7 +190,6 @@ export const useAuth = createWithEqualityFn<AuthState & AuthActions>()(
                                         state.isInitialized = true;
                                     });
 
-                                    console.log('[AUTH] Successfully reauthenticated after Stripe return');
                                     return;
                                 }
                             } catch (refreshError) {

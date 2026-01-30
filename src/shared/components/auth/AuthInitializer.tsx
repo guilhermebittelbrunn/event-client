@@ -15,7 +15,7 @@ export function AuthInitializer({ children }: AuthInitializerProps) {
     const pathname = usePathname();
     const { warningAlert } = useAlert();
 
-    const [initializeAuth, signOut, error, isInitialized, isLoading, isAuthenticated] = useAuth((state) => [
+    const [initializeAuth, signOut, error, isInitialized, isLoading, isAuthenticated] = useAuth(state => [
         state.initializeAuth,
         state.signOut,
         state.error,

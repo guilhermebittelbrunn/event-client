@@ -101,8 +101,8 @@ export default function useLocalStorage<T>(
         };
     }, [key, defaultValue]);
 
-    const setValueInLocalStorage: React.Dispatch<React.SetStateAction<T>> = (newValue) => {
-        setValue((currentValue) => {
+    const setValueInLocalStorage: React.Dispatch<React.SetStateAction<T>> = newValue => {
+        setValue(currentValue => {
             const result = newValue instanceof Function ? newValue(currentValue) : newValue;
 
             if (typeof window !== 'undefined') {

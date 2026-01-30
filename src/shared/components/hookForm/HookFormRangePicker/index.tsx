@@ -12,7 +12,6 @@ interface HookFormRangePickerProps<T extends FieldValues> extends RangePickerPro
 export function HookFormRangePicker<T extends FieldValues>({
     control,
     name,
-    label,
     controllerProps,
     ...props
 }: HookFormRangePickerProps<T>): React.ReactElement {

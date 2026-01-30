@@ -56,7 +56,7 @@ const useMemory = createWithEqualityFn<MemoryState & MemoryActions>()(
                 ...initialState,
 
                 setImage(image) {
-                    set((state) => {
+                    set(state => {
                         // Limpa URL anterior se existir
                         if (state.imageUrl) {
                             URL.revokeObjectURL(state.imageUrl);
@@ -79,7 +79,7 @@ const useMemory = createWithEqualityFn<MemoryState & MemoryActions>()(
                 },
 
                 clearImage() {
-                    set((state) => {
+                    set(state => {
                         if (state.imageUrl) {
                             URL.revokeObjectURL(state.imageUrl);
                         }
@@ -93,13 +93,13 @@ const useMemory = createWithEqualityFn<MemoryState & MemoryActions>()(
                 },
 
                 setError(error) {
-                    set((state) => {
+                    set(state => {
                         state.error = error;
                     });
                 },
 
                 resetMemory() {
-                    set((state) => {
+                    set(state => {
                         if (state.imageUrl) {
                             URL.revokeObjectURL(state.imageUrl);
                         }
@@ -114,7 +114,7 @@ const useMemory = createWithEqualityFn<MemoryState & MemoryActions>()(
                 },
 
                 startCapture() {
-                    set((state) => {
+                    set(state => {
                         state.isCapturing = true;
                         state.currentStep = 'capture';
                         state.error = null;
@@ -122,7 +122,7 @@ const useMemory = createWithEqualityFn<MemoryState & MemoryActions>()(
                 },
 
                 startUpload() {
-                    set((state) => {
+                    set(state => {
                         state.isUploading = true;
                         state.isProcessing = true;
                         state.currentStep = 'processing';
@@ -131,7 +131,7 @@ const useMemory = createWithEqualityFn<MemoryState & MemoryActions>()(
                 },
 
                 completeUpload() {
-                    set((state) => {
+                    set(state => {
                         state.isUploading = false;
                         state.isProcessing = false;
                         state.currentStep = 'select';
@@ -147,7 +147,7 @@ const useMemory = createWithEqualityFn<MemoryState & MemoryActions>()(
                 },
 
                 cancelProcess() {
-                    set((state) => {
+                    set(state => {
                         state.isUploading = false;
                         state.isProcessing = false;
                         state.isCapturing = false;
@@ -160,7 +160,7 @@ const useMemory = createWithEqualityFn<MemoryState & MemoryActions>()(
                 async compressImage(file: File): Promise<File> {
                     const { maxFileSize, compressionQuality } = get();
 
-                    return new Promise((resolve) => {
+                    return new Promise(resolve => {
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
                         const img = new Image();
@@ -186,7 +186,7 @@ const useMemory = createWithEqualityFn<MemoryState & MemoryActions>()(
 
                             // Converte para blob com compressão
                             canvas.toBlob(
-                                (blob) => {
+                                blob => {
                                     if (blob) {
                                         const compressedFile = new File([blob], file.name, {
                                             type: 'image/jpeg',
@@ -235,7 +235,7 @@ const useMemory = createWithEqualityFn<MemoryState & MemoryActions>()(
         {
             name: 'memory-store',
             storage: createJSONStorage(() => localStorage),
-            partialize: (state) => ({
+            partialize: state => ({
                 // Persiste apenas configurações, não estado temporário pois File e URL não são serializáveis
                 maxFileSize: state.maxFileSize,
                 compressionQuality: state.compressionQuality,

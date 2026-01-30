@@ -14,7 +14,7 @@ interface MemoryPreviewProps {
 }
 
 export function MemoryPreview({ isLoading = false, onSubmit, onCancel }: MemoryPreviewProps) {
-    const { image, imageUrl, message, showPreview, cancelProcess } = useMemoryStore((state) => ({
+    const { image, imageUrl, message, showPreview, cancelProcess } = useMemoryStore(state => ({
         image: state.image,
         imageUrl: state.imageUrl,
         message: state.message,

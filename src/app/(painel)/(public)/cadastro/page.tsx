@@ -15,11 +15,11 @@ import { handleClientError } from '@/shared/utils';
 
 export default function SignUpForm() {
     const form = useForm({ resolver: yupResolver(signUpRequestSchema) });
-    const signUp = useAuth((state) => state.signUp);
-    const isSigningUp = useAuth((state) => state.isSigningUp);
+    const signUp = useAuth(state => state.signUp);
+    const isSigningUp = useAuth(state => state.isSigningUp);
     const { successAlert, errorAlert } = useAlert();
 
-    const onSubmit: SubmitHandler<SignUpSchema> = async (data) => {
+    const onSubmit: SubmitHandler<SignUpSchema> = async data => {
         try {
             await signUp(data);
             successAlert('Cadastro realizado com sucesso');

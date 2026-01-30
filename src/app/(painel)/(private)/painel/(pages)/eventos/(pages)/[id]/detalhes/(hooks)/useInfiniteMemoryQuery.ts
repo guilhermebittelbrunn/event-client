@@ -35,7 +35,7 @@ export const useInfiniteMemoryQuery = (props: UseInfiniteMemoryQueryProps) => {
             }
             return allPages.length + 1;
         },
-        placeholderData: (previousData) => previousData,
+        placeholderData: previousData => previousData,
         initialPageParam: 1,
         refetchInterval: 1 * 60 * 1000, // 1 minute
         refetchOnWindowFocus: true,

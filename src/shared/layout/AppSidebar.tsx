@@ -105,7 +105,7 @@ const AppSidebar: React.FC = () => {
                     )}
                     {nav.subItems && (isExpanded || isHovered || isMobileOpen) && (
                         <div
-                            ref={(el) => {
+                            ref={el => {
                                 subMenuRefs.current[`${menuType}-${index}`] = el;
                             }}
                             className="overflow-hidden transition-all duration-300"
@@ -117,7 +117,7 @@ const AppSidebar: React.FC = () => {
                             }}
                         >
                             <ul className="mt-2 space-y-1 ml-9">
-                                {nav.subItems.map((subItem) => (
+                                {nav.subItems.map(subItem => (
                                     <li key={subItem.name}>
                                         <Link
                                             href={subItem.path}
@@ -173,12 +173,12 @@ const AppSidebar: React.FC = () => {
     // Get all available paths from menu items
     const getAllPaths = useCallback(() => {
         const paths: string[] = [];
-        [...navItems, ...othersItems].forEach((item) => {
+        [...navItems, ...othersItems].forEach(item => {
             if (item.path) {
                 paths.push(item.path);
             }
             if (item.subItems) {
-                item.subItems.forEach((subItem) => {
+                item.subItems.forEach(subItem => {
                     paths.push(subItem.path);
                 });
             }
@@ -196,7 +196,7 @@ const AppSidebar: React.FC = () => {
                 // Check if there's a more specific path that also matches
                 const allPaths = getAllPaths();
                 const hasMoreSpecificMatch = allPaths.some(
-                    (otherPath) =>
+                    otherPath =>
                         otherPath !== path &&
                         otherPath.length > path.length &&
                         (pathname === otherPath || pathname.startsWith(otherPath + '/')),
@@ -212,11 +212,11 @@ const AppSidebar: React.FC = () => {
     useEffect(() => {
         // Check if the current path matches any submenu item
         let submenuMatched = false;
-        ['main', 'others'].forEach((menuType) => {
+        ['main', 'others'].forEach(menuType => {
             const items = menuType === 'main' ? navItems : othersItems;
             items.forEach((nav, index) => {
                 if (nav.subItems) {
-                    nav.subItems.forEach((subItem) => {
+                    nav.subItems.forEach(subItem => {
                         if (isActive(subItem.path)) {
                             setOpenSubmenu({
                                 type: menuType as 'main' | 'others',
@@ -240,7 +240,7 @@ const AppSidebar: React.FC = () => {
         if (openSubmenu !== null) {
             const key = `${openSubmenu.type}-${openSubmenu.index}`;
             if (subMenuRefs.current[key]) {
-                setSubMenuHeight((prevHeights) => ({
+                setSubMenuHeight(prevHeights => ({
                     ...prevHeights,
                     [key]: subMenuRefs.current[key]?.scrollHeight || 0,
                 }));
@@ -249,7 +249,7 @@ const AppSidebar: React.FC = () => {
     }, [openSubmenu]);
 
     const handleSubmenuToggle = (index: number, menuType: 'main' | 'others') => {
-        setOpenSubmenu((prevOpenSubmenu) => {
+        setOpenSubmenu(prevOpenSubmenu => {
             if (prevOpenSubmenu && prevOpenSubmenu.type === menuType && prevOpenSubmenu.index === index) {
                 return null;
             }
