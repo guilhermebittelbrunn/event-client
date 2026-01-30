@@ -47,7 +47,7 @@ export function EventForm({ action = 'create' }: EventFormProps) {
                         autoSize={{ minRows: 3, maxRows: 6 }}
                     />
 
-                    <HookFormRangePicker name="dates" required disablePast />
+                    <HookFormRangePicker name="dates" required disablePast={action === 'create'} />
                 </div>
                 <div className="space-y-4">
                     <HookFormInput name="slug" label="Link de Acesso" required />
@@ -64,11 +64,13 @@ export function EventForm({ action = 'create' }: EventFormProps) {
                     <HookFormUpload name="image" label="Foto do evento" />
 
                     {isAdmin && action === 'create' && (
-                        <HookFormSwitch
-                            name="isForTesting"
-                            label="Evento de teste"
-                            helperText="Caso esteja ativado, o evento será criado sem cobrança"
-                        />
+                        <div className="flex justify-end">
+                            <HookFormSwitch
+                                name="isForTesting"
+                                label="Evento de teste"
+                                helperText="Caso esteja ativado, o evento será criado sem cobrança"
+                            />
+                        </div>
                     )}
                 </div>
             </FormContainer>

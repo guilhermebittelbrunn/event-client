@@ -38,11 +38,15 @@ export default function PlansPage() {
         createColumn<PlanDTO, 'enabled'>({
             title: 'Ativo',
             key: 'enabled',
+            align: 'center',
             render: (_, plan) => (
-                <Switch
-                    checked={!!plan.enabled}
-                    onChange={() => toggleStatusPlanMutation.mutate({ id: plan.id, status: !plan.enabled })}
-                />
+                <div className="flex justify-center">
+                    <Switch
+                        checked={!!plan.enabled}
+                        onChange={() => toggleStatusPlanMutation.mutate({ id: plan.id, status: !plan.enabled })}
+                        disabled={toggleStatusPlanMutation.isPending}
+                    />
+                </div>
             ),
         }),
         {

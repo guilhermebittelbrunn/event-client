@@ -74,7 +74,7 @@ export function InputUpload({
 
     const uploadButton = (
         <button
-            className="p-4 gap-2 flex flex-col items-center font-bold justify-between text-sm border-1 transition rounded-lg border-soft-gold dark:border-soft-gold-dark shadow-theme-xs hover:opacity-80 hover:cursor-pointer"
+            className="p-4 w-full gap-2 flex flex-col items-center font-bold justify-between text-sm border-1 transition rounded-lg border-soft-gold dark:border-soft-gold-dark shadow-theme-xs hover:opacity-80 hover:cursor-pointer"
             type="button"
         >
             <PlusOutlined />
@@ -87,17 +87,19 @@ export function InputUpload({
                 {label}
             </Label>
             <ErrorBadge hidden={!error || !showErrorBadge} message={error?.message || 'Imagem inválido'}>
-                <Upload
-                    listType="picture"
-                    fileList={fileList}
-                    onPreview={handlePreview}
-                    onChange={handleChange}
-                    customRequest={customRequest}
-                    className={cn('w-full', className)}
-                    multiple={multiple}
-                >
-                    {fileList.length >= (multiple ? 8 : 1) ? null : uploadButton}
-                </Upload>
+                <div className="[&_.ant-upload]:w-full">
+                    <Upload
+                        listType="picture"
+                        fileList={fileList}
+                        onPreview={handlePreview}
+                        onChange={handleChange}
+                        customRequest={customRequest}
+                        className={cn('w-full', className)}
+                        multiple={multiple}
+                    >
+                        {fileList.length >= (multiple ? 8 : 1) ? null : uploadButton}
+                    </Upload>
+                </div>
             </ErrorBadge>
             {previewImage && showPreview && (
                 <AntdImage
