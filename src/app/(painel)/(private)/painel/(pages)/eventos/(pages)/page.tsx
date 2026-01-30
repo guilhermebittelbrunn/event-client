@@ -28,7 +28,7 @@ export default function EventsPage() {
             {
                 key: 'statuses',
                 defaultValue: [],
-                initialValue: isAdmin ? [EventStatusEnum.IN_PROGRESS] : [],
+                initialValue: isAdmin ? [EventStatusEnum.PUBLISHED] : [],
                 multiple: true,
             },
             { key: 'order', defaultValue: '', initialValue: 'asc' },

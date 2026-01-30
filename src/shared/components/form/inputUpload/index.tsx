@@ -63,6 +63,15 @@ export function InputUpload({
         onChange?.(newFileList);
     };
 
+    /**
+     * Evita o POST automático para a URL atual (comportamento padrão do Upload quando
+     * não há `action`). O arquivo é mantido via `onChange` e enviado no submit do form.
+     * Em produção, o POST para /painel/eventos/cadastrar gerava "Server action not found".
+     */
+    const customRequest: NonNullable<UploadProps['customRequest']> = ({ onSuccess }) => {
+        onSuccess?.({});
+    };
+
     const uploadButton = (
         <button
             className="p-4 gap-2 flex flex-col items-center font-bold justify-between text-sm border-1 transition rounded-lg border-soft-gold dark:border-soft-gold-dark shadow-theme-xs hover:opacity-80 hover:cursor-pointer"
@@ -83,6 +92,7 @@ export function InputUpload({
                     fileList={fileList}
                     onPreview={handlePreview}
                     onChange={handleChange}
+                    customRequest={customRequest}
                     className={cn('w-full', className)}
                     multiple={multiple}
                 >

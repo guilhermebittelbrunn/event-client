@@ -9,7 +9,6 @@ export const createEventRequestSchema = yup.object({
         .required('Datas de início e término são obrigatórias'),
     image: yup.array().optional(),
     isForTesting: yup.boolean().optional(),
-    startAt: yup.date().required('Data de início é obrigatória'),
 });
 
 export const updateEventRequestSchema = yup.object({
