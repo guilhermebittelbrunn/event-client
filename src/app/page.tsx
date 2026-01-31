@@ -7,6 +7,7 @@ import { useAuth } from '@/shared/store/useAuth';
 import { InstagramEmbed } from 'react-social-media-embed';
 import Image from 'next/image';
 
+import coupleH from '../../public/images/couple-h.png';
 import mockupIos from '../../public/images/home/mockup-ios.png';
 import mockupDesktop from '../../public/images/home/mockup-desktop.png';
 import { Collapse } from 'antd';
@@ -59,7 +60,7 @@ export default function Home() {
                 {/* Camada da imagem: cover para não esticar, posicionada mais alta */}
                 <div
                     className="absolute inset-0 bg-no-repeat bg-cover bg-[50%_5%]"
-                    style={{ backgroundImage: "url('/images/couple-h.png')" }}
+                    style={{ backgroundImage: `url(${coupleH.src})` }}
                 />
                 {/* Degradê opaco do topo até o início da imagem */}
                 <div
