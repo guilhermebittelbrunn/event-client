@@ -1,6 +1,6 @@
 'use client';
 
-import { Outfit, Nanum_Brush_Script } from 'next/font/google';
+import { Outfit, Nanum_Brush_Script, Playfair_Display, Montserrat } from 'next/font/google';
 import './globals.css';
 
 import { SidebarProvider } from '@/shared/context/SidebarContext';
@@ -20,6 +20,18 @@ const nanumBrushScript = Nanum_Brush_Script({
     display: 'swap',
 });
 
+const playfairDisplay = Playfair_Display({
+    subsets: ['latin'],
+    variable: '--font-playfair-display',
+    display: 'swap',
+});
+
+const montserrat = Montserrat({
+    subsets: ['latin'],
+    variable: '--font-montserrat',
+    display: 'swap',
+});
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     const queryClient = useMemo(
         () =>
@@ -36,7 +48,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
     return (
         <html lang="pt-BR" suppressHydrationWarning>
-            <body className={`${outfit.className} ${nanumBrushScript.variable} dark:bg-gray-900`}>
+            <body
+                className={`${outfit.className} ${nanumBrushScript.variable} ${playfairDisplay.variable} ${montserrat.variable} bg-white`}
+            >
                 <QueryClientProvider client={queryClient}>
                     <SidebarProvider>
                         <ClientLayout>{children}</ClientLayout>

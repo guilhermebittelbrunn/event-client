@@ -210,6 +210,8 @@ const config = {
                 ],
                 cursive: ['var(--font-cursive)', 'cursive'],
                 'nanum-brush': ['var(--font-nanum-brush-script)', 'cursive'],
+                playfair: ['var(--font-playfair-display)', 'serif'],
+                montserrat: ['var(--font-montserrat)', 'sans-serif'],
             },
             fontSize: {
                 xxs: ['0.55rem', '0.8rem'],
