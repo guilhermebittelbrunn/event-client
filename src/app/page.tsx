@@ -14,6 +14,7 @@ import { Collapse } from 'antd';
 
 import { SiGmail } from 'react-icons/si';
 import { FaInstagram } from 'react-icons/fa';
+import { useClientRouter } from '@/shared/hooks';
 
 const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
@@ -21,14 +22,18 @@ const scrollToSection = (id: string) => {
 };
 
 export default function Home() {
+    const { push } = useClientRouter();
     const { isAuthenticated } = useAuth();
 
     return (
-        <Box className="w-full max-w-[1470px] mx-auto">
+        <Box className="w-full  mx-auto">
             <header className="sticky w-full top-0 z-50 mx-auto flex justify-center px-6 bg-white dark:bg-matte-black">
                 <Box className="flex flex-row w-full justify-between max-w-screen-xl bg-white dark:bg-matte-black">
                     <div className="flex items-center gap-4">
-                        <Title className="text-2xl font-bold text-matte-black dark:text-snow-white font-nanum-brush">
+                        <Title
+                            className="text-2xl font-bold text-matte-black dark:text-snow-white font-nanum-brush"
+                            onClick={() => scrollToSection('inicio')}
+                        >
                             Qinstante
                         </Title>
                     </div>
@@ -56,7 +61,10 @@ export default function Home() {
             </div>
 
             {/* Hero: imagem com bg-cover (sem esticar), degradê opaco até o início da imagem */}
-            <div id="inicio" className="relative w-full min-h-[660px] overflow-hidden">
+            <div
+                id="inicio"
+                className="relative w-full min-h-[660px] overflow-hidden 2xl:min-h-[800px] 3xl:min-h-[1000px]"
+            >
                 {/* Camada da imagem: cover para não esticar, posicionada mais alta */}
                 <div
                     className="absolute inset-0 bg-no-repeat bg-cover bg-[50%_5%]"
@@ -88,7 +96,7 @@ export default function Home() {
                         </Paragraph>
                     </div>
                     <div className="flex flex-row flex-wrap gap-4 justify-center mt-2">
-                        <Button type="primary" className="px-20 py-5 md:px-10">
+                        <Button type="primary" className="px-20 py-5 md:px-10" onClick={() => push('/entrar')}>
                             Criar meu evento
                         </Button>
                         <Button
@@ -164,7 +172,7 @@ export default function Home() {
                 <h2 className="text-2xl font-montserrat font-bold text-matte-black dark:text-snow-white">
                     Vídeo de demonstração
                 </h2>
-                <div className="flex justify-center items-center w-full max-w-[428px] mx-auto">
+                <div className="flex justify-center items-center w-full max-w-[428px]  mx-auto">
                     <InstagramEmbed
                         url="https://www.instagram.com/p/DPykL4Yjb13/"
                         className="w-full max-w-[428px]"
