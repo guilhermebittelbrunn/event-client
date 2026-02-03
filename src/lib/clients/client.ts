@@ -6,6 +6,7 @@ import { getCookie, removeCookie } from '@/shared/utils/helpers/cookies';
 import FormattedError from '@/shared/utils/helpers/formattedError';
 import MemoryService from '../services/memory/service';
 import PlanService from '../services/plan/service';
+import WebhookService from '../services/webhook/service';
 
 class Client {
     readonly client: AxiosInstance;
@@ -15,6 +16,7 @@ class Client {
     readonly eventService: EventService;
     readonly memoryService: MemoryService;
     readonly planService: PlanService;
+    readonly webhookService: WebhookService;
 
     constructor() {
         this.client = this.buildClient();
@@ -24,6 +26,7 @@ class Client {
         this.eventService = new EventService(this.client);
         this.memoryService = new MemoryService(this.client);
         this.planService = new PlanService(this.client);
+        this.webhookService = new WebhookService(this.client);
     }
 
     private buildClient() {
@@ -87,6 +90,13 @@ class Client {
                 return Promise.reject(formattedError);
             },
         );
+    }
+
+    addHeaders(headers: Record<string, string>) {
+        this.client.defaults.headers.common = {
+            ...this.client.defaults.headers.common,
+            ...headers,
+        };
     }
 }
 
