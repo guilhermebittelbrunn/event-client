@@ -8,6 +8,7 @@ import ClientLayout from './clientLayout';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { ToastContainer } from 'react-toastify';
+import { Analytics } from '@vercel/analytics/next';
 
 const outfit = Outfit({
     subsets: ['latin'],
@@ -57,6 +58,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                         <ToastContainer className="scale-90 md:scale-100" />
                     </SidebarProvider>
                 </QueryClientProvider>
+                <Analytics />
             </body>
         </html>
     );
