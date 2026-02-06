@@ -19,6 +19,7 @@ export function CameraButton({
     ...buttonProps
 }: CameraButtonProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
+
     const { setImage, compressImage, validateImage, setError } = useMemoryStore(state => ({
         setImage: state.setImage,
         compressImage: state.compressImage,
@@ -37,7 +38,11 @@ export function CameraButton({
             const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
 
             if (isIOS && isSafari) {
-                // No iOS Safari, o input com capture="environment" vai direto à câmera
+                // No iOS Safari, o input com capture="environment" vai direto à câmera.
+                // Limpa o input ANTES de abrir para evitar que o mobile reutilize a mesma foto.
+                if (fileInputRef.current) {
+                    fileInputRef.current.value = '';
+                }
                 fileInputRef.current?.click();
                 return;
             }
@@ -45,6 +50,9 @@ export function CameraButton({
             // Verifica se o dispositivo suporta getUserMedia
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
                 // Fallback para dispositivos que não suportam câmera
+                if (fileInputRef.current) {
+                    fileInputRef.current.value = '';
+                }
                 fileInputRef.current?.click();
                 return;
             }
@@ -120,6 +128,9 @@ export function CameraButton({
             console.error('Erro ao acessar câmera:', error);
             setError('Erro ao acessar a câmera. Tente novamente.');
             // Fallback para input file
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
             fileInputRef.current?.click();
         } finally {
             useMemory.setState({ isCapturing: false });
@@ -128,8 +139,15 @@ export function CameraButton({
 
     const handleFileSelect = useCallback(
         async (event: React.ChangeEvent<HTMLInputElement>) => {
-            const file = event.target.files?.[0];
-            if (file) {
+            const rawFile = event.target.files?.[0];
+            if (rawFile) {
+                // No mobile (câmera), o browser pode devolver a mesma referência da última foto.
+                // Sempre criar um novo File quebra essa referência e garante que cada captura é única.
+                const file = new File([rawFile], `photo_${Date.now()}.jpg`, {
+                    type: rawFile.type || 'image/jpeg',
+                    lastModified: Date.now(),
+                });
+
                 if (!validateImage(file)) {
                     setError('Formato de imagem inválido ou arquivo muito grande');
                     return;
@@ -152,7 +170,7 @@ export function CameraButton({
                 }
             }
 
-            // Limpa o input para permitir selecionar o mesmo arquivo novamente
+            // Limpa o input para permitir selecionar/tirar outra foto
             if (fileInputRef.current) {
                 fileInputRef.current.value = '';
             }
