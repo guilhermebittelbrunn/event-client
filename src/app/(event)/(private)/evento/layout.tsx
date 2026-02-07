@@ -29,7 +29,7 @@ export default function EventLayout({ children }: { children: React.ReactNode })
                 <main>
                     <Box
                         type="secondary"
-                        className="min-h-[calc(100vh-150px)] flex flex-col touch-manipulation overflow-hidden overscroll-none"
+                        className="min-h-[calc(100vh-150px)] flex flex-col touch-manipulation"
                     >
                         {children}
                     </Box>
