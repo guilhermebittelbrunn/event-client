@@ -8,7 +8,7 @@ import { InputSearch, Select } from '@/shared/components/form';
 import { AddButton, Container, PaginationTable, Tooltip, createColumn } from '@/shared/components/ui';
 import { ActionMenuItem, ActionsMenu } from '@/shared/components/ui/actionMenu';
 import { Box } from '@/shared/components/ui/box';
-import { formatDate } from '@/shared/utils/helpers';
+import { formatDate, formatDateTime } from '@/shared/utils/helpers';
 import { useEventCrud } from '../../../../../../../shared/hooks/useEventCrud';
 import { EventDTO, EventStatusEnum, EventStatusOptions, UserTypeEnum } from '@/shared/types/dtos';
 import ResponsiveImage from '@/shared/components/ui/responsiveImage';
@@ -23,18 +23,16 @@ export default function EventsPage() {
     const user = useAuth(state => state.user);
     const isAdmin = user?.type === UserTypeEnum.ADMIN;
 
-    const { apiParams } = useQueryParams({
-        params: [
-            {
-                key: 'statuses',
-                defaultValue: [],
-                initialValue: isAdmin ? [EventStatusEnum.PUBLISHED] : [],
-                multiple: true,
-            },
-            { key: 'order', defaultValue: '', initialValue: 'asc' },
-            { key: 'orderBy', defaultValue: '', initialValue: 'startAt' },
-        ],
-    });
+    const { apiParams } = useQueryParams(
+        {
+            key: 'statuses',
+            defaultValue: [],
+            initialValue: isAdmin ? [EventStatusEnum.PUBLISHED] : [],
+            multiple: true,
+        },
+        { key: 'order', defaultValue: '', initialValue: 'asc' },
+        { key: 'orderBy', defaultValue: '', initialValue: 'startAt' },
+    );
 
     const { useListPaginatedEvent, deleteEventMutation } = useEventCrud();
 
@@ -75,12 +73,21 @@ export default function EventsPage() {
             key: 'startAt',
             render: startAt => formatDate(startAt),
             sort: true,
+            align: 'center',
         }),
         createColumn<EventDTO, 'endAt'>({
             title: 'Data de término',
             key: 'endAt',
             render: endAt => formatDate(endAt),
             sort: true,
+            align: 'center',
+        }),
+        createColumn<EventDTO, 'createdAt'>({
+            title: 'Data de criação',
+            key: 'createdAt',
+            render: createdAt => formatDateTime(createdAt),
+            sort: true,
+            align: 'center',
         }),
         {
             title: 'Ações',
@@ -100,6 +107,8 @@ export default function EventsPage() {
                     event.status === EventStatusEnum.PUBLISHED ||
                     event.status === EventStatusEnum.COMPLETED ||
                     event.status === EventStatusEnum.IN_PROGRESS;
+
+                const hideActions = isExpiredPayment && user?.type !== UserTypeEnum.ADMIN;
 
                 const actionsForPendingPayment = [
                     {
@@ -135,24 +144,17 @@ export default function EventsPage() {
 
                 if (isPendingPayment) {
                     actions.push(...actionsForPendingPayment);
-                }
-
-                if (isConfirmedStatus) {
-                    actions.push(...actionsForConfirmedStatus);
-                }
-
-                if (isExpiredPayment) {
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    actions.filter(_ => false);
+                } else {
+                    if (isConfirmedStatus || user?.type === UserTypeEnum.ADMIN) {
+                        actions.push(...actionsForConfirmedStatus);
+                    }
                 }
 
                 return (
                     <ActionsMenu
                         items={actions}
                         onEdit={
-                            isExpiredPayment
-                                ? undefined
-                                : () => router.push(`/painel/eventos/${event.id}/editar`)
+                            hideActions ? undefined : () => router.push(`/painel/eventos/${event.id}/editar`)
                         }
                         onDelete={() => deleteEventMutation.mutate(event.id)}
                     />

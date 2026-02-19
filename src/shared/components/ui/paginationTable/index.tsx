@@ -5,6 +5,7 @@ import { TablePaginationConfig } from 'antd';
 import { SorterResult } from 'antd/es/table/interface';
 import { useMemo, useRef, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import useQueryParams from '@/shared/hooks/useQueryParams';
 
 interface PaginationTableProps<T> extends TableProps<T> {
     data?: T[];
@@ -22,6 +23,7 @@ interface PaginationTableProps<T> extends TableProps<T> {
 export function PaginationTable<T>(props: PaginationTableProps<T>) {
     const searchParams = useSearchParams();
     const router = useRouter();
+    const { setParam } = useQueryParams();
 
     // Get current values from URL
     const currentPage = Number(searchParams.get('page')) || 1;
@@ -47,6 +49,12 @@ export function PaginationTable<T>(props: PaginationTableProps<T>) {
     useEffect(() => {
         isMounted.current = true;
     }, []);
+
+    useEffect(() => {
+        if (meta && meta?.page > meta?.pages && !meta?.hasNextPage) {
+            setParam('page', meta?.pages);
+        }
+    }, [meta]);
 
     // Create sorted columns with current sort state
     const sortedColumns = useMemo(() => {

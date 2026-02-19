@@ -3,8 +3,13 @@ import { cn } from '@/shared/utils/helpers/cn';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 import { Label } from '../label';
+import { useMemo } from 'react';
+import { DefaultOptionType } from 'antd/es/select';
+
+export type ISelectOption = DefaultOptionType;
 
 export interface SelectProps extends Omit<AntdSelectProps, 'mode'> {
+    options: ISelectOption[];
     name?: string;
     changeUrl?: boolean;
     paramKey?: string;
@@ -31,15 +36,24 @@ export function Select({
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    // For multiple mode, split comma-separated values, otherwise get single value
-    const currentValue = paramKey
-        ? multiple
-            ? (() => {
-                  const value = searchParams.get(paramKey);
-                  return value ? value.split(',') : undefined;
-              })()
-            : searchParams.get(paramKey)
-        : undefined;
+    const currentValue = useMemo(() => {
+        const paramValue = paramKey ? searchParams.get(paramKey) : undefined;
+
+        if (!paramValue) {
+            return undefined;
+        }
+
+        if (multiple) {
+            const values = paramValue.split(',');
+            return values.filter(value => options?.find(option => option.value === value));
+        }
+
+        if (options?.find(option => option.value === paramValue)) {
+            return paramValue;
+        }
+
+        return paramValue;
+    }, [paramKey, multiple, searchParams, options]);
 
     const handleFilterChange = (key: string, value: string | string[] | null) => {
         const params = new URLSearchParams(searchParams.toString());
@@ -51,9 +65,12 @@ export function Select({
             // If the value exists and is not empty, add/update the parameter
             if (Array.isArray(value)) {
                 // For arrays (multiple select), join with comma into a single param
-                params.set(key, value.join(','));
+                const filteredValue = value.filter(value => options?.find(option => option.value === value));
+                params.set(key, filteredValue.join(','));
             } else {
-                params.set(key, value);
+                if (options?.find(option => option.value === value)) {
+                    params.set(key, value);
+                }
             }
         }
 
@@ -72,14 +89,30 @@ export function Select({
                 className={cn('w-full', className)}
                 value={currentValue}
                 size={size}
+                showSearch={true}
+                optionFilterProp="label"
                 placeholder={placeholder || 'Selecione uma opção'}
                 mode={multiple ? 'tags' : undefined}
                 {...props}
-                onChange={value => {
+                onChange={(value: string | string[]) => {
+                    if (paramKey) {
+                        if (Array.isArray(value)) {
+                            const filteredValue = value.filter(value =>
+                                options?.find(option => option.value === value),
+                            );
+
+                            onChange?.(filteredValue);
+                        }
+                        if (typeof value === 'string' && options?.find(option => option.value === value)) {
+                            onChange?.(value);
+                        }
+                    } else {
+                        onChange?.(value);
+                    }
+
                     if (changeUrl && (paramKey || props.name)) {
                         handleFilterChange(paramKey || props.name || '', value);
                     }
-                    onChange?.(value);
                 }}
             />
         </>

@@ -12,12 +12,7 @@ export interface QueryParamConfig {
     type?: 'string' | 'number' | 'boolean';
 }
 
-export interface UseQueryParamsProps {
-    params?: QueryParamConfig[];
-}
-
-const useQueryParams = (props?: UseQueryParamsProps) => {
-    const { params = [] } = props || {};
+const useQueryParams = (...params: QueryParamConfig[]) => {
     const searchParams = useSearchParams();
     const router = useRouter();
     const [initialized, setInitialized] = useState(false);

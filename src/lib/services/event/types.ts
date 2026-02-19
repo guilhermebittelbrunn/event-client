@@ -11,6 +11,7 @@ export interface CreateEventRequest {
     endAt: Date;
     image?: File;
     isForTesting?: boolean;
+    userId?: string;
 }
 
 export interface CreateEventResponse {

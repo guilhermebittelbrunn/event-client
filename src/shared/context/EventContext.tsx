@@ -28,6 +28,7 @@ const getTokenFromCookies = () => {
 export const EventProvider = ({ children }: { children: React.ReactNode }) => {
     const [event, setEvent] = useState<EventDTO | undefined>(undefined);
     const [isClient, setIsClient] = useState(false);
+    const [isAuthenticating, setIsAuthenticating] = useState(true);
     const { client } = useApi();
 
     const { warningAlert } = useAlert();
@@ -40,10 +41,19 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
             setCookie('eventToken', token.accessToken, token.expiresIn);
             setEvent(eventData);
         },
+        onSettled: () => {
+            setIsAuthenticating(false);
+        },
     });
 
     const findEventByIdMutation = useMutation({
         mutationFn: (id: string) => client.eventService.findByIdForGuest(id),
+        onSuccess: ({ data }) => {
+            setEvent(data);
+        },
+        onSettled: () => {
+            setIsAuthenticating(false);
+        },
     });
 
     const handleFailedAuthentication = useCallback(() => {
@@ -133,17 +143,15 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
     //     };
     // }, [isClient, revalidateAuthentication]);
 
-    const authenticating = findEventByIdMutation.isPending || signInByTokenMutation.isPending;
-
     return (
         <EventContext.Provider
             value={{
                 isEventAuthenticated: Boolean(event),
-                authenticating,
+                authenticating: isAuthenticating,
                 event,
             }}
         >
-            {!isClient || authenticating ? <LoadingScreen /> : event ? children : <EventRedirect />}
+            {!isClient || isAuthenticating ? <LoadingScreen /> : event ? children : <EventRedirect />}
         </EventContext.Provider>
     );
 };

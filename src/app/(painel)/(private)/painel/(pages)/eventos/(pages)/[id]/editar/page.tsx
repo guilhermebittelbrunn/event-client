@@ -11,12 +11,15 @@ import { useEventCrud } from '@/shared/hooks/useEventCrud';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { createEventRequestSchema, UpdateEventSchema } from '@/lib/services/event';
 import { useEffect } from 'react';
-import { EventStatusEnum } from '@/shared/types/dtos';
+import { EventStatusEnum, UserTypeEnum } from '@/shared/types/dtos';
 import { useEventPage } from '@/app/(painel)/(private)/painel/(pages)/eventos/(store)/useEventPage';
+import { useAuth } from '@/shared/store/useAuth';
 
 export default function EditEventPage() {
     const { event } = useEventPage();
     const { updateEventMutation } = useEventCrud();
+    const user = useAuth(state => state.user);
+    const isAdmin = user?.type === UserTypeEnum.ADMIN;
 
     const form = useForm({
         resolver: yupResolver(createEventRequestSchema),
@@ -29,6 +32,7 @@ export default function EditEventPage() {
                 startAt: data.dates[0]!,
                 endAt: data.dates[1]!,
                 image: data?.image?.[0]?.originFileObj,
+                ...(isAdmin && data.userId && { userId: data.userId }),
                 ...(data.status && { status: data.status as EventStatusEnum }),
             });
         }
@@ -40,6 +44,7 @@ export default function EditEventPage() {
                 ...event,
                 description: event.description || '',
                 dates: [new Date(event.startAt), new Date(event.endAt)],
+                userId: user?.type === UserTypeEnum.ADMIN ? event.userId : undefined,
                 ...(event.file && {
                     image: [
                         {
@@ -53,7 +58,7 @@ export default function EditEventPage() {
                 }),
             });
         }
-    }, [event, form]);
+    }, [event, form, user?.type]);
 
     return (
         <>

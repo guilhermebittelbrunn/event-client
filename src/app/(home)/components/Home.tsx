@@ -7,9 +7,9 @@ import { useAuth } from '@/shared/store/useAuth';
 import { InstagramEmbed } from 'react-social-media-embed';
 import Image from 'next/image';
 
-import coupleH from '../../public/images/couple-h.png';
-import mockupIos from '../../public/images/home/mockup-ios.png';
-import mockupDesktop from '../../public/images/home/mockup-desktop.png';
+import coupleH from '@/assets/images/home/couple-h.png';
+import mockupIos from '@/assets/images/home/mockup-ios.png';
+import mockupDesktop from '@/assets/images/home/mockup-desktop.png';
 import { Collapse } from 'antd';
 
 import { SiGmail } from 'react-icons/si';
@@ -23,7 +23,7 @@ const scrollToSection = (id: string) => {
 
 export default function Home() {
     const { push } = useClientRouter();
-    const { isAuthenticated } = useAuth();
+    const isAuthenticated = useAuth(state => state.isAuthenticated);
 
     return (
         <Box className="w-full  mx-auto">

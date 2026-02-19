@@ -1,28 +1,22 @@
-'use client';
+import { Metadata } from 'next';
+import { createMetadata } from '@/shared/seo/metadata';
+import { fetchEventBySlug } from '@/shared/actions/event/fetchEvent';
+import SlugLayoutClient from './SlugLayoutClient';
 
-import useEvent from '@/shared/context/EventContext';
-import { useParams, usePathname } from 'next/navigation';
-import React, { useEffect } from 'react';
+type Props = { params: Promise<{ slug: string }>; children: React.ReactNode };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const { slug } = await params;
+
+    const event = await fetchEventBySlug(slug);
+
+    return createMetadata({
+        title: event?.name,
+        description: `Participe do evento ${event?.name ?? 'QInstante'}`,
+        image: event?.file?.url,
+    });
+}
 
 export default function EventSlugLayout({ children }: { children: React.ReactNode }) {
-    const { slug } = useParams() as { slug: string };
-    const pathname = usePathname();
-    const { event } = useEvent();
-
-    useEffect(() => {
-        if (event && slug !== event?.slug) {
-            const urlParts = pathname.split('/');
-            const slugIndex = urlParts.findIndex(
-                (part, index) => index > 0 && urlParts[index - 1] === 'evento' && part === slug,
-            );
-
-            if (slugIndex !== -1) {
-                urlParts[slugIndex] = event.slug;
-                const newPathname = urlParts.join('/');
-                window.history.replaceState({}, '', newPathname);
-            }
-        }
-    }, [slug, event, pathname]);
-
-    return <>{children}</>;
+    return <SlugLayoutClient>{children}</SlugLayoutClient>;
 }
