@@ -52,6 +52,11 @@ export default class EventService extends BaseService {
         return data;
     }
 
+    async findBySlug(slug: string): Promise<EventDTO> {
+        const { data } = await this.client.get<{ data: EventDTO }>(`${this.baseUrl}/slug/${slug}`);
+        return data.data;
+    }
+
     async listPaginated(dto: ListPaginatedEventRequest): Promise<PaginatedResponse<EventDTO>> {
         const { data } = await this.client.get<PaginatedResponse<EventDTO>>(
             `${this.baseUrl}?${this.buildQueryProperties(dto)}`,

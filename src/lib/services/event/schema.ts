@@ -9,6 +9,7 @@ export const createEventRequestSchema = yup.object({
         .required('Datas de início e término são obrigatórias'),
     image: yup.array().optional(),
     isForTesting: yup.boolean().optional(),
+    userId: yup.string().optional().nullable(),
 });
 
 export const updateEventRequestSchema = yup.object({
@@ -19,6 +20,7 @@ export const updateEventRequestSchema = yup.object({
     image: yup.array().optional(),
     isForTesting: yup.boolean().optional(),
     status: yup.string().optional(),
+    userId: yup.string().optional().nullable(),
 });
 
 export type CreateEventSchema = yup.InferType<typeof createEventRequestSchema>;

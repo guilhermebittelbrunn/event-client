@@ -10,3 +10,4 @@ export * from './useQRCode';
 export * from './useApi';
 export * from './useResponsiveLimit';
 export * from './useQueryParams';
+export * from './useListUsers';

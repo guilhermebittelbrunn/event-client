@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { useCallback, useMemo } from 'react';
 import { CameraOutlined, PictureOutlined } from '@ant-design/icons';
 import { cn } from '@/shared/utils';
 import useEvent from '@/shared/context/EventContext';
+import { usePathname } from 'next/navigation';
 
 interface MobileNavbarProps {
     className?: string;

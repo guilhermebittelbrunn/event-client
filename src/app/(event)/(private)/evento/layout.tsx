@@ -5,8 +5,8 @@ import { Title } from '@/shared/components/ui';
 import ThemeToggleButton from '@/shared/components/ui/themeToggleButton';
 import React from 'react';
 import { EventProvider } from '@/shared/context/EventContext';
-import { useRouter } from 'next/navigation';
 import MobileNavbar from './[slug]/(components)/mobileNavbar';
+import { useRouter } from 'next/navigation';
 
 export default function EventLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();

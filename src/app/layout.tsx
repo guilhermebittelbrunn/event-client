@@ -1,14 +1,13 @@
-'use client';
-
 import { Outfit, Nanum_Brush_Script, Playfair_Display, Montserrat } from 'next/font/google';
 import './globals.css';
 
 import { SidebarProvider } from '@/shared/context/SidebarContext';
 import ClientLayout from './clientLayout';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useMemo } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { Analytics } from '@vercel/analytics/next';
+import { QueryProvider } from '@/shared/context/QueryContext';
+import { createMetadata } from '@/shared/seo/metadata';
+import qinstanteLogo from '@/assets/images/shared/qinstante.png';
 
 const outfit = Outfit({
     subsets: ['latin'],
@@ -33,31 +32,24 @@ const montserrat = Montserrat({
     display: 'swap',
 });
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-    const queryClient = useMemo(
-        () =>
-            new QueryClient({
-                defaultOptions: {
-                    queries: {
-                        refetchOnWindowFocus: false,
-                        retry: false,
-                    },
-                },
-            }),
-        [],
-    );
+export const metadata = createMetadata({
+    title: 'QInstante',
+    description: 'QInstante - Transforme seu evento em uma experiência ao vivo',
+    image: qinstanteLogo.src,
+});
 
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
         <html lang="pt-BR" suppressHydrationWarning>
             <body
                 className={`${outfit.className} ${nanumBrushScript.variable} ${playfairDisplay.variable} ${montserrat.variable} bg-white`}
             >
-                <QueryClientProvider client={queryClient}>
+                <QueryProvider>
                     <SidebarProvider>
                         <ClientLayout>{children}</ClientLayout>
                         <ToastContainer className="scale-90 md:scale-100" />
                     </SidebarProvider>
-                </QueryClientProvider>
+                </QueryProvider>
                 <Analytics />
             </body>
         </html>

@@ -10,7 +10,7 @@ import {
 import { Paragraph } from '@/shared/components/ui';
 import { EVENT_STATUS_OPTIONS } from '@/shared/consts/event';
 import { useAuth } from '@/shared/store/useAuth';
-import { useClientRouter } from '@/shared/hooks';
+import { useClientRouter, useListUsers } from '@/shared/hooks';
 import { UserTypeEnum } from '@/shared/types/dtos';
 import { ChangeEvent } from 'react';
 
@@ -21,11 +21,16 @@ interface EventFormProps {
 export function EventForm({ action = 'create' }: EventFormProps) {
     const { watch, setValue, clearErrors } = useFormContext();
     const { currentDomain } = useClientRouter();
+
     const user = useAuth(state => state.user);
 
     const isAdmin = user?.type === UserTypeEnum.ADMIN;
-
     const slug = watch('slug');
+
+    const { options: usersOptions, isLoading: isLoadingUsers } = useListUsers(
+        { limit: 1000, types: [UserTypeEnum.COMMON] },
+        { enabled: isAdmin },
+    );
 
     const handleChangeName = (e: ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
@@ -59,6 +64,10 @@ export function EventForm({ action = 'create' }: EventFormProps) {
 
                     {isAdmin && action === 'update' && (
                         <HookFormSelect name="status" label="Status" options={EVENT_STATUS_OPTIONS} />
+                    )}
+
+                    {isAdmin && !isLoadingUsers && (
+                        <HookFormSelect name="userId" label="Usuário responsável" options={usersOptions} />
                     )}
 
                     <HookFormUpload name="image" label="Foto do evento" />

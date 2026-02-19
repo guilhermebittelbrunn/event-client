@@ -1,7 +1,7 @@
 import { MoreIcon } from '@/shared/icons';
 import { cn } from '@/shared/utils';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Dropdown } from 'antd';
+import { Dropdown, Popconfirm } from 'antd';
 
 export type ActionMenuItem = {
     icon: React.ReactNode;
@@ -45,10 +45,20 @@ export function ActionsMenu({ onEdit, onDelete, items, className }: ActionsMenuP
                               {
                                   icon: <DeleteOutlined style={{ scale: 1.25 }} />,
                                   key: 'delete',
-                                  label: 'Excluir',
-                                  danger: true,
+                                  label: (
+                                      <Popconfirm
+                                          title="Excluir registro"
+                                          description="Uma vez excluído, o registro não poderá ser recuperado."
+                                          onConfirm={onDelete}
+                                          okText="Sim"
+                                          cancelText="Não"
+                                          className="flex items-center justify-between gap-2 "
+                                      >
+                                          <span>Excluir</span>
+                                      </Popconfirm>
+                                  ),
                                   style: { margin: 4, fontSize: 14 },
-                                  onClick: onDelete,
+                                  danger: true,
                               },
                           ]
                         : []),

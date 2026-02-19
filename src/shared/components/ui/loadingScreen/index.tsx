@@ -17,7 +17,7 @@ export function LoadingScreen({ loading = true, className, description }: Loadin
     return (
         <div
             className={cn(
-                'flex h-screen w-screen items-center justify-center bg-white dark:bg-matte-black',
+                'flex h-screen w-full items-center justify-center bg-white dark:bg-matte-black',
                 className,
             )}
         >
