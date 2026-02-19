@@ -19,20 +19,25 @@ const routeConfig: Record<
 };
 
 /**
- * Descobre rotas automaticamente na pasta app
+ * Descobre rotas automaticamente na pasta app (src/app ou app)
  */
 function getAppRoutes(): string[] {
-    const appDir = path.join(process.cwd(), 'app');
+    const appDir = [path.join(process.cwd(), 'src', 'app'), path.join(process.cwd(), 'app')].find(dir => {
+        try {
+            return fs.existsSync(dir);
+        } catch {
+            return false;
+        }
+    });
 
-    return (
-        fs
-            .readdirSync(appDir, { withFileTypes: true })
-            .filter(file => file.isDirectory())
-            .filter(folder => !folder.name.startsWith('_')) // ignora privadas
-            .filter(folder => !folder.name.startsWith('(')) // ignora route groups
-            // .filter(folder => !folder.name.startsWith('[')) // ignora rotas dinâmicas
-            .map(folder => folder.name)
-    );
+    if (!appDir) return [];
+
+    return fs
+        .readdirSync(appDir, { withFileTypes: true })
+        .filter(file => file.isDirectory())
+        .filter(folder => !folder.name.startsWith('_')) // ignora privadas
+        .filter(folder => !folder.name.startsWith('(')) // ignora route groups
+        .map(folder => folder.name);
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {

@@ -1,9 +1,7 @@
 import type { MetadataRoute } from 'next';
 
-const url = process.env.NEXT_PUBLIC_APP_URL || 'qinstante.com.br';
-
-const protocol = url?.startsWith('https') ? 'https' : 'http';
-const baseUrl = url || `${protocol}://${url}`;
+const rawUrl = process.env.NEXT_PUBLIC_APP_URL || 'qinstante.com.br';
+const baseUrl = rawUrl.startsWith('http://') || rawUrl.startsWith('https://') ? rawUrl : `https://${rawUrl}`;
 
 export default function robots(): MetadataRoute.Robots {
     return {
