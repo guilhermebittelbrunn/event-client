@@ -1,6 +1,31 @@
-import merge from 'lodash.merge';
 import type { Metadata } from 'next';
 import qinstanteLogo from '@/assets/images/shared/qinstante.png';
+
+function deepMerge<T extends object>(target: T, source: Partial<T>): T {
+    const result = { ...target };
+    for (const key of Object.keys(source) as (keyof T)[]) {
+        const sourceVal = source[key];
+        if (sourceVal !== undefined) {
+            const targetVal = result[key];
+            if (
+                typeof sourceVal === 'object' &&
+                sourceVal !== null &&
+                !Array.isArray(sourceVal) &&
+                typeof targetVal === 'object' &&
+                targetVal !== null &&
+                !Array.isArray(targetVal)
+            ) {
+                (result as Record<keyof T, unknown>)[key] = deepMerge(
+                    targetVal as object,
+                    sourceVal as object,
+                ) as T[keyof T];
+            } else {
+                (result as Record<keyof T, unknown>)[key] = sourceVal as T[keyof T];
+            }
+        }
+    }
+    return result;
+}
 
 type MetadataGenerator = Omit<Metadata, 'description' | 'title'> & {
     title: string;
@@ -59,7 +84,7 @@ export const createMetadata = ({ title, description, image, ...properties }: Met
         },
     };
 
-    const metadata: Metadata = merge(defaultMetadata, properties);
+    const metadata: Metadata = deepMerge(defaultMetadata, properties);
 
     if (image && metadata.openGraph) {
         metadata.openGraph.images = [
