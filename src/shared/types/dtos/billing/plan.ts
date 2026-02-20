@@ -5,6 +5,7 @@ export interface PlanDTO extends BaseDTO {
     description?: string;
     price: number; // cents
     enabled: boolean;
+    accessDays?: number | null;
 }
 
 export enum PlanTypeEnum {

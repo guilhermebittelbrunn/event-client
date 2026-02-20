@@ -60,6 +60,7 @@ export interface EventDTO extends BaseDTO {
     description?: string;
     startAt: Date;
     endAt: Date;
+    availableUntil: Date;
     totalMemories: number;
 
     config?: EventConfigDTO;

@@ -25,3 +25,4 @@ export * from './table';
 export * from './title';
 export * from './tooltip';
 export * from './themeToggleButton';
+export * from './helperBadge';

@@ -2,7 +2,7 @@
 import { useMutation } from '@tanstack/react-query';
 import useAlert from '../hooks/useAlert';
 import { getTokenPayload } from '../utils';
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
 import { EventDTO } from '../types/dtos';
 import { LoadingScreen } from '../components/ui';
 import { getCookie, setCookie } from '../utils/helpers/cookies';
@@ -11,11 +11,13 @@ import { EventTokenPayload } from '../types/dtos/user/auth';
 import { usePathname } from 'next/navigation';
 import useApi from '../hooks/useApi';
 import EventRedirect from '../components/common/eventRedirect';
+import { isBefore } from 'date-fns';
 
 interface EventContextData {
     isEventAuthenticated: boolean;
     authenticating: boolean;
     event?: EventDTO;
+    isFinished: boolean;
 }
 
 const EventContext = createContext({} as EventContextData);
@@ -33,6 +35,10 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
 
     const { warningAlert } = useAlert();
     const pathname = usePathname();
+
+    const isFinished = useMemo(() => {
+        return event?.endAt && isBefore(new Date(), event?.endAt);
+    }, [event]);
 
     const signInByTokenMutation = useMutation({
         mutationFn: (token: string) => client.authService.signInByToken(token),
@@ -149,6 +155,7 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
                 isEventAuthenticated: Boolean(event),
                 authenticating: isAuthenticating,
                 event,
+                isFinished: isFinished || true,
             }}
         >
             {!isClient || isAuthenticating ? <LoadingScreen /> : event ? children : <EventRedirect />}
