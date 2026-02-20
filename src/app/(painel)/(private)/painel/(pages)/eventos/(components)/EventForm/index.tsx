@@ -1,5 +1,6 @@
 import { FormContainer, useFormContext } from '@/shared/components/form';
 import {
+    HookFormDatePicker,
     HookFormInput,
     HookFormRangePicker,
     HookFormSelect,
@@ -55,15 +56,20 @@ export function EventForm({ action = 'create' }: EventFormProps) {
                     <HookFormRangePicker name="dates" required disablePast={action === 'create'} />
                 </div>
                 <div className="space-y-4">
-                    <HookFormInput name="slug" label="Link de Acesso" required />
-                    {slug && (
-                        <Paragraph className="text-sm opacity-50 block text-start p-0">
-                            Exemplo do link de acesso: {currentDomain}/eventos/{slug}
-                        </Paragraph>
-                    )}
+                    <>
+                        <HookFormInput name="slug" label="Link de Acesso" required />
+                        {slug && (
+                            <Paragraph className="text-sm opacity-50 block text-start p-0">
+                                Exemplo do link de acesso: {currentDomain}/eventos/{slug}
+                            </Paragraph>
+                        )}
+                    </>
 
                     {isAdmin && action === 'update' && (
-                        <HookFormSelect name="status" label="Status" options={EVENT_STATUS_OPTIONS} />
+                        <>
+                            <HookFormSelect name="status" label="Status" options={EVENT_STATUS_OPTIONS} />
+                            <HookFormDatePicker name="availableUntil" label="Disponível até" />
+                        </>
                     )}
 
                     {isAdmin && !isLoadingUsers && (

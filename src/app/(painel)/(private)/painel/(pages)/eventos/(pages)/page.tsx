@@ -82,6 +82,13 @@ export default function EventsPage() {
             sort: true,
             align: 'center',
         }),
+        createColumn<EventDTO, 'availableUntil'>({
+            title: 'Disponível até',
+            key: 'availableUntil',
+            render: availableUntil => formatDate(availableUntil),
+            sort: true,
+            align: 'center',
+        }),
         createColumn<EventDTO, 'createdAt'>({
             title: 'Data de criação',
             key: 'createdAt',

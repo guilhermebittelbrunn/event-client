@@ -4,6 +4,7 @@ import { CameraOutlined, PictureOutlined } from '@ant-design/icons';
 import { cn } from '@/shared/utils';
 import useEvent from '@/shared/context/EventContext';
 import { usePathname } from 'next/navigation';
+import { isBefore } from 'date-fns';
 
 interface MobileNavbarProps {
     className?: string;
@@ -15,23 +16,23 @@ export default function MobileNavbar({ className = '' }: MobileNavbarProps) {
 
     const basePath = `/evento/${event?.slug}`;
 
-    const navItems = useMemo(
-        () => [
+    const navItems = useMemo(() => {
+        const actions = [
             {
                 icon: <PictureOutlined className="scale-150" />,
                 path: `${basePath}/fotos`,
             },
-            {
+        ];
+
+        if (event?.endAt && isBefore(new Date(), event?.endAt)) {
+            actions.push({
                 icon: <CameraOutlined className="scale-150" />,
                 path: basePath,
-            },
-            // {
-            //     icon: <UserOutlined className="scale-150" />,
-            //     path: '/entrar',
-            // },
-        ],
-        [basePath],
-    );
+            });
+        }
+
+        return actions;
+    }, [basePath, event]);
 
     const getAllPaths = useCallback(() => {
         return navItems.map(item => item.path);

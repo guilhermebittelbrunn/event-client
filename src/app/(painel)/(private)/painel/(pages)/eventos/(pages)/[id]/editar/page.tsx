@@ -45,6 +45,7 @@ export default function EditEventPage() {
                 description: event.description || '',
                 dates: [new Date(event.startAt), new Date(event.endAt)],
                 userId: user?.type === UserTypeEnum.ADMIN ? event.userId : undefined,
+                availableUntil: new Date(event.availableUntil),
                 ...(event.file && {
                     image: [
                         {
