@@ -30,10 +30,7 @@ function Page({ children }: { children: React.ReactNode }) {
             <main>
                 <Box
                     type="secondary"
-                    className={cn(
-                        'min-h-[calc(100vh-150px)] flex flex-col touch-manipulation',
-                        isFinished && 'min-h-auto',
-                    )}
+                    className={cn('min-h-[calc(100vh-150px)] flex flex-col touch-manipulation')}
                 >
                     {children}
                 </Box>

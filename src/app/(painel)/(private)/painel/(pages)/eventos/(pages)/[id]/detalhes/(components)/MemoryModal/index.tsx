@@ -98,7 +98,7 @@ export const MemoryModal: React.FC<MemoryModalProps> = ({
             )}
 
             <div className="relative max-w-[90vw] max-h-[90vh] flex flex-col items-center justify-center gap-4">
-                <Polaroid memory={currentMemory} />
+                <Polaroid memory={currentMemory} showDownloadButton />
 
                 {toolBar && (
                     <div className="flex items-center justify-center gap-4 border-2 border-soft-gold 2 px-2 py-1 rounded-full">

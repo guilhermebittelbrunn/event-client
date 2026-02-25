@@ -1,13 +1,11 @@
-import { fetchEventBySlug } from '@/shared/actions/event/fetchEvent';
-import { isBefore } from 'date-fns';
-import { NextRequest, NextResponse } from 'next/server';
+'use server';
 
-export default async function EventMiddleware(request: NextRequest) {
-    const event = await fetchEventBySlug(request.nextUrl.pathname.split('/')[2]);
+import { NextResponse } from 'next/server';
 
-    if (event?.endAt && isBefore(event?.endAt, new Date()) && !request.nextUrl.pathname.includes('/fotos')) {
-        return NextResponse.redirect(new URL(`/evento/${event?.slug}/fotos`, request.url));
-    }
+export default async function EventMiddleware() {
+    /**
+     * @note: Por enquanto esse middleware não é usado, pois o {@link EventProvider} valida token na url, como já fiz o redirect para fotos ele perde o token da url e não faz nada na parte de auth
+     */
 
     return NextResponse.next();
 }

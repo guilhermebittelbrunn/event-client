@@ -28,9 +28,12 @@ export default function EditEventPage() {
     const onSubmit: SubmitHandler<UpdateEventSchema> = data => {
         if (event) {
             updateEventMutation.mutate({
-                ...event,
+                ...data,
+                id: event.id,
                 startAt: data.dates[0]!,
                 endAt: data.dates[1]!,
+                userId: data.userId ?? undefined,
+                status: data.status ? (data.status as EventStatusEnum) : undefined,
                 image: data?.image?.[0]?.originFileObj,
                 ...(isAdmin && data.userId && { userId: data.userId }),
                 ...(data.status && { status: data.status as EventStatusEnum }),

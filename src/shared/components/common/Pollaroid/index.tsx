@@ -1,13 +1,17 @@
 'use client';
 
+import { useMemoryCrud } from '@/shared/hooks/useMemoryCrud';
 import { MemoryDTO } from '@/shared/types/dtos';
 import { cn, formatDate } from '@/shared/utils';
+import { DownloadOutlined } from '@ant-design/icons';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { Button } from '../../ui';
 
 interface PolaroidProps {
     memory: Partial<MemoryDTO>;
     priority?: boolean;
+    showDownloadButton?: boolean;
 }
 
 interface ImageDimensions {
@@ -19,11 +23,13 @@ interface ImageDimensions {
 /**
  * @TODO: change this priority to true in the future, after the blur image is implemented
  */
-export function Polaroid({ memory, priority = false }: PolaroidProps) {
+export function Polaroid({ memory, priority = false, showDownloadButton = false }: PolaroidProps) {
     const [isRevealed, setIsRevealed] = useState(false);
     const [isImageLoading, setIsImageLoading] = useState(true);
     const [hasImageError, setHasImageError] = useState(false);
     const [imageDimensions, setImageDimensions] = useState<ImageDimensions | null>(null);
+
+    const { downloadMemoryMutation } = useMemoryCrud();
 
     useEffect(() => {
         const timer = setTimeout(() => setIsRevealed(true), 300);
@@ -205,6 +211,20 @@ export function Polaroid({ memory, priority = false }: PolaroidProps) {
                     )}
                 </div>
             </div>
+
+            {showDownloadButton && memory.file?.url && !hasImageError && (
+                <div className="mt-4 flex justify-center">
+                    <Button
+                        icon={<DownloadOutlined />}
+                        loading={downloadMemoryMutation.isPending}
+                        onClick={() => memory.id && downloadMemoryMutation.mutate({ memoryIds: [memory.id] })}
+                        disabled={!memory.id}
+                        className="w-3/5"
+                    >
+                        Baixar
+                    </Button>
+                </div>
+            )}
 
             {/* decorative elements */}
             <div className="absolute -top-4 -left-4 w-8 h-8 bg-yellow-200 rounded-full opacity-60 animate-float-delayed" />

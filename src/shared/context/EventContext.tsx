@@ -11,7 +11,8 @@ import { EventTokenPayload } from '../types/dtos/user/auth';
 import { usePathname } from 'next/navigation';
 import useApi from '../hooks/useApi';
 import EventRedirect from '../components/common/eventRedirect';
-import { isBefore } from 'date-fns';
+import { isAfter, startOfDay } from 'date-fns';
+import { useRedirect } from '../hooks';
 
 interface EventContextData {
     isEventAuthenticated: boolean;
@@ -32,12 +33,14 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
     const [isClient, setIsClient] = useState(false);
     const [isAuthenticating, setIsAuthenticating] = useState(true);
     const { client } = useApi();
+    const { redirect } = useRedirect();
 
     const { warningAlert } = useAlert();
     const pathname = usePathname();
 
     const isFinished = useMemo(() => {
-        return event?.endAt && isBefore(new Date(), event?.endAt);
+        const startOfDayDate = startOfDay(new Date());
+        return event?.endAt && isAfter(startOfDayDate, event?.endAt);
     }, [event]);
 
     const signInByTokenMutation = useMutation({
@@ -64,6 +67,7 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
 
     const handleFailedAuthentication = useCallback(() => {
         setEvent(undefined);
+        setIsAuthenticating(false);
         warningAlert('Não foi possível acessar o evento');
     }, []);
 
@@ -126,6 +130,15 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
         setIsClient(true);
     }, []);
 
+    useEffect(() => {
+        if (event && !isAuthenticating) {
+            const startOfDayDate = startOfDay(new Date());
+            if (event?.endAt && isAfter(startOfDayDate, event?.endAt) && !pathname.includes('/fotos')) {
+                redirect(`/evento/${event?.slug}/fotos`);
+            }
+        }
+    }, [event]);
+
     // Listener para detectar quando o usuário volta para a aba
     // useEffect(() => {
     //     if (!isClient) return;
@@ -155,7 +168,7 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
                 isEventAuthenticated: Boolean(event),
                 authenticating: isAuthenticating,
                 event,
-                isFinished: isFinished || true,
+                isFinished: isFinished ?? true,
             }}
         >
             {!isClient || isAuthenticating ? <LoadingScreen /> : event ? children : <EventRedirect />}

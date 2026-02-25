@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTokenPayload } from './shared/utils/helpers/token';
 import { UserTokenPayload } from './shared/types/dtos/user/auth';
-import EventMiddleware from './app/(event)/middleware';
 
 interface PublicRoute {
     path: string;
@@ -22,9 +21,9 @@ const REDIRECT_URL_WHEN_UNAUTHENTICATED = '/entrar';
 export default function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    if (pathname.startsWith('/evento')) {
-        return EventMiddleware(request);
-    }
+    // if (pathname.startsWith('/evento')) {
+    //     return EventMiddleware(request);
+    // }
 
     // Skip proxy for API routes
     if (pathname.startsWith('/api/')) {

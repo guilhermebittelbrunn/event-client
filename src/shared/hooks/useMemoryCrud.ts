@@ -40,17 +40,28 @@ export const useMemoryCrud = () => {
 
     const downloadMemoryMutation = useMutation({
         mutationFn: (dto: DownloadMemoriesRequest) => client.memoryService.download(dto),
-        onSuccess: ({ data }) => {
-            const url = window.URL.createObjectURL(data);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'memories.zip';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
+        onSuccess: ({ data }, variables) => {
+            const singleMemory = variables.memoryIds.length === 1;
 
-            successAlert('Memórias baixadas com sucesso');
+            if (singleMemory) {
+                const url = window.URL.createObjectURL(data);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'memory';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            } else {
+                const url = window.URL.createObjectURL(data);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'memories.zip';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            }
         },
         onError: error => errorAlert(handleClientError(error)),
     });
