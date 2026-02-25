@@ -10,6 +10,7 @@ export * from './input';
 export * from './inputPassword';
 export * from './inputSearch';
 export * from './inputUpload';
+export * from './inputDecimal';
 export * from './label';
 export * from './textArea';
 export * from './container';

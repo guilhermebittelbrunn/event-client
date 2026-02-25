@@ -2,7 +2,7 @@
 import { useMutation } from '@tanstack/react-query';
 import useAlert from '../hooks/useAlert';
 import { getTokenPayload } from '../utils';
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
 import { EventDTO } from '../types/dtos';
 import { LoadingScreen } from '../components/ui';
 import { getCookie, setCookie } from '../utils/helpers/cookies';
@@ -11,11 +11,14 @@ import { EventTokenPayload } from '../types/dtos/user/auth';
 import { usePathname } from 'next/navigation';
 import useApi from '../hooks/useApi';
 import EventRedirect from '../components/common/eventRedirect';
+import { isAfter, startOfDay } from 'date-fns';
+import { useRedirect } from '../hooks';
 
 interface EventContextData {
     isEventAuthenticated: boolean;
     authenticating: boolean;
     event?: EventDTO;
+    isFinished: boolean;
 }
 
 const EventContext = createContext({} as EventContextData);
@@ -30,9 +33,15 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
     const [isClient, setIsClient] = useState(false);
     const [isAuthenticating, setIsAuthenticating] = useState(true);
     const { client } = useApi();
+    const { redirect } = useRedirect();
 
     const { warningAlert } = useAlert();
     const pathname = usePathname();
+
+    const isFinished = useMemo(() => {
+        const startOfDayDate = startOfDay(new Date());
+        return event?.endAt && isAfter(startOfDayDate, event?.endAt);
+    }, [event]);
 
     const signInByTokenMutation = useMutation({
         mutationFn: (token: string) => client.authService.signInByToken(token),
@@ -58,6 +67,7 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
 
     const handleFailedAuthentication = useCallback(() => {
         setEvent(undefined);
+        setIsAuthenticating(false);
         warningAlert('Não foi possível acessar o evento');
     }, []);
 
@@ -120,6 +130,15 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
         setIsClient(true);
     }, []);
 
+    useEffect(() => {
+        if (event && !isAuthenticating) {
+            const startOfDayDate = startOfDay(new Date());
+            if (event?.endAt && isAfter(startOfDayDate, event?.endAt) && !pathname.includes('/fotos')) {
+                redirect(`/evento/${event?.slug}/fotos`);
+            }
+        }
+    }, [event]);
+
     // Listener para detectar quando o usuário volta para a aba
     // useEffect(() => {
     //     if (!isClient) return;
@@ -149,6 +168,7 @@ export const EventProvider = ({ children }: { children: React.ReactNode }) => {
                 isEventAuthenticated: Boolean(event),
                 authenticating: isAuthenticating,
                 event,
+                isFinished: isFinished ?? true,
             }}
         >
             {!isClient || isAuthenticating ? <LoadingScreen /> : event ? children : <EventRedirect />}

@@ -21,6 +21,10 @@ const REDIRECT_URL_WHEN_UNAUTHENTICATED = '/entrar';
 export default function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
+    // if (pathname.startsWith('/evento')) {
+    //     return EventMiddleware(request);
+    // }
+
     // Skip proxy for API routes
     if (pathname.startsWith('/api/')) {
         return NextResponse.next();

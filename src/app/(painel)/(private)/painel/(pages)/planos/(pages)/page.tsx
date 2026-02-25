@@ -35,6 +35,10 @@ export default function PlansPage() {
             key: 'price',
             render: price => formatPrice(price / 100),
         }),
+        createColumn<PlanDTO, 'accessDays'>({
+            title: 'Dias de acesso',
+            key: 'accessDays',
+        }),
         createColumn<PlanDTO, 'enabled'>({
             title: 'Ativo',
             key: 'enabled',

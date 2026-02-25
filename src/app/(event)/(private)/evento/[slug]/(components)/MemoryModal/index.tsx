@@ -6,9 +6,10 @@ import { Polaroid } from '@/shared/components/common/Pollaroid';
 interface MemoryModalProps {
     memory: Partial<MemoryDTO>;
     onClose: () => void;
+    showDownloadButton?: boolean;
 }
 
-export const MemoryModal: React.FC<MemoryModalProps> = ({ memory, onClose }) => {
+export const MemoryModal: React.FC<MemoryModalProps> = ({ memory, onClose, showDownloadButton = false }) => {
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -26,7 +27,7 @@ export const MemoryModal: React.FC<MemoryModalProps> = ({ memory, onClose }) => 
             className="fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-xl"
             onClick={handleBackdropClick}
         >
-            <Polaroid memory={memory} />
+            <Polaroid memory={memory} showDownloadButton={showDownloadButton} />
         </div>
     );
 

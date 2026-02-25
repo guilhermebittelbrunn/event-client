@@ -30,6 +30,7 @@ export default function EditPlanPage() {
                 description: data.description || '',
                 price: data.price ? data.price * 100 : undefined,
                 enabled: data.enabled,
+                accessDays: data.accessDays,
             });
         }
     };
@@ -40,6 +41,7 @@ export default function EditPlanPage() {
                 ...plan,
                 description: plan.description || '',
                 price: plan.price ? plan.price / 100 : undefined,
+                accessDays: plan.accessDays ?? undefined,
                 enabled: plan.enabled,
             });
         }

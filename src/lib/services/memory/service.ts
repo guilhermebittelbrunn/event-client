@@ -57,7 +57,7 @@ export default class MemoryService {
             params: dto,
         });
 
-        return { data: data.data, meta: data.meta };
+        return data;
     }
 
     async delete(id: string): Promise<void> {

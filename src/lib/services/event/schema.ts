@@ -10,6 +10,7 @@ export const createEventRequestSchema = yup.object({
     image: yup.array().optional(),
     isForTesting: yup.boolean().optional(),
     userId: yup.string().optional().nullable(),
+    availableUntil: yup.date().optional(),
 });
 
 export const updateEventRequestSchema = yup.object({
@@ -21,6 +22,7 @@ export const updateEventRequestSchema = yup.object({
     isForTesting: yup.boolean().optional(),
     status: yup.string().optional(),
     userId: yup.string().optional().nullable(),
+    availableUntil: yup.date().optional(),
 });
 
 export type CreateEventSchema = yup.InferType<typeof createEventRequestSchema>;

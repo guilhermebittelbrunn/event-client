@@ -15,8 +15,8 @@ export default function MobileNavbar({ className = '' }: MobileNavbarProps) {
 
     const basePath = `/evento/${event?.slug}`;
 
-    const navItems = useMemo(
-        () => [
+    const navItems = useMemo(() => {
+        const actions = [
             {
                 icon: <PictureOutlined className="scale-150" />,
                 path: `${basePath}/fotos`,
@@ -25,13 +25,10 @@ export default function MobileNavbar({ className = '' }: MobileNavbarProps) {
                 icon: <CameraOutlined className="scale-150" />,
                 path: basePath,
             },
-            // {
-            //     icon: <UserOutlined className="scale-150" />,
-            //     path: '/entrar',
-            // },
-        ],
-        [basePath],
-    );
+        ];
+
+        return actions;
+    }, [basePath]);
 
     const getAllPaths = useCallback(() => {
         return navItems.map(item => item.path);

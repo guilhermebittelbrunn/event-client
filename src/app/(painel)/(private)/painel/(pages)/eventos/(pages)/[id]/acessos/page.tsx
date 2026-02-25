@@ -107,13 +107,19 @@ export default function EventAccessesPage() {
 
                                     <div className="flex flex-row items-center gap-4 text-sm text-gray-500 dark:text-gray-500">
                                         <div className="flex items-center gap-1">
-                                            <span className="font-medium">Data:</span>
+                                            <span className="font-medium">Data de início:</span>
                                             <span>{formatDate(event.startAt)}</span>
                                         </div>
                                         {event.endAt && event.endAt !== event.startAt && (
                                             <div className="flex items-center gap-1">
-                                                <span className="font-medium">até:</span>
+                                                <span className="font-medium">Data de término:</span>
                                                 <span>{formatDate(event.endAt)}</span>
+                                            </div>
+                                        )}
+                                        {event.availableUntil && event.availableUntil !== event.endAt && (
+                                            <div className="flex items-center gap-1">
+                                                <span className="font-medium">Disponível até:</span>
+                                                <span>{formatDate(event.availableUntil)}</span>
                                             </div>
                                         )}
                                     </div>
