@@ -10,6 +10,7 @@ interface MemoryModalProps {
     onClose: () => void;
     onNavigate: (memory: MemoryDTO) => void;
     toolBar?: React.ReactNode;
+    showDownloadButton?: boolean;
 }
 
 export const MemoryModal: React.FC<MemoryModalProps> = ({
@@ -18,6 +19,7 @@ export const MemoryModal: React.FC<MemoryModalProps> = ({
     onClose,
     onNavigate,
     toolBar,
+    showDownloadButton = false,
 }) => {
     const [mounted, setMounted] = useState(false);
 
@@ -98,7 +100,7 @@ export const MemoryModal: React.FC<MemoryModalProps> = ({
             )}
 
             <div className="relative max-w-[90vw] max-h-[90vh] flex flex-col items-center justify-center gap-4">
-                <Polaroid memory={currentMemory} showDownloadButton />
+                <Polaroid memory={currentMemory} showDownloadButton={showDownloadButton} />
 
                 {toolBar && (
                     <div className="flex items-center justify-center gap-4 border-2 border-soft-gold 2 px-2 py-1 rounded-full">

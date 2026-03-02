@@ -35,6 +35,7 @@ const HelperSection = () => (
 
 export default function EventAccessesPage() {
     const { event } = useEventPage();
+
     const { currentDomain } = useClientRouter();
     const { redirect } = useRedirect();
     const { successAlert } = useAlert();
@@ -105,12 +106,12 @@ export default function EventAccessesPage() {
                                         </Paragraph>
                                     )}
 
-                                    <div className="flex flex-row items-center gap-4 text-sm text-gray-500 dark:text-gray-500">
+                                    <div className="flex flex-col items-center gap-4 text-sm text-gray-500 dark:text-gray-500 md:flex-col">
                                         <div className="flex items-center gap-1">
                                             <span className="font-medium">Data de início:</span>
                                             <span>{formatDate(event.startAt)}</span>
                                         </div>
-                                        {event.endAt && event.endAt !== event.startAt && (
+                                        {event.endAt && (
                                             <div className="flex items-center gap-1">
                                                 <span className="font-medium">Data de término:</span>
                                                 <span>{formatDate(event.endAt)}</span>

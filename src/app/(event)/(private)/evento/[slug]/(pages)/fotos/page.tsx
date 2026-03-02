@@ -125,6 +125,7 @@ export default function PhotosPage() {
                     allPhotos={allPhotos}
                     onNavigate={handleNavigateModal}
                     onClose={handleCloseModal}
+                    showDownloadButton
                 />
             )}
         </>
