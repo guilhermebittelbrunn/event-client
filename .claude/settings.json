@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(pnpm install)",
+      "Bash(pnpm dev:*)",
+      "Bash(pnpm build:*)",
+      "Bash(pnpm start:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm exec eslint:*)",
+      "Bash(pnpm exec prettier:*)",
+      "Bash(pnpm exec tsc:*)",
+      "Bash(npm view *)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Skill(agent-browser)",
+      "Skill(agent-browser:*)",
+      "Bash(agent-browser open *)",
+      "Bash(agent-browser wait *)",
+      "Bash(agent-browser snapshot *)",
+      "Bash(agent-browser click *)",
+      "Bash(agent-browser screenshot *)",
+      "Bash(agent-browser set *)",
+      "Bash(agent-browser close *)",
+      "Bash(agent-browser fill *)",
+      "Bash(agent-browser get *)",
+      "Bash(agent-browser hover *)",
+      "Bash(agent-browser viewport *)",
+      "Bash(agent-browser skills *)",
+      "Bash(curl -s -o /dev/null -w * http://localhost:3000/*)",
+      "Read(//Users/guilhermebittelbrunn/.claude/**)",
+      "Edit(/.claude/skills/new-crud/**)",
+      "Bash(pnpm --version)",
+      "Bash(tee /tmp/tsc-out.txt)",
+      "Bash(git rm *)",
+      "Bash(pnpm typecheck *)",
+      "Bash(echo \"typecheck exit: $?\")",
+      "Bash(pnpm install *)",
+      "Bash(git checkout *)",
+      "Bash(git commit *)",
+      "Bash(git --no-pager log --oneline -1)",
+      "Bash(git --no-pager log --oneline -3)",
+      "Bash(git --no-pager diff .claude/settings.json)"
+    ],
+    "additionalDirectories": [
+      "/tmp"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/format-edited-file.sh\""
+          }
+        ]
+      }
+    ]
+  }
+}
