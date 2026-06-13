@@ -59,7 +59,8 @@ export default function PhotosPage() {
 
     return (
         <>
-            <Box type="secondary" className="max-w-4xl mx-auto px-4 py-6">
+            {/* pb generoso para a última linha de fotos não ficar atrás da MobileNavbar fixa */}
+            <Box type="secondary" className="max-w-4xl mx-auto px-4 pt-6 pb-28">
                 <div className="flex flex-row md:flex-row gap-2">
                     <div className="flex justify-center md:justify-start">
                         <div className="relative">

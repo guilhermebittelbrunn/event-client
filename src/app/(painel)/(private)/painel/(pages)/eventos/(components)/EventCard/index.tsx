@@ -129,11 +129,13 @@ export const EventCard = ({ event, detailed }: EventCardProps) => {
             className="bg-gray-200 dark:bg-neutral-800 rounded-xl shadow-lg p-4 flex gap-4 hover:cursor-pointer hover:opacity-60 transition-opacity duration-300"
             onClick={handleShowDetails}
         >
-            <div className="flex flex-row items-center gap-4  w-full">
-                <p className="font-bold text-neutral-800 dark:text-white text-lg mb-1">{event.name}</p>
-                <p className="text-gray-600 dark:text-gray-400 text-sm">{formatDate(event.startAt)}</p>
+            <div className="flex flex-row items-center gap-2 sm:gap-4 flex-1 min-w-0">
+                <p className="font-bold text-neutral-800 dark:text-white text-lg mb-1 truncate">{event.name}</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm whitespace-nowrap">
+                    {formatDate(event.startAt)}
+                </p>
             </div>
-            <div className="w-full flex items-end justify-end ">
+            <div className="flex items-center justify-end flex-shrink-0">
                 <div
                     className="flex flex-row gap-2 justify-center items-center"
                     onClick={e => e.stopPropagation()}

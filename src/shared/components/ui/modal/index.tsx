@@ -25,7 +25,7 @@ export function Modal({
 }: ModalProps) {
     return (
         <AntdModal className={cn('', className)} open={open} onCancel={onClose} {...props} footer={false}>
-            <div className="flex flex-col p-10 justify-center items-center">{children}</div>
+            <div className="flex flex-col p-4 sm:p-6 md:p-10 justify-center items-center">{children}</div>
             <div className="flex justify-end gap-2">
                 <Button type="secondary" onClick={onClose} className="px-6">
                     {cancelText ? cancelText : 'Fechar'}

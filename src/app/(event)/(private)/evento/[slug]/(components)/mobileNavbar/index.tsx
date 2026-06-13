@@ -64,7 +64,11 @@ export default function MobileNavbar({ className = '' }: MobileNavbarProps) {
                 className,
             )}
         >
-            <div className="flex justify-around items-center py-2">
+            {/* paddingBottom respeita a safe-area (home indicator / notch) em iPhones */}
+            <div
+                className="flex justify-around items-center pt-2"
+                style={{ paddingBottom: 'calc(0.5rem + env(safe-area-inset-bottom))' }}
+            >
                 {navItems.map(item => (
                     <Link
                         key={item.path}

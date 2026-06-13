@@ -27,7 +27,15 @@ export default function ResponsiveImage({
 
     return (
         <Fallback condition={Boolean(src)}>
-            <div className={cn(`relative w-${width} h-${height} rounded-full overflow-hidden`, className)}>
+            {/*
+             * Tamanho via style (rem na escala do Tailwind: 40 -> 10rem) porque classes
+             * dinâmicas `w-${width}` NÃO são compiladas pelo Tailwind (JIT só vê strings
+             * literais). Mantém o tamanho pretendido por cada caller de forma robusta.
+             */}
+            <div
+                style={{ width: `${width / 4}rem`, height: `${height / 4}rem` }}
+                className={cn('relative rounded-full overflow-hidden', className)}
+            >
                 {isLoading && (
                     <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 animate-pulse" />
                 )}

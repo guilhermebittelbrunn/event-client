@@ -26,7 +26,7 @@ export function PhotoSelector({ disabled = false }: PhotoSelectorProps) {
 
             <GalleryButton
                 disabled={isDisabled}
-                className='className="w-full p-6 text-lg font-medium rounded-lg flex items-center justify-center gap-3 touch-manipulation active:scale-95 transition-transform"'
+                className="w-full p-6 text-lg font-medium rounded-lg flex items-center justify-center gap-3 touch-manipulation active:scale-95 transition-transform"
             />
         </div>
     );
