@@ -6,8 +6,8 @@ import type { MetadataRoute } from 'next';
  */
 export default function manifest(): MetadataRoute.Manifest {
     return {
-        name: 'QInstante — Fotos colaborativas para casamentos e eventos',
-        short_name: 'QInstante',
+        name: 'Qinstante — Fotos colaborativas para casamentos e eventos',
+        short_name: 'Qinstante',
         description:
             'Seus convidados registram e compartilham fotos do evento em tempo real, por um QR code. Um álbum colaborativo do casamento ou festa.',
         start_url: '/',

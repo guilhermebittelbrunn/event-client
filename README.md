@@ -1,4 +1,4 @@
-# QInstante — event-client
+# Qinstante — event-client
 
 Aplicação web **mobile-first** para eventos sociais (foco em casamento): o organizador cria um evento e compartilha um **link/QR code**; os convidados acessam **sem cadastro** e enviam fotos ("memórias") para uma galeria coletiva, que pode ser apresentada ao vivo.
 

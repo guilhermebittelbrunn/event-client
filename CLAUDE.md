@@ -1,4 +1,4 @@
-# CLAUDE.md — event-client (QInstante)
+# CLAUDE.md — event-client (Qinstante)
 
 Guia para o Claude trabalhar bem neste repositório. Leia antes de editar. É a **fonte de verdade** das convenções; o que estiver em conflito aqui vence suposições vindas de outros projetos.
 
@@ -8,7 +8,7 @@ Guia para o Claude trabalhar bem neste repositório. Leia antes de editar. É a 
 
 ## 1. O produto
 
-**QInstante** é uma aplicação **mobile-first** (browser, não app nativo) para **eventos sociais** — o foco hoje é casamento. A ideia central é registrar **"memórias"** (fotos) de forma simples e intuitiva: o organizador cria um evento e compartilha um **link/QR code**; os convidados acessam **sem cadastro** e enviam fotos, que aparecem numa galeria coletiva e podem ser apresentadas ao vivo.
+**Qinstante** é uma aplicação **mobile-first** (browser, não app nativo) para **eventos sociais** — o foco hoje é casamento. A ideia central é registrar **"memórias"** (fotos) de forma simples e intuitiva: o organizador cria um evento e compartilha um **link/QR code**; os convidados acessam **sem cadastro** e enviam fotos, que aparecem numa galeria coletiva e podem ser apresentadas ao vivo.
 
 A aplicação tem **3 frentes** (3 route groups em `src/app/`):
 
@@ -229,7 +229,7 @@ Config em `tailwind.config.js` + variáveis em `src/app/globals.css` (`@theme`).
 
 ## 11. SEO
 
-`createMetadata()` (`src/shared/seo/metadata.ts`) gera o `Metadata` do Next (título `… | QInstante`, OpenGraph 1200×630, Twitter card, locale `pt_BR`). `sitemap.ts` e `robots.ts` na raiz de `app/`. **Quem se importa com SEO:** `(home)` (alto) e `/evento/[slug]` (metadata dinâmica). `(painel)` é privado — sem indexação. Para trabalho sério de SEO/conteúdo, use os skills `seo-audit` / `ai-seo` / `copywriting`.
+`createMetadata()` (`src/shared/seo/metadata.ts`) gera o `Metadata` do Next (título `… | Qinstante`, OpenGraph 1200×630, Twitter card, locale `pt_BR`). `sitemap.ts` e `robots.ts` na raiz de `app/`. **Quem se importa com SEO:** `(home)` (alto) e `/evento/[slug]` (metadata dinâmica). `(painel)` é privado — sem indexação. Para trabalho sério de SEO/conteúdo, use os skills `seo-audit` / `ai-seo` / `copywriting`.
 
 ---
 

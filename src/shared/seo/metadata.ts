@@ -37,12 +37,12 @@ type MetadataGenerator = Omit<Metadata, 'description' | 'title'> & {
     noindex?: boolean;
 };
 
-const applicationName = 'QInstante';
+const applicationName = 'Qinstante';
 const author: Metadata['authors'] = {
-    name: 'QInstante',
+    name: 'Qinstante',
     url: 'https://qinstante.com.br/',
 };
-const publisher = 'QInstante';
+const publisher = 'Qinstante';
 const twitterHandle = '@qinstante';
 // Fallback fixo para o domínio de produção: garante metadataBase/canonical/OG
 // absolutos mesmo se a env não estiver setada (senão OG/canonical viram relativos e quebram).
@@ -52,7 +52,7 @@ const rawBaseUrl =
 const baseUrl = rawBaseUrl.startsWith('http') ? rawBaseUrl : `https://${rawBaseUrl}`;
 
 const defaultKeywords = [
-    'QInstante',
+    'Qinstante',
     'fotos colaborativas',
     'álbum colaborativo',
     'fotos de casamento',

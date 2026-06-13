@@ -5,9 +5,9 @@ import HomeComponent from './components/Home';
 import qinstanteLogo from '@/assets/images/shared/qinstante.png';
 
 export const metadata = createMetadata({
-    title: 'QInstante — Fotos colaborativas para casamentos e eventos',
+    title: 'Qinstante — Fotos colaborativas para casamentos e eventos',
     image: qinstanteLogo.src,
-    description: 'QInstante - Transforme seu evento em uma experiência ao vivo',
+    description: 'Qinstante - Transforme seu evento em uma experiência ao vivo',
     path: '/',
 });
 

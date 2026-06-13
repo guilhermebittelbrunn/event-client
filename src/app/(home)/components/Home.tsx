@@ -31,11 +31,11 @@ export default function Home() {
                         {/* Logo (não é heading — o único h1 da página é o do hero) */}
                         <button
                             type="button"
-                            aria-label="QInstante — ir para o início"
+                            aria-label="Qinstante — ir para o início"
                             className="py-4 flex items-center text-2xl font-bold text-matte-black dark:text-snow-white font-nanum-brush cursor-pointer"
                             onClick={() => scrollToSection('inicio')}
                         >
-                            QInstante
+                            Qinstante
                         </button>
                     </div>
 
@@ -125,12 +125,12 @@ export default function Home() {
                     <div className="flex flex-row justify-center items-center gap-8">
                         <Image
                             src={mockupIos}
-                            alt="Tela do QInstante no celular com o álbum de fotos do evento"
+                            alt="Tela do Qinstante no celular com o álbum de fotos do evento"
                             className="w-[60px] sm:w-[75px] md:w-[150px]"
                         />
                         <Image
                             src={mockupDesktop}
-                            alt="Galeria de fotos do evento exibida ao vivo na TV com o QInstante"
+                            alt="Galeria de fotos do evento exibida ao vivo na TV com o Qinstante"
                             className="pl-0 w-[200px] sm:w-[250px] md:w-[500px] md:pl-2"
                         />
                     </div>
@@ -202,7 +202,7 @@ export default function Home() {
                     items={[
                         {
                             key: '1',
-                            label: 'O que é o QInstante?',
+                            label: 'O que é o Qinstante?',
                             children: (
                                 <div className="flex flex-col gap-2">
                                     <p>Um jeito diferente e cheio de significado de eternizar o grande dia!</p>
@@ -265,7 +265,7 @@ export default function Home() {
                     <div className="flex flex-col items-center md:items-start gap-4">
                         <div>
                             <h2 className="text-2xl font-bold text-matte-black dark:text-snow-white font-nanum-brush text-center md:text-left">
-                                QInstante
+                                Qinstante
                             </h2>
                             <p className="text-center text-sm text-matte-black/70 dark:text-snow-white/70 font-montserrat mt-2 md:mt-0">
                                 Fotos colaborativas para casamentos e eventos, em tempo real.
@@ -338,7 +338,7 @@ export default function Home() {
 
                 <div className="border-t border-soft-gold/20 dark:border-soft-gold-dark/20 py-6 px-6">
                     <p className="text-center text-sm text-matte-black/70 dark:text-snow-white/70 font-montserrat">
-                        © {new Date().getFullYear()} QInstante. Todos os direitos reservados.
+                        © {new Date().getFullYear()} Qinstante. Todos os direitos reservados.
                     </p>
                 </div>
             </footer>

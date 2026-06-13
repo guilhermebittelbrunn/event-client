@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     return createMetadata({
         title: eventName ?? 'Evento',
-        description: `Envie e veja as fotos do evento ${eventName ?? ''} em tempo real no QInstante.`.trim(),
+        description: `Envie e veja as fotos do evento ${eventName ?? ''} em tempo real no Qinstante.`.trim(),
         image: eventImage,
         // Mantemos title/OG para o preview ao compartilhar o link, mas barramos a indexação.
         noindex: true,

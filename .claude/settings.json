@@ -65,7 +65,10 @@
       "Bash(curl -s -o /dev/null -w \"og-image: %{http_code}\\\\n\" \"http://localhost:3000/_next/static/media/qinstante.ea158c9f.png\")",
       "Bash(pkill -f \"next dev\")",
       "Bash(pkill -f \"next-server\")",
-      "Bash(git --no-pager log --oneline -4)"
+      "Bash(git --no-pager log --oneline -4)",
+      "Bash(ls MEMORY.md)",
+      "Bash(cat MEMORY.md)",
+      "Bash(agent-browser --help)"
     ],
     "additionalDirectories": [
       "/tmp"

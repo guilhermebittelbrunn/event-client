@@ -36,8 +36,8 @@ const montserrat = Montserrat({
 });
 
 export const metadata = createMetadata({
-    title: 'QInstante',
-    description: 'QInstante - Transforme seu evento em uma experiência ao vivo',
+    title: 'Qinstante',
+    description: 'Qinstante - Transforme seu evento em uma experiência ao vivo',
     image: qinstanteLogo.src,
     icons: {
         icon: '/images/shared/qinstante.png',
