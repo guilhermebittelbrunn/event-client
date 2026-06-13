@@ -126,7 +126,7 @@ src/
 │   ├── seo/                  # createMetadata()
 │   ├── types/dtos/           # DTOs por domínio
 │   └── utils/helpers/        # cn, cookies, token, formattedError, formatNumber…
-└── proxy.ts                  # lógica de proteção de rota (ver §6 — atualmente NÃO ativa como middleware)
+└── proxy.ts                  # middleware de borda do Next 16 (proteção de rota — ver §6)
 ```
 
 **Convenção de pastas entre parênteses** (importantíssima — é o padrão de organização do repo):
@@ -179,7 +179,7 @@ Três tokens, todos JWT em **cookies** (helpers em `src/shared/utils/helpers/coo
 
 **Acesso do convidado** → `EventContext` (`src/shared/context/EventContext.tsx`, React Context, **não** Zustand): lê `?t=<token>` da URL, chama `signInByToken`, grava `eventToken` em cookie, valida o evento. Se o evento já terminou, redireciona para `/evento/[slug]/fotos`.
 
-> ⚠️ **`src/proxy.ts` NÃO está ativo como middleware.** Não existe `src/middleware.ts` na raiz e o arquivo não é importado como middleware do Next — apenas o export `publicRoutes` é consumido pelo `AuthInitializer`. A função `proxy()` + o `config.matcher` estão **dormentes**. `src/app/(event)/middleware.ts` também está desabilitado (só retorna `NextResponse.next()`). **Resumo: a proteção de rota hoje é client-side** (via `AuthInitializer`). Se for reativar middleware de borda, renomeie/registre como `middleware.ts` — mas confirme a intenção antes.
+> ⚠️ **`src/proxy.ts` É o middleware de borda ativo.** No **Next.js 16 o `middleware.ts` foi renomeado para `proxy.ts`** — o arquivo é detectado por convenção (não precisa ser importado) e roda em toda request que casa com `config.matcher` (o build confirma: `ƒ Proxy (Middleware)`). Ele faz a proteção de rota na borda: redireciona não-autenticado de rota privada → `/entrar`, e autenticado em `/entrar`/`/cadastro` → `/painel`; rotas públicas (`/`, `/evento/*`) passam direto. O `AuthInitializer` (client) **complementa** isso restaurando a sessão e tratando `auth:logout`/`auth:session-expired`. `src/app/(event)/middleware.ts` está desabilitado (só retorna `NextResponse.next()`) — esse não roda.
 
 ---
 
@@ -300,7 +300,7 @@ Fluxo recomendado: implementar → `pnpm lint` + `pnpm typecheck` → **agente `
 - ❌ Importar `client`/`eventClient` direto num componente. Use **`useApi()`**.
 - ❌ Esquecer `dark:` num componente novo. Dark mode é obrigatório.
 - ❌ Criar arquivos de i18n. App é pt-BR puro.
-- ❌ Tratar `src/proxy.ts` como middleware ativo. Não está wired (ver §6).
+- ❌ Procurar `src/middleware.ts`. No Next 16 o middleware é o `src/proxy.ts` (renomeado) e **está ativo** (ver §6).
 - ❌ Editar e supor que o hook formatou com Biome — o hook foi **corrigido** para Prettier+ESLint (ver `.claude/hooks/format-edited-file.sh`).
 - ❌ Pesar JS/imagens na frente `(event)`. É a mais sensível a performance.
 
