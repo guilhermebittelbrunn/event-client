@@ -7,6 +7,10 @@
 .pnp.js
 .yarn/install-state.gz
 
+# usar apenas pnpm (pnpm-lock.yaml) — bloquear lockfiles de outros gerenciadores
+package-lock.json
+yarn.lock
+
 # testing
 /coverage
 
