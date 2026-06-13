@@ -1,67 +1,34 @@
-import fs from 'node:fs';
-import path from 'node:path';
 import type { MetadataRoute } from 'next';
 
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://qinstante.com.br';
+const rawUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://qinstante.com.br';
+const BASE_URL = rawUrl.startsWith('http') ? rawUrl : `https://${rawUrl}`;
 
 /**
- * Configuração opcional por rota
- * Se não existir configuração, usamos default
+ * Sitemap com as páginas PÚBLICAS e indexáveis.
+ *
+ * Só entram aqui URLs que queremos no índice do Google. Páginas privadas
+ * (`/painel/*`), utilitárias (`/api/*`) e de evento (`/evento/[slug]`, que são
+ * gated por token e marcadas `noindex`) ficam de fora de propósito.
  */
-const routeConfig: Record<
-    string,
-    { priority?: number; changeFrequency?: MetadataRoute.Sitemap[number]['changeFrequency'] }
-> = {
-    '': { priority: 1, changeFrequency: 'weekly' },
-    entrar: { priority: 0.8, changeFrequency: 'monthly' },
-    cadastro: { priority: 0.8, changeFrequency: 'monthly' },
-    evento: { priority: 0.9, changeFrequency: 'monthly' },
+type Entry = {
+    path: string;
+    priority: number;
+    changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'];
 };
 
-/**
- * Descobre rotas automaticamente na pasta app (src/app ou app)
- */
-function getAppRoutes(): string[] {
-    const appDir = [path.join(process.cwd(), 'src', 'app'), path.join(process.cwd(), 'app')].find(dir => {
-        try {
-            return fs.existsSync(dir);
-        } catch {
-            return false;
-        }
-    });
-
-    if (!appDir) return [];
-
-    return fs
-        .readdirSync(appDir, { withFileTypes: true })
-        .filter(file => file.isDirectory())
-        .filter(folder => !folder.name.startsWith('_')) // ignora privadas
-        .filter(folder => !folder.name.startsWith('(')) // ignora route groups
-        .map(folder => folder.name);
-}
+const publicPages: Entry[] = [
+    { path: '/', priority: 1, changeFrequency: 'weekly' },
+    { path: '/entrar', priority: 0.6, changeFrequency: 'monthly' },
+    { path: '/cadastro', priority: 0.8, changeFrequency: 'monthly' },
+];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const routes = getAppRoutes();
+    const lastModified = new Date();
 
-    return [
-        // homepage manual
-        {
-            url: BASE_URL,
-            lastModified: new Date(),
-            priority: routeConfig['']?.priority ?? 0.5,
-            changeFrequency: routeConfig['']?.changeFrequency ?? 'monthly',
-        },
-
-        // rotas automáticas
-        ...routes.map(route => {
-            const config = routeConfig[route];
-
-            return {
-                url: `${BASE_URL}/${route}`,
-                lastModified: new Date(),
-                priority: config?.priority ?? 0.5,
-                changeFrequency: config?.changeFrequency ?? 'monthly',
-            };
-        }),
-    ];
+    return publicPages.map(({ path, priority, changeFrequency }) => ({
+        url: new URL(path, BASE_URL).href,
+        lastModified,
+        priority,
+        changeFrequency,
+    }));
 }

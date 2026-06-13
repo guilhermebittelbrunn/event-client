@@ -86,8 +86,13 @@ export const config = {
          * - api (API routes)
          * - _next/static (static files)
          * - _next/image (image optimization files)
-         * - favicon.ico, sitemap.xml, robots.txt (metadata files)
+         * - favicon.ico, sitemap.xml, robots.txt, manifest.webmanifest (metadata files)
+         * - images/ (assets públicos em /public/images — favicon/OG/manifest icon)
+         *
+         * Sem essas exceções o middleware redirecionava /manifest.webmanifest e os
+         * ícones para /entrar quando o usuário está deslogado — quebrando PWA/favicon
+         * para visitantes anônimos e crawlers (público de SEO).
          */
-        '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+        '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|manifest.webmanifest|images/).*)',
     ],
 };

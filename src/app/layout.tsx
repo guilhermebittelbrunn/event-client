@@ -1,3 +1,4 @@
+import type { Viewport } from 'next';
 import { Outfit, Nanum_Brush_Script, Playfair_Display, Montserrat } from 'next/font/google';
 import './globals.css';
 
@@ -7,6 +8,8 @@ import { ToastContainer } from 'react-toastify';
 import { Analytics } from '@vercel/analytics/next';
 import { QueryProvider } from '@/shared/context/QueryContext';
 import { createMetadata } from '@/shared/seo/metadata';
+import JsonLd from '@/shared/seo/JsonLd';
+import { organizationSchema, websiteSchema } from '@/shared/seo/structuredData';
 import qinstanteLogo from '@/assets/images/shared/qinstante.png';
 
 const outfit = Outfit({
@@ -36,7 +39,20 @@ export const metadata = createMetadata({
     title: 'QInstante',
     description: 'QInstante - Transforme seu evento em uma experiência ao vivo',
     image: qinstanteLogo.src,
+    icons: {
+        icon: '/images/shared/qinstante.png',
+        apple: '/images/shared/qinstante.png',
+    },
 });
+
+export const viewport: Viewport = {
+    width: 'device-width',
+    initialScale: 1,
+    themeColor: [
+        { media: '(prefers-color-scheme: light)', color: '#FAFAFA' },
+        { media: '(prefers-color-scheme: dark)', color: '#1C1B19' },
+    ],
+};
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
@@ -44,6 +60,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <body
                 className={`${outfit.className} ${nanumBrushScript.variable} ${playfairDisplay.variable} ${montserrat.variable} bg-white`}
             >
+                <JsonLd data={[organizationSchema, websiteSchema]} />
                 <QueryProvider>
                     <SidebarProvider>
                         <ClientLayout>{children}</ClientLayout>

@@ -31,6 +31,10 @@ type MetadataGenerator = Omit<Metadata, 'description' | 'title'> & {
     title: string;
     description: string;
     image?: string;
+    /** Caminho canônico relativo ao domínio (ex.: '/', '/cadastro'). Omitir quando não indexável. */
+    path?: string;
+    /** Marcar a página como noindex (ex.: páginas privadas/gated como /evento). */
+    noindex?: boolean;
 };
 
 const applicationName = 'QInstante';
@@ -40,20 +44,46 @@ const author: Metadata['authors'] = {
 };
 const publisher = 'QInstante';
 const twitterHandle = '@qinstante';
-const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
-const productionUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
-const baseUrl =
-    process.env.NEXT_PUBLIC_APP_URL || (productionUrl ? `${protocol}://${productionUrl}` : undefined);
+// Fallback fixo para o domínio de produção: garante metadataBase/canonical/OG
+// absolutos mesmo se a env não estiver setada (senão OG/canonical viram relativos e quebram).
+const rawBaseUrl =
+    process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_PROJECT_PRODUCTION_URL || 'https://qinstante.com.br';
+// Normaliza o protocolo: se a env vier sem http(s), `new URL()` lançaria e derrubaria a metadata.
+const baseUrl = rawBaseUrl.startsWith('http') ? rawBaseUrl : `https://${rawBaseUrl}`;
 
-export const createMetadata = ({ title, description, image, ...properties }: MetadataGenerator): Metadata => {
-    const parsedTitle = `${title} | ${applicationName}`;
+const defaultKeywords = [
+    'QInstante',
+    'fotos colaborativas',
+    'álbum colaborativo',
+    'fotos de casamento',
+    'QR code para fotos',
+    'compartilhar fotos de evento',
+    'galeria de fotos ao vivo',
+    'fotos de convidados',
+];
+
+export const createMetadata = ({
+    title,
+    description,
+    image,
+    path,
+    noindex,
+    ...properties
+}: MetadataGenerator): Metadata => {
+    // Evita duplicar a marca quando o título já a contém (ex.: home).
+    const parsedTitle = title.includes(applicationName) ? title : `${title} | ${applicationName}`;
     const defaultMetadata: Metadata = {
         title: parsedTitle,
         description,
         applicationName,
-        metadataBase: baseUrl ? new URL(baseUrl) : undefined,
+        metadataBase: new URL(baseUrl),
+        keywords: defaultKeywords,
         authors: [author],
         creator: author.name,
+        alternates: path ? { canonical: path } : undefined,
+        robots: noindex
+            ? { index: false, follow: false }
+            : { index: true, follow: true, googleBot: { index: true, follow: true } },
         formatDetection: {
             telephone: false,
         },
@@ -68,6 +98,7 @@ export const createMetadata = ({ title, description, image, ...properties }: Met
             type: 'website',
             siteName: applicationName,
             locale: 'pt_BR',
+            url: path ?? '/',
             images: [
                 {
                     url: qinstanteLogo.src,
@@ -81,6 +112,8 @@ export const createMetadata = ({ title, description, image, ...properties }: Met
         twitter: {
             card: 'summary_large_image',
             creator: twitterHandle,
+            title: parsedTitle,
+            description,
         },
     };
 

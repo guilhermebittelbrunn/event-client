@@ -1,6 +1,6 @@
 'use client';
 
-import { LinkButton, Title, Paragraph, Button } from '@/shared/components/ui';
+import { LinkButton, Paragraph, Button } from '@/shared/components/ui';
 import { Box } from '@/shared/components/ui/box';
 import ThemeToggleButton from '@/shared/components/ui/themeToggleButton';
 import { useAuth } from '@/shared/store/useAuth';
@@ -14,7 +14,6 @@ import { Collapse } from 'antd';
 
 import { SiGmail } from 'react-icons/si';
 import { FaInstagram } from 'react-icons/fa';
-import { useClientRouter } from '@/shared/hooks';
 
 const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
@@ -22,7 +21,6 @@ const scrollToSection = (id: string) => {
 };
 
 export default function Home() {
-    const { push } = useClientRouter();
     const isAuthenticated = useAuth(state => state.isAuthenticated);
 
     return (
@@ -30,12 +28,15 @@ export default function Home() {
             <header className="sticky w-full top-0 z-50 mx-auto flex justify-center px-6 bg-white dark:bg-matte-black">
                 <Box className="flex flex-row w-full justify-between max-w-screen-xl bg-white dark:bg-matte-black">
                     <div className="flex items-center gap-4">
-                        <Title
-                            className="text-2xl font-bold text-matte-black dark:text-snow-white font-nanum-brush"
+                        {/* Logo (não é heading — o único h1 da página é o do hero) */}
+                        <button
+                            type="button"
+                            aria-label="QInstante — ir para o início"
+                            className="py-4 flex items-center text-2xl font-bold text-matte-black dark:text-snow-white font-nanum-brush cursor-pointer"
                             onClick={() => scrollToSection('inicio')}
                         >
-                            Qinstante
-                        </Title>
+                            QInstante
+                        </button>
                     </div>
 
                     {isAuthenticated ? (
@@ -60,15 +61,20 @@ export default function Home() {
                 <ThemeToggleButton type="secondary" />
             </div>
 
-            {/* Hero: imagem com bg-cover (sem esticar), degradê opaco até o início da imagem */}
+            {/* Hero: imagem otimizada (next/image) como LCP, com degradê opaco até o início da imagem */}
             <div
                 id="inicio"
                 className="relative w-full min-h-[660px] overflow-hidden 2xl:min-h-[800px] 3xl:min-h-[1000px]"
             >
-                {/* Camada da imagem: cover para não esticar, posicionada mais alta */}
-                <div
-                    className="absolute inset-0 bg-no-repeat bg-cover bg-[50%_5%]"
-                    style={{ backgroundImage: `url(${coupleH.src})` }}
+                {/* Imagem de fundo otimizada e priorizada (melhora LCP) */}
+                <Image
+                    src={coupleH}
+                    alt="Casal de noivos celebrando o casamento com os convidados"
+                    fill
+                    priority
+                    sizes="100vw"
+                    placeholder="blur"
+                    className="object-cover object-[50%_5%]"
                 />
                 {/* Degradê opaco do topo até o início da imagem */}
                 <div
@@ -88,17 +94,17 @@ export default function Home() {
                 <div className="relative flex flex-col items-center justify-center gap-4 pt-8 pb-20 px-4">
                     <div className="flex flex-col py-8 max-w-2xl text-center">
                         <h1 className="text-4xl md:text-5xl font-playfair font-semibold text-matte-black dark:text-snow-white">
-                            Transforme seu evento em uma experiência ao vivo
+                            Fotos colaborativas para casamentos e eventos, em tempo real
                         </h1>
                         <Paragraph className="text-lg font-montserrat text-matte-black/90 dark:text-snow-white/90 mt-3">
-                            Seus convidados tiram fotos, curtem e se divertem — e tudo aparece na TV, em tempo
-                            real.
+                            Seus convidados tiram fotos por um QR code e tudo aparece ao vivo — na TV da festa e
+                            em um álbum colaborativo online. Eternize cada momento do seu grande dia.
                         </Paragraph>
                     </div>
                     <div className="flex flex-row flex-wrap gap-4 justify-center mt-2">
-                        <Button type="primary" className="px-20 py-5 md:px-10" onClick={() => push('/entrar')}>
+                        <LinkButton type="primary" href="/cadastro" className="px-20 py-5 md:px-10">
                             Criar meu evento
-                        </Button>
+                        </LinkButton>
                         <Button
                             type="secondary"
                             className="px-20 py-5 md:px-10"
@@ -117,10 +123,14 @@ export default function Home() {
             >
                 <Box className="gap-4 w-full max-w-5xl p-8 sm:p-10 rounded-2xl shadow-xl">
                     <div className="flex flex-row justify-center items-center gap-8">
-                        <Image src={mockupIos} alt="Mockup iOS" className="w-[60px] sm:w-[75px] md:w-[150px]" />
+                        <Image
+                            src={mockupIos}
+                            alt="Tela do QInstante no celular com o álbum de fotos do evento"
+                            className="w-[60px] sm:w-[75px] md:w-[150px]"
+                        />
                         <Image
                             src={mockupDesktop}
-                            alt="Mockup Desktop"
+                            alt="Galeria de fotos do evento exibida ao vivo na TV com o QInstante"
                             className="pl-0 w-[200px] sm:w-[250px] md:w-[500px] md:pl-2"
                         />
                     </div>
@@ -130,11 +140,11 @@ export default function Home() {
             {/* Como funciona */}
             <div id="como-funciona" className="flex flex-col items-center justify-center gap-6 py-12 px-4">
                 <h2 className="text-2xl font-montserrat font-bold text-matte-black dark:text-snow-white">
-                    Como funciona?
+                    Como funciona o álbum colaborativo?
                 </h2>
                 <div className="flex flex-row gap-4">
                     <ul className="flex flex-col justify-center items-center gap-6 w-full max-w-4xl mt-2 md:flex-row">
-                        <li className="flex flex-col gap-3 items-center justify-center font-semibold border-soft-gold border-1 rounded-2xl p-4 w-[320px] h-[120px]">
+                        <li className="flex flex-col gap-3 items-center justify-center font-semibold border-soft-gold border-1 rounded-2xl p-4 w-full sm:w-[320px] min-h-[120px]">
                             <div className="flex flex-row gap-3  items-center">
                                 <p className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-soft-gold text-white rounded-full font-bold font-montserrat">
                                     1
@@ -144,17 +154,17 @@ export default function Home() {
                                 </p>
                             </div>
                         </li>
-                        <li className="flex flex-col gap-3 items-center justify-center font-semibold border-soft-gold border-1 rounded-2xl p-4 w-[320px] h-[120px]">
+                        <li className="flex flex-col gap-3 items-center justify-center font-semibold border-soft-gold border-1 rounded-2xl p-4 w-full sm:w-[320px] min-h-[120px]">
                             <div className="flex flex-row gap-3  items-center">
                                 <p className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-soft-gold text-white rounded-full font-bold font-montserrat">
                                     2
                                 </p>
                                 <p className="font-montserrat text-matte-black dark:text-snow-white/90">
-                                    Distribua o QR Code para seus convidados
+                                    Distribua o QR code para seus convidados
                                 </p>
                             </div>
                         </li>
-                        <li className="flex flex-col gap-3 items-center justify-center font-semibold border-soft-gold border-1 rounded-2xl p-4 w-[320px] h-[120px]">
+                        <li className="flex flex-col gap-3 items-center justify-center font-semibold border-soft-gold border-1 rounded-2xl p-4 w-full sm:w-[320px] min-h-[120px]">
                             <div className="flex flex-row gap-3  items-center">
                                 <p className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-soft-gold text-white rounded-full font-bold font-montserrat">
                                     3
@@ -192,13 +202,13 @@ export default function Home() {
                     items={[
                         {
                             key: '1',
-                            label: 'O que é o Qinstante?',
+                            label: 'O que é o QInstante?',
                             children: (
                                 <div className="flex flex-col gap-2">
                                     <p>Um jeito diferente e cheio de significado de eternizar o grande dia!</p>
                                     <p>
-                                        Os convidados se tornaram parte da história, registrando seus próprios
-                                        momentos através de um QR Code disponível em todo o evento.
+                                        Os convidados se tornam parte da história, registrando seus próprios
+                                        momentos através de um QR code disponível em todo o evento.
                                     </p>
                                 </div>
                             ),
@@ -210,10 +220,10 @@ export default function Home() {
                         },
                         {
                             key: '3',
-                            label: 'Quanto tempo demora para receber o QR Code?',
+                            label: 'Quanto tempo demora para receber o QR code?',
                             children: (
                                 <div className="flex flex-col gap-2">
-                                    <p>Após a confirmação do pagamento você receberá o QR Code na hora.</p>
+                                    <p>Após a confirmação do pagamento você receberá o QR code na hora.</p>
                                     <p>
                                         Seus convidados poderão acessar o evento em qualquer momento durante o
                                         evento.
@@ -254,11 +264,11 @@ export default function Home() {
                     {/* Logo e contato */}
                     <div className="flex flex-col items-center md:items-start gap-4">
                         <div>
-                            <h6 className="text-2xl font-bold text-matte-black dark:text-snow-white font-nanum-brush text-center md:text-left">
-                                Qinstante
-                            </h6>
+                            <h2 className="text-2xl font-bold text-matte-black dark:text-snow-white font-nanum-brush text-center md:text-left">
+                                QInstante
+                            </h2>
                             <p className="text-center text-sm text-matte-black/70 dark:text-snow-white/70 font-montserrat mt-2 md:mt-0">
-                                Transforme seu evento em uma experiência ao vivo
+                                Fotos colaborativas para casamentos e eventos, em tempo real.
                             </p>
                         </div>
                         <div className="flex flex-col justify-center items-center md:justify-start md:items-start gap-3 w-full md:gap-6 md:flex-row">
@@ -272,7 +282,7 @@ export default function Home() {
                                 @qinstante
                             </a>
                             <a
-                                href="mailto:Qinstante@teste.com"
+                                href="mailto:qinstante@gmail.com"
                                 className="flex scale-80 items-center gap-2 text-matte-black dark:text-snow-white hover:text-soft-gold dark:hover:text-soft-gold transition-colors font-montserrat md:scale-100"
                             >
                                 <SiGmail className="w-6 h-6" />
@@ -283,9 +293,9 @@ export default function Home() {
 
                     {/* Navegação */}
                     <nav className="flex flex-wrap flex-col justify-center gap-6">
-                        <h5 className="text-md text-center font-bold opacity-90 text-gray-800 dark:text-white/90 md:text-left">
+                        <h2 className="text-md text-center font-bold opacity-90 text-gray-800 dark:text-white/90 md:text-left">
                             NAVEGAR
-                        </h5>
+                        </h2>
                         <div className="flex flex-wrap flex-col justify-center items-center gap-2 md:flex-row md:justify-start md:items-start md:gap-6">
                             <button
                                 type="button"
@@ -328,7 +338,7 @@ export default function Home() {
 
                 <div className="border-t border-soft-gold/20 dark:border-soft-gold-dark/20 py-6 px-6">
                     <p className="text-center text-sm text-matte-black/70 dark:text-snow-white/70 font-montserrat">
-                        © {new Date().getFullYear()} Qinstante. Todos os direitos reservados.
+                        © {new Date().getFullYear()} QInstante. Todos os direitos reservados.
                     </p>
                 </div>
             </footer>
